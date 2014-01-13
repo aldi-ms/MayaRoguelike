@@ -1,0 +1,23 @@
+﻿1. Revamp inventory so it actually works.
+
+2. Implement options to scroll the log history.
+
+3. Move unitSpeed, energy, etc. Unit fields to UnitStats.
+
+4. Add the units to the game save method.
+4.1. Add UnitStats to the game save method.
+4.2. Add (unit/dropped) Items to the game save method.
+4.3. Add Ticks (game time) to the game save method.
+
+5. Implement combat!!!
+5.1. Move all combat related actions/code to CombatEngine class.
+
+6. Make all array initializations (esp. in ItemType and VisualEngine) load from file/s.
+
+7. Add a method to save every char to a different log file, not deleting the old.
+7.1. Use the character name + date/time for the log file names.
+7.2. If "load game" is chosen, load a log file according to the saved character's name.
+
+8. 
+
+9. 

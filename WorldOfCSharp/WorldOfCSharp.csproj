@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0B65B911-6677-430B-A956-C8E9C534109B}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WorldOfCSharp</RootNamespace>
+    <AssemblyName>WorldOfCSharp</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Framework\AI.cs" />
+    <Compile Include="Framework\ArrayExtension.cs" />
+    <Compile Include="ConsoleTools.cs" />
+    <Compile Include="Framework\Coordinate.cs" />
+    <Compile Include="Database.cs" />
+    <Compile Include="Framework\DirectionEnum.cs" />
+    <Compile Include="Framework\Equipment.cs" />
+    <Compile Include="Framework\FieldOfView.cs" />
+    <Compile Include="Framework\FOVAlgorithm.cs" />
+    <Compile Include="Framework\GameEngine.cs" />
+    <Compile Include="Framework\GameCell.cs" />
+    <Compile Include="Framework\GameObject.cs" />
+    <Compile Include="Framework\GameTime.cs" />
+    <Compile Include="Framework\GameUI.cs" />
+    <Compile Include="Framework\Inventory.cs" />
+    <Compile Include="Framework\RightInfoPane.cs" />
+    <Compile Include="Framework\RNG.cs" />
+    <Compile Include="GlobalValues.cs" />
+    <Compile Include="Framework\IngameObject.cs" />
+    <Compile Include="Framework\Item.cs" />
+    <Compile Include="Framework\ItemCode.cs" />
+    <Compile Include="Framework\ItemType.cs" />
+    <Compile Include="MapTools.cs" />
+    <Compile Include="Framework\MersenneTwister.cs" />
+    <Compile Include="Framework\MessageLog.cs" />
+    <Compile Include="Framework\MonthsAndDaysEnum.cs" />
+    <Compile Include="Framework\MRPAS.cs" />
+    <Compile Include="Framework\NonPlayerCharacter.cs" />
+    <Compile Include="Framework\PlayerCharacter.cs" />
+    <Compile Include="SaveLoadTools.cs" />
+    <Compile Include="Framework\ShadowCasting.cs" />
+    <Compile Include="Framework\Stats.cs" />
+    <Compile Include="Framework\TerrainType.cs" />
+    <Compile Include="Testing.cs" />
+    <Compile Include="Framework\Unit.cs" />
+    <Compile Include="Framework\VisualEngine.cs" />
+    <Compile Include="Framework\Window.cs" />
+    <Compile Include="WorldOfCSharpMain.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="!TO DO.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
