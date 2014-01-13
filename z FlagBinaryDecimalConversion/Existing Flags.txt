@@ -1,0 +1,8 @@
+﻿Flags:
+
+# - description
+
+0 – is movable
+1 – is collidable
+2 - has effect
+3 - isTransparent

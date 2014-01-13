@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorldOfCSharp", "WorldOfCSharp\WorldOfCSharp.csproj", "{0B65B911-6677-430B-A956-C8E9C534109B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "z FlagBinaryDecimalConversion", "z FlagBinaryDecimalConversion\z FlagBinaryDecimalConversion.csproj", "{9596D314-6187-481F-B4EC-ACA51CFE97DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "zMapEditor", "MapEditor\zMapEditor.csproj", "{52A2ECF9-63DE-43B3-8E6A-71BD39B324ED}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0B65B911-6677-430B-A956-C8E9C534109B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B65B911-6677-430B-A956-C8E9C534109B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B65B911-6677-430B-A956-C8E9C534109B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B65B911-6677-430B-A956-C8E9C534109B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9596D314-6187-481F-B4EC-ACA51CFE97DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9596D314-6187-481F-B4EC-ACA51CFE97DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9596D314-6187-481F-B4EC-ACA51CFE97DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9596D314-6187-481F-B4EC-ACA51CFE97DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52A2ECF9-63DE-43B3-8E6A-71BD39B324ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52A2ECF9-63DE-43B3-8E6A-71BD39B324ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52A2ECF9-63DE-43B3-8E6A-71BD39B324ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52A2ECF9-63DE-43B3-8E6A-71BD39B324ED}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

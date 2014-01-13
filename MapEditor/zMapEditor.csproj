@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0B65B911-6677-430B-A956-C8E9C534109B}</ProjectGuid>
+    <ProjectGuid>{52A2ECF9-63DE-43B3-8E6A-71BD39B324ED}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WorldOfCSharp</RootNamespace>
-    <AssemblyName>WorldOfCSharp</AssemblyName>
+    <RootNamespace>MapEditor</RootNamespace>
+    <AssemblyName>MapEditor</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -42,51 +42,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Framework\AI.cs" />
-    <Compile Include="Framework\ArrayExtension.cs" />
-    <Compile Include="Framework\ConsoleTools.cs" />
-    <Compile Include="Framework\Coordinate.cs" />
-    <Compile Include="Framework\Database.cs" />
-    <Compile Include="Framework\DirectionEnum.cs" />
-    <Compile Include="Framework\Equipment.cs" />
-    <Compile Include="Framework\FieldOfView.cs" />
-    <Compile Include="Framework\FOVAlgorithm.cs" />
-    <Compile Include="Framework\GameEngine.cs" />
-    <Compile Include="Framework\GameCell.cs" />
-    <Compile Include="Framework\GameObject.cs" />
-    <Compile Include="Framework\GameTime.cs" />
-    <Compile Include="GameUI.cs" />
-    <Compile Include="Framework\Inventory.cs" />
-    <Compile Include="Framework\RightInfoPane.cs" />
-    <Compile Include="Framework\RNG.cs" />
-    <Compile Include="GlobalValues.cs" />
-    <Compile Include="IngameObject.cs" />
-    <Compile Include="Framework\Item.cs" />
-    <Compile Include="Framework\ItemCode.cs" />
-    <Compile Include="Framework\ItemType.cs" />
-    <Compile Include="Framework\MapTools.cs" />
-    <Compile Include="Framework\MersenneTwister.cs" />
-    <Compile Include="Framework\MessageLog.cs" />
-    <Compile Include="Framework\MonthsAndDaysEnum.cs" />
-    <Compile Include="Framework\MRPAS.cs" />
-    <Compile Include="NonPlayerCharacter.cs" />
-    <Compile Include="PlayerCharacter.cs" />
-    <Compile Include="Framework\SaveLoadTools.cs" />
-    <Compile Include="Framework\ShadowCasting.cs" />
-    <Compile Include="Framework\Stats.cs" />
-    <Compile Include="Framework\TerrainType.cs" />
-    <Compile Include="Testing.cs" />
-    <Compile Include="Framework\Unit.cs" />
-    <Compile Include="Framework\VisualEngine.cs" />
-    <Compile Include="Framework\Window.cs" />
-    <Compile Include="WorldOfCSharpMain.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="!TO DO.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
