@@ -19,7 +19,7 @@ namespace WorldOfCSharp
                     x, Globals.CONSOLE_WIDTH);
                 throw new ArgumentOutOfRangeException("Constructor check.", exceptionStr);
             }
-
+            
             if (y >= 0 && y <= Globals.CONSOLE_HEIGHT)
             {
                 this.y = y;
