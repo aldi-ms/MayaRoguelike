@@ -4,17 +4,20 @@ namespace WorldOfCSharp
 {
     public class Equipment
     {
-        private const int ITEM_SLOTS = 16;
+        public const int ITEM_SLOTS = 16;
         private bool hasChanged;
         private Item[] equipment;
         private bool[] isSlotUsed;
+        private int count = 0;
 
         public Equipment()
         {
             this.equipment = new Item[ITEM_SLOTS];
+            this.isSlotUsed = new bool[ITEM_SLOTS];
             for (int i = 0; i < equipment.Length; i++)
             {
-                this.equipment[i] = new Item();
+                this.equipment[i] = null;
+                this.isSlotUsed[i] = false;
             }
         }
 
@@ -27,20 +30,29 @@ namespace WorldOfCSharp
         {
             get { return this.isSlotUsed; }
         }
+
+        public int Count
+        {
+            get { return this.count; }
+        }
+
         public void EquipItem(Item item)
         {
             if (item.Slot != EquipSlot.NotEquippable && item != null)
             {
                 this.equipment[(int)item.Slot] = item;
                 this.isSlotUsed[(int)item.Slot] = true;
+                this.count++;
                 this.hasChanged = true;
             }
         }
 
-        public void Unequip(Item item)
+        public Item Unequip(Item item)
         {
-            this.equipment[(int)item.Slot] = new Item();
+            this.equipment[(int)item.Slot] = null;
             this.isSlotUsed[(int)item.Slot] = false;
+            this.count--;
+            return item;
         }
 
         public List<string> ToStringListDEPRECATED()
@@ -51,7 +63,7 @@ namespace WorldOfCSharp
             {
                 if (equipment[i].Slot != EquipSlot.NotEquippable)
                 {
-                    strList.Add(string.Format("{0}", equipment[i].ToFullString()));
+                    strList.Add(string.Format("{0}", equipment[i].ToString()));
                 }
             }
 

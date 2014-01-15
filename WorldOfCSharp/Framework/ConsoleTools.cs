@@ -123,10 +123,10 @@ namespace WorldOfCSharp
             Environment.Exit(0);
         }
         
-        public static void PrintDebugInfo(string str)
-        {
-            GameEngine.MessageLog.SendMessage(string.Format("Debug: {0}", str));
-        }
+        //public static void PrintDebugInfo(string str)
+        //{
+        //    GameEngine.MessageLog.SendMessage(string.Format("Debug: {0}", str));
+        //}
 
         public static void QuickSort(List<int> intList, int left, int right) //left = 0, right = IDList.Count - 1
         {

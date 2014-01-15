@@ -126,12 +126,23 @@ namespace WorldOfCSharp
             SaveGame(pc);
             ConsoleTools.Clear(windowBottomLeftX, windowBottomLeftY, windowWidth, windowHeight);
             DrawWindow();
-            ConsoleTools.PrintDebugInfo(string.Format("Window \"{0}\" opened.", title));
+            GameEngine.MessageLog.SendMessage(string.Format("\"{0}\" opened.", title));
         }
 
         public bool Write(string str, ConsoleColor color = ConsoleColor.Gray)
         {
             linePosition++;
+            if (!(linePosition >= BottomLeft.Y - 2))
+            {
+                ConsoleTools.WriteOnPosition(str, (windowHeight - windowBottomLeftY) + (windowMargin + 2),
+                    windowBottomLeftX + (linePosition - 1), color);
+                return true;
+            }
+            return false;
+        }
+        public bool WriteLine(string str, ConsoleColor color = ConsoleColor.Gray)
+        {
+            linePosition +=2;
             if (!(linePosition >= BottomLeft.Y - 2))
             {
                 ConsoleTools.WriteOnPosition(str, (windowHeight - windowBottomLeftY) + (windowMargin + 2),

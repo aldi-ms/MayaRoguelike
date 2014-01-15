@@ -57,9 +57,10 @@ namespace WorldOfCSharp
                 {
                     switch (gameField[objX, objY].IngameObject.Name)
                     {
+                            //add hit/walk related objects here
                         case "savepoint":
                             SaveLoadTools.SaveGame(unit);
-                            ConsoleTools.PrintDebugInfo("Game saved.");
+                            MessageLog.SendMessage("Game Saved.");
                             break;
                         default:
                             break;
@@ -189,7 +190,6 @@ namespace WorldOfCSharp
                             return 0;
 
                         case ConsoleKey.Y:
-                            ConsoleTools.PrintDebugInfo(pc.ItemInSlot(EquipSlot.Chest));
                             return 0;
 
                         case ConsoleKey.E:
@@ -204,7 +204,9 @@ namespace WorldOfCSharp
                             //pick up item
                             if (GameField[pc.X, pc.Y].Item != null)
                             {
-                                pc.Inventory.AddItem(GameField[pc.X, pc.Y].Item);
+                                pc.Inventory.PickUpItem(GameField[pc.X, pc.Y].Item);
+                                MessageLog.SendMessage(string.Format("Picked up {0}.", GameField[pc.X, pc.Y].Item.ToString()));
+                                GameField[pc.X, pc.Y].Item = null;
                             }
                             return 100;
 
@@ -268,57 +270,91 @@ namespace WorldOfCSharp
 
         private static void ShowInventoryWindow(PlayerCharacter pc)
         {
+            int letterCount = 0;
+            bool bigLetters = false;
+            int letterSize = 97;
             //show equipment/inventory window
             Window invWindow = new Window(pc, "inventory");
             invWindow.Show();
 
-            invWindow.Write("\tEquipment:", ConsoleColor.Cyan);
+            invWindow.WriteLine("Equipment:", ConsoleColor.Red);
             for (int i = 0; i < pc.Equipment.IsSlotUsed.Length; i++)
             {
                 if (pc.Equipment.IsSlotUsed[i] == true)
                 {
-                    invWindow.Write(string.Format("{0} - {1}", (char)(i + 65), pc.Equipment[i].ToFullString()));
+                    invWindow.Write(string.Format("{0} - {1}: {2}", (char)(letterCount++ + letterSize), pc.Equipment[i].Slot, pc.Equipment[i].ToString()), ConsoleColor.Yellow);
+                    if (letterCount > 25 && !bigLetters)
+                    {
+                        letterCount = 0;
+                        letterSize = 65;  //switch to big letters, when small are used up.
+                        bigLetters = true;
+                    }
                 }
             }
 
-            invWindow.Write("\tInventory:", ConsoleColor.Cyan);
-            
+            invWindow.WriteLine("Inventory:", ConsoleColor.Red);
+            invWindow.Write("");
             for (int i = 0; i < pc.Inventory.IsSlotUsed.Length; i++)
             {
                 if (pc.Inventory.IsSlotUsed[i] == true)
                 {
-                    invWindow.Write(string.Format("{0} - {1}", (char)(i + 65), pc.Inventory[i].ToFullString()));
+                    invWindow.Write(string.Format("{0} - {1}", (char)(letterCount++ + letterSize), pc.Inventory[i].ToString()), ConsoleColor.White);
+                    if (letterCount > 25 && !bigLetters)
+                    {
+                        letterCount = 0;
+                        letterSize = 65;  //switch to big letters, when small are used up.
+                        bigLetters = true;
+                    }
                 }
+                else
+                    break;
             }
 
             ConsoleKeyInfo key;
             bool loop = true;
-            selectionChar = (char)(selectionChar + 32); //to convert the char to lower case
             do
             {
                 key = Console.ReadKey(true);
-                if (key.KeyChar >= 'a' && key.KeyChar < selectionChar)
+                if (key.KeyChar >= 'a' && key.KeyChar < (char)(bigLetters ? letterCount + 25 + letterSize : letterCount + letterSize))
                 {
-                    int selectedItem = key.KeyChar - 'a';
-                    if (equipment.Count != 0 && selectedItem < equipment.Count)
+                    int letterCode = key.KeyChar;
+                    int itemPosition;
+                    if (letterCode > 91)
+                        itemPosition = letterCode - 97;
+                    else
+                        itemPosition = letterCode - 65;
+
+                    if (pc.Equipment.Count > ((!bigLetters) ? itemPosition : itemPosition + 25))
                     {
-                        int counter = -1;
-                        for (int i = 0; i < Globals.ITEM_SLOTS; i++)
+                        int counter = 0;
+                        for (int i = 0; i < Equipment.ITEM_SLOTS; i++)
                         {
-                            if (pc.Equipment[i].Slot != EquipSlot.NotEquippable)
+                            if (pc.Equipment.IsSlotUsed[i])
                             {
-                                counter++;
-                                if (counter == selectedItem)
+                                if (counter == itemPosition && pc.Equipment[counter] != null)
                                 {
-                                    pc.Equipment[i].Actions();
+                                    ItemActions(pc, pc.Equipment[counter]);
                                     break;
                                 }
+                                counter++;
                             }
                         }
                     }
                     else
                     {
-                        pc.Inventory[selectedItem - equipment.Count].Actions();
+                        int counter = 0;
+                        for (int i = 0; i < pc.Inventory.IsSlotUsed.Length; i++)
+                        {
+                            if (pc.Inventory.IsSlotUsed[i])
+                            {
+                                if (counter == itemPosition && pc.Inventory[counter] != null)
+                                {
+                                    ItemActions(pc, pc.Inventory[counter]);
+                                    break;
+                                }
+                                counter++;
+                            }
+                        }
                     }
                 }
                 else if (key.Key == ConsoleKey.Escape)
@@ -327,6 +363,52 @@ namespace WorldOfCSharp
                     invWindow.CloseWindow();
                 }
             } while(loop);
+        }
+
+        private static void ItemActions(Unit unit, Item item)
+        {
+            if (item.isEquipped)
+            {
+                GameEngine.MessageLog.SendMessage(string.Format("{0} -- [T] Take off, [D] Drop", item.ToString()));
+
+                ConsoleKeyInfo key = Console.ReadKey(true);
+                switch (key.Key)
+                {
+                    case ConsoleKey.D:
+                        unit.Equipment.Unequip(item);
+                        GameField[unit.X, unit.Y].Item = unit.Inventory.DropItem(item);
+                        MessageLog.SendMessage(string.Format("{0} ({1}) dropped.", item.ToString(), item.Slot));
+                        break;
+                    case ConsoleKey.T:
+                        unit.Inventory.PickUpItem(unit.Equipment.Unequip(item));
+                        MessageLog.SendMessage(string.Format("You are taking off {0} ({1}).", item.ToString(), item.Slot));
+                        break;
+                    default:
+                    case ConsoleKey.Escape:
+                        GameEngine.MessageLog.SendMessage("No action taken.");
+                        break;
+                }
+            }
+            else
+            {
+                GameEngine.MessageLog.SendMessage(string.Format("{0} -- [E] Equip, [D] Drop", item.ToString()));
+
+                ConsoleKeyInfo key = Console.ReadKey(true);
+                switch (key.Key)
+                {
+                    case ConsoleKey.D:
+                        GameField[unit.X, unit.Y].Item = unit.Inventory.DropItem(item);
+                        MessageLog.SendMessage(string.Format("{0} dropped.", item.ToString()));
+                        break;
+                    case ConsoleKey.E:
+                        unit.Equipment.EquipItem(item);
+                        MessageLog.SendMessage(string.Format("Equipping {0} to {1}.", item.ToString(), item.Slot));
+                        break;
+                    default:
+                        GameEngine.MessageLog.SendMessage("No action taken.");
+                        break;
+                }
+            }
         }
 
         //Method to fill the whole map with a single type of terrain.

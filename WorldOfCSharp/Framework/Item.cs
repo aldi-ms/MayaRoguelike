@@ -7,9 +7,9 @@ namespace WorldOfCSharp
         private string name;
         private ItemType itemType = new ItemType();
         private ItemStats itemStats;
-        private Unit owner;
-        private bool isEquipped = false;
-        private bool isStored = false;
+        //private Unit owner;
+        public bool isEquipped = false;
+        //private bool isStored = false;
         private int inventorySlot;
         //weapon fields
 
@@ -20,6 +20,7 @@ namespace WorldOfCSharp
                 throw new ArgumentException("Use the weapon constructor for items of type Weapon!");
             this.itemType = itemType;
             this.itemStats = new ItemStats(strength: strength, dexterity: dexterity, stamina: stamina, intelligence: intelligence, spirit: spirit);
+            this.inventorySlot = -1;    //default value -1 for not in inventory.
         }
 
         public Item(string name, ItemType itemType, ItemStats itemStats)
@@ -67,68 +68,28 @@ namespace WorldOfCSharp
         public int InventorySlot
         {
             get { return this.inventorySlot; }
+            set { this.inventorySlot = value; }
         }
-
-        //public void Actions()
-        //{
-        //    if (isEquipped)
-        //    {
-        //        GameEngine.MessageLog.SendMessage(string.Format("{0} -- [T] Take off, [D] Drop", this.ToFullString()));
-
-        //        ConsoleKeyInfo key = Console.ReadKey(true);
-        //        switch (key.Key)
-        //        {
-        //            case ConsoleKey.D:
-        //                //this.TakeOff();
-        //                this.Drop();
-        //                break;
-        //            case ConsoleKey.T:
-        //                this.TakeOff();
-        //                break;
-        //            default:
-        //                GameEngine.MessageLog.SendMessage("No action taken.");
-        //                break;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        GameEngine.MessageLog.SendMessage(string.Format("{0} -- [E] Equip, [D] Drop", this.ToFullString()));
-
-        //        ConsoleKeyInfo key = Console.ReadKey(true);
-        //        switch (key.Key)
-        //        {
-        //            case ConsoleKey.D:
-        //                this.Drop();
-        //                break;
-        //            case ConsoleKey.E:
-        //                this.Equip(this.owner);
-        //                break;
-        //            default:
-        //                GameEngine.MessageLog.SendMessage("No action taken.");
-        //                break;
-        //        }
-        //    }
-        //}
         
+        //public override string ToString()
+        //{
+        //    return string.Format("[{0}]", this.name);
+        //}
+         
         public override string ToString()
         {
-            return string.Format("[{0}]", this.name);
-        }
-         
-        public string ToFullString()
-        {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            sb.AppendFormat("{0}: [{1}", this.Slot, this.name);
+            sb.AppendFormat("[{0}", this.name);
 
             if (this.ItemStats.ActiveStats.Count > 0)
-                sb.Append(" (");
-            foreach (var stat in this.ItemStats.ActiveStats)
             {
-                sb.AppendFormat("+{0}{1};", stat.Stat, stat.StatShortName);
-            }
-            if (this.ItemStats.ActiveStats.Count > 0)
+                sb.Append(" (");
+                foreach (var stat in this.ItemStats.ActiveStats)
+                {
+                    sb.AppendFormat("+{0}{1};", stat.Stat, stat.StatShortName);
+                }
                 sb.Append(")");
-
+            }
             sb.Append("]");
 
             return sb.ToString();

@@ -330,7 +330,7 @@ namespace WorldOfCSharp
                 }
             }
         }
-
+        
         private int Attack()
         {
             //make checks (accuracy, critical, etc.)

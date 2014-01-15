@@ -42,10 +42,6 @@ namespace WorldOfCSharp
                 {
                     this.coord.X = temp;
                 }
-                else
-                {
-                    ConsoleTools.PrintDebugInfo(string.Format("{0} coordinates reached the X boundary. Stopping.", this.VisualChar));
-                }
             }
         }
         
@@ -58,10 +54,6 @@ namespace WorldOfCSharp
                 if (temp >= 0 && temp <= Globals.GAME_FIELD_BOTTOM_RIGHT.Y)
                 {
                     this.coord.Y = temp;
-                }
-                else
-                {
-                    ConsoleTools.PrintDebugInfo(string.Format("{0} coordinates reached the Y boundary. Stopping.", this.VisualChar));
                 }
             }
         }
