@@ -9,6 +9,8 @@ namespace WorldOfCSharp
         private Item[] equipment;
         private bool[] isSlotUsed;
         private int count = 0;
+        private Inventory inventoryConnected;
+        private bool inventoryReWriteProt = true;
 
         public Equipment()
         {
@@ -36,38 +38,69 @@ namespace WorldOfCSharp
             get { return this.count; }
         }
 
+        public bool HasChanged
+        {
+            get
+            {
+                if (this.hasChanged)
+                {
+                    this.hasChanged = false;
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        public Inventory InventoryConnected
+        {
+            set 
+            {
+                if (inventoryReWriteProt)
+                {
+                    this.inventoryConnected = value;
+                    inventoryReWriteProt = false;
+                }
+            }
+        }
+        //to be fixed to return item if there was one before equipping.
         public void EquipItem(Item item)
         {
             if (item.Slot != EquipSlot.NotEquippable && item != null)
             {
+                this.inventoryConnected.DropItem(item);
+
                 this.equipment[(int)item.Slot] = item;
+                this.equipment[(int)item.Slot].isEquipped = true;
                 this.isSlotUsed[(int)item.Slot] = true;
                 this.count++;
                 this.hasChanged = true;
             }
         }
 
-        public Item Unequip(Item item)
+        public void Unequip(Item item)
         {
             this.equipment[(int)item.Slot] = null;
             this.isSlotUsed[(int)item.Slot] = false;
             this.count--;
-            return item;
+            this.hasChanged = true;
+
+            item.isEquipped = false;
+            this.inventoryConnected.PickUpItem(item);
         }
 
-        public List<string> ToStringListDEPRECATED()
-        {
-            List<string> strList = new List<string>();
+        //public List<string> ToStringListDEPRECATED()
+        //{
+        //    List<string> strList = new List<string>();
 
-            for (int i = 0; i < equipment.Length; i++)
-            {
-                if (equipment[i].Slot != EquipSlot.NotEquippable)
-                {
-                    strList.Add(string.Format("{0}", equipment[i].ToString()));
-                }
-            }
+        //    for (int i = 0; i < equipment.Length; i++)
+        //    {
+        //        if (equipment[i].Slot != EquipSlot.NotEquippable)
+        //        {
+        //            strList.Add(string.Format("{0}", equipment[i].ToString()));
+        //        }
+        //    }
 
-            return strList;
-        }
+        //    return strList;
+        //}        
     }
 }

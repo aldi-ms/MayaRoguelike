@@ -239,25 +239,25 @@ namespace WorldOfCSharp
         public int NumberOfDies
         {
             get { return this.numberOfDies; }
-            set { this.numberOfDies = value; }
+            private set { this.numberOfDies = value; }
         }
 
         public int SidesPerDie
         {
             get { return this.sidesPerDie; }
-            set { this.sidesPerDie = value; }
+            private set { this.sidesPerDie = value; }
         }
 
         public int Speed
         {
             get { return this.speed; }
-            set { this.speed = value;  }
+            private set { this.speed = value;  }
         }
 
         public int Accuracy
         {
             get { return this.accuracy; }
-            set { this.accuracy = value; }
+            private set { this.accuracy = value; }
         }
 
         public List<StatStruct> ActiveStats

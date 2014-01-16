@@ -8,12 +8,12 @@ namespace WorldOfCSharp
         //private int otherBagSlots = 0; //to be implemented...
         private Item[] inventory = new Item[BASE_BAG_SLOTS];
         private bool[] isSlotUsed = new bool[BASE_BAG_SLOTS];
-        private Unit invOwner;
         private int count = 0;
+        private readonly Equipment equipmentConnected;
 
-        public Inventory(Unit invOwner)
+        public Inventory(Equipment equipmentToConnect)
         {
-            this.invOwner = invOwner;
+            this.equipmentConnected = equipmentToConnect;
             for (int i = 0; i < BASE_BAG_SLOTS; i++)
             {
                 this.inventory[i] = null;
@@ -46,6 +46,7 @@ namespace WorldOfCSharp
                     this[i].InventorySlot = i;
                     this.isSlotUsed[i] = true;
                     this.count++;
+
                     break;
                 }
             }
@@ -59,14 +60,16 @@ namespace WorldOfCSharp
             {
                 this.inventory[item.InventorySlot] = null;
                 this.isSlotUsed[item.InventorySlot] = false;
-                item.InventorySlot = -1;
                 this.count--;
+
+                item.InventorySlot = -1;
+
                 return item;
             }
             //else throw ex.
             return null;
         }
-        
+
         //private void Sort()
         //{
         //    int[] intArr = new int[this.inventory.Length];
@@ -96,16 +99,16 @@ namespace WorldOfCSharp
         //    }
         //}
 
-        public List<string> ToStringListDEPRECATED()
-        {
-            List<string> strList = new List<string>();
-            for (int i = 0; i < this.inventory.Length; i++)
-            {
-                if (this.inventory[i].Slot != EquipSlot.NotEquippable)
-                    strList.Add(string.Format("{0}", this.inventory[i].ToString()));
-            }
+        //public List<string> ToStringListDEPRECATED()
+        //{
+        //    List<string> strList = new List<string>();
+        //    for (int i = 0; i < this.inventory.Length; i++)
+        //    {
+        //        if (this.inventory[i].Slot != EquipSlot.NotEquippable)
+        //            strList.Add(string.Format("{0}", this.inventory[i].ToString()));
+        //    }
 
-            return strList;
-        }
+        //    return strList;
+        //}
     }
 }
