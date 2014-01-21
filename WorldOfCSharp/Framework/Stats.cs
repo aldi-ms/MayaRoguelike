@@ -162,10 +162,6 @@ namespace WorldOfCSharp
             this.spirit = spirit;
             if (this.spirit != 0)
                 activeStats.Add(new StatStruct(this.spirit, "spi"));
-
-            this.hitPoints = hitPoints;
-            if (this.hitPoints != 0)
-                activeStats.Add(new StatStruct(this.hitPoints, "hp"));
         }
 
         public ItemStats(int numberOfDies, int sidesPerDie, int speed, int accuracy, 

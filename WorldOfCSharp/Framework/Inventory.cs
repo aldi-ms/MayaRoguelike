@@ -10,6 +10,7 @@ namespace WorldOfCSharp
         private bool[] isSlotUsed = new bool[BASE_BAG_SLOTS];
         private int count = 0;
         private readonly Equipment equipmentConnected;
+        private Unit owner;
 
         public Inventory(Equipment equipmentToConnect)
         {
@@ -19,6 +20,7 @@ namespace WorldOfCSharp
                 this.inventory[i] = null;
                 this.isSlotUsed[i] = false;
             }
+            this.owner = equipmentConnected.Owner;
         }
 
         public Item this[int index]

@@ -1,4 +1,4 @@
-﻿1. Revamp Stats, so they actually work, and are easy to work with.
+﻿1. REVAMP Stat System!!!
 1.1. Do the (item)stat sum in Unit, so that equipped items actually give their stats.
 
 2. Implement options to scroll the log history.

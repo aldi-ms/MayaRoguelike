@@ -11,11 +11,13 @@ namespace WorldOfCSharp
         private int count = 0;
         private Inventory inventoryConnected;
         private bool inventoryReWriteProt = true;
+        private Unit unitOwner;
 
-        public Equipment()
+        public Equipment(Unit owner)
         {
             this.equipment = new Item[ITEM_SLOTS];
             this.isSlotUsed = new bool[ITEM_SLOTS];
+            this.unitOwner = owner;
             for (int i = 0; i < equipment.Length; i++)
             {
                 this.equipment[i] = null;
@@ -36,6 +38,11 @@ namespace WorldOfCSharp
         public int Count
         {
             get { return this.count; }
+        }
+
+        public Unit Owner
+        {
+            get { return this.unitOwner; }
         }
 
         public bool HasChanged
@@ -68,10 +75,11 @@ namespace WorldOfCSharp
             if (item.Slot != EquipSlot.NotEquippable && item != null)
             {
                 this.inventoryConnected.DropItem(item);
-
+                
                 this.equipment[(int)item.Slot] = item;
                 this.equipment[(int)item.Slot].isEquipped = true;
                 this.isSlotUsed[(int)item.Slot] = true;
+                this.Owner.AddStats(item);
                 this.count++;
                 this.hasChanged = true;
             }
@@ -83,6 +91,7 @@ namespace WorldOfCSharp
             this.isSlotUsed[(int)item.Slot] = false;
             this.count--;
             this.hasChanged = true;
+            this.Owner.RemoveStats(item);
 
             item.isEquipped = false;
             this.inventoryConnected.PickUpItem(item);

@@ -300,9 +300,9 @@ namespace WorldOfCSharp
                 {
                     itemsOwned[itemsCount++] = pc.Inventory[i];
                     if (!CTRLModifier)
-                        invWindow.Write(string.Format("{0} - {1}", (char)(letterCount++ + letterSize), pc.Inventory[i].ToString()), ConsoleColor.White);
+                        invWindow.Write(string.Format("{0} - {1}", (char)(pc.Inventory[i].InventorySlot + letterSize), pc.Inventory[i].ToString()), ConsoleColor.White);
                     else
-                        invWindow.Write(string.Format("^{0} - {1}", (char)(letterCount++ + letterSize), pc.Inventory[i].ToString()), ConsoleColor.White);
+                        invWindow.Write(string.Format("^{0} - {1}", (char)(pc.Inventory[i].InventorySlot + letterSize), pc.Inventory[i].ToString()), ConsoleColor.White);
 
                     if (letterCount > 25 && !CTRLModifier)
                     {

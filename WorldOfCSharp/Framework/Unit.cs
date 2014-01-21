@@ -21,7 +21,7 @@ namespace WorldOfCSharp
             this.unitSpeed = unitSpeed;
             this.uniqueID = UniqueIDGenerator();
             this.unitStats = new UnitStats(1, 1, 1, 1, 1);
-            this.inventory = new Inventory(this.equipment = new Equipment());
+            this.inventory = new Inventory(this.equipment = new Equipment(this));
             this.equipment.InventoryConnected = this.inventory;
             this.currentHP = this.unitStats.HitPoints;
         }
@@ -138,46 +138,52 @@ namespace WorldOfCSharp
         }
         #endregion
         
-        public void SumStats()
+        public void AddStats(Item item)
         {
-            if (this.Equipment.HasChanged)
-            for (int i = 0; i < this.equipment.IsSlotUsed.Length; i++)
-            {
-                if (this.equipment.IsSlotUsed[i])
-                {
-                    //SHITTY STATS, RE DO THEM!!!!!!!!!
-                //    if (this.equipment[i].ItemStats.Strength != 0)
-                //        this.unitStats.Strength += this.equipment[i].ItemStats.Strength;
-
-                //    if (this.equipment[i].ItemStats.Stamina != 0)
-                //        this.unitStats.Stamina += this.equipment[i].ItemStats.Stamina;
-
-                //    if (this.equipment[i].ItemStats.Spirit != 0)
-                //        this.unitStats.Spirit += this.equipment[i].ItemStats.Spirit;
-
-                //    if (this.equipment[i].ItemStats.Intelligence != 0)
-                //        this.unitStats.Intelligence += this.equipment[i].ItemStats.Intelligence;
-
-                //    if (this.equipment[i].ItemStats. != 0)
-                //        this.unitStats.Stamina += this.equipment[i].ItemStats.Stamina;
-
-                //    if (this.equipment[i].ItemStats.Spirit != 0)
-                //        this.unitStats.Spirit += this.equipment[i].ItemStats.Spirit;
-
-                //    if (this.equipment[i].ItemStats.Strength != 0)
-                //        this.unitStats.Strength += this.equipment[i].ItemStats.Strength;
-
-                //    if (this.equipment[i].ItemStats.Stamina != 0)
-                //        this.unitStats.Stamina += this.equipment[i].ItemStats.Stamina;
-
-                //    if (this.equipment[i].ItemStats.Spirit != 0)
-                //        this.unitStats.Spirit += this.equipment[i].ItemStats.Spirit;
-                }
-            }
+            if (item.ItemStats.Strength != 0)
+                this.unitStats.Strength += item.ItemStats.Strength;
+                    
+            if (item.ItemStats.Stamina != 0)
+                this.unitStats.Stamina += item.ItemStats.Stamina;
+                    
+            if (item.ItemStats.Spirit != 0)
+                this.unitStats.Spirit += item.ItemStats.Spirit;
+                    
+            if (item.ItemStats.Intelligence != 0)
+                this.unitStats.Intelligence += item.ItemStats.Intelligence;
+                    
+            if (item.ItemStats.Dexterity != 0)
+                this.unitStats.Dexterity += item.ItemStats.Dexterity;
+                    
+            if (item.ItemStats.Accuracy != 0)
+                this.unitStats.Accuracy += item.ItemStats.Accuracy;
+                    
+            if (item.ItemStats.Speed != 0)
+                this.unitSpeed += item.ItemStats.Speed;
         }
 
-        public void DeductStats(Item item)
+        public void RemoveStats(Item item)
         {
+            if (item.ItemStats.Strength != 0)
+                this.unitStats.Strength -= item.ItemStats.Strength;
+
+            if (item.ItemStats.Stamina != 0)
+                this.unitStats.Stamina -= item.ItemStats.Stamina;
+
+            if (item.ItemStats.Spirit != 0)
+                this.unitStats.Spirit -= item.ItemStats.Spirit;
+
+            if (item.ItemStats.Intelligence != 0)
+                this.unitStats.Intelligence -= item.ItemStats.Intelligence;
+
+            if (item.ItemStats.Dexterity != 0)
+                this.unitStats.Dexterity -= item.ItemStats.Dexterity;
+
+            if (item.ItemStats.Accuracy != 0)
+                this.unitStats.Accuracy -= item.ItemStats.Accuracy;
+
+            if (item.ItemStats.Speed != 0)
+                this.unitSpeed -= item.ItemStats.Speed;
         }
         
         public string ItemInSlot(EquipSlot slot)
