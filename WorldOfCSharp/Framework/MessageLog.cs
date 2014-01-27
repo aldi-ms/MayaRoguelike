@@ -110,7 +110,7 @@ namespace WorldOfCSharp
             PrintMessageLog();
         }
 
-        public void ShowLogFile(PlayerCharacter pc)
+        public void ShowLogFile(Unit pc)
         {
             //create a window
             Window logWindow = new Window(pc, "log");

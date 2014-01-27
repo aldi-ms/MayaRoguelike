@@ -123,7 +123,7 @@ namespace WorldOfCSharp
         public override string ToString()
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            sb.AppendFormat("Game object: {0}\nChar: \'{1}\'\nCoordinates: {2}\nFlags: {3}", this.Name, this.VisualChar, this.coord, Convert.ToString(this.flags, 2));
+            sb.AppendFormat("Game object: <{0}>\nChar: <{1}>\nCoordinates: <{2}>\nFlags: <{3}>", this.Name, this.VisualChar, this.coord, Convert.ToString(this.flags, 2));
             return sb.ToString();
         }
     }

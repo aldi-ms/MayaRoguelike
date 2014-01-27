@@ -8,7 +8,7 @@ namespace WorldOfCSharp
     public sealed class Window
     {
         private const string TEMP_SAVE_FILE = @"../../saves/temp.wocs";
-        private PlayerCharacter pc;
+        private Unit pc;
         private string title;
         private int windowBottomLeftX = 0;
         private int windowBottomLeftY = Globals.CONSOLE_HEIGHT - (Globals.CONSOLE_HEIGHT - Globals.GAME_FIELD_BOTTOM_RIGHT.Y);
@@ -18,10 +18,10 @@ namespace WorldOfCSharp
         private Coordinate topLeft, topRight, bottomLeft, bottomRight;  //window frame coordinates!
         private int linePosition;
 
-        //constructor using the default values, window over the whole game field
-        public Window(PlayerCharacter pc, string title)
+        //Default Constructor (creates window over the game field)
+        public Window(Unit pc, string title)
         {
-            this.pc = new PlayerCharacter(pc);
+            this.pc = new Unit(pc);
             this.title = title.ToUpper();
 
             //save window coordinates
@@ -32,10 +32,10 @@ namespace WorldOfCSharp
             this.linePosition = this.TopLeft.Y + 2;
         }
         
-        //constructor for manually setting the values
-        public Window(PlayerCharacter pc, string title, int windowBottomLeftX, int windowBottomLeftY, int windowWidth, int windowHeight)
+        //Manually set Window values
+        public Window(Unit pc, string title, int windowBottomLeftX, int windowBottomLeftY, int windowWidth, int windowHeight)
         {
-            this.pc = new PlayerCharacter(pc);
+            this.pc = new Unit(pc);
             this.title = title.ToUpper();
 
             if (windowBottomLeftX <= Globals.CONSOLE_WIDTH && windowBottomLeftX >= 0)
@@ -81,6 +81,7 @@ namespace WorldOfCSharp
             this.linePosition = this.TopLeft.Y + 1;
         }
 
+        #region WindowSize&Coordinates
         public Coordinate TopLeft
         {
             get { return this.topLeft; }
@@ -120,6 +121,7 @@ namespace WorldOfCSharp
         {
             get { return this.windowMargin; }
         }
+        #endregion
 
         public void Show()
         {
@@ -153,9 +155,9 @@ namespace WorldOfCSharp
         }
 
         //temporarily save the game to file other than the main save
-        private void SaveGame(PlayerCharacter pc)    //pause
+        private void SaveGame(Unit pc)    //pause
         {
-            SaveLoadTools.SaveGame(pc, TEMP_SAVE_FILE);
+            SaveLoadTools.SaveGame(TEMP_SAVE_FILE);
         }
 
         //draw the window over the game field
@@ -214,7 +216,7 @@ namespace WorldOfCSharp
         public void CloseWindow()
         {
             ConsoleTools.Clear(windowBottomLeftX, windowBottomLeftY, windowWidth, windowHeight);
-            PlayerCharacter pc = new PlayerCharacter(SaveLoadTools.LoadSavedPlayerCharacter(TEMP_SAVE_FILE));
+            Unit pc = new Unit(SaveLoadTools.LoadUnits(TEMP_SAVE_FILE));
             GameCell[,] gameField = MapTools.LoadMap(SaveLoadTools.LoadSavedMapName(TEMP_SAVE_FILE));       //load map<<<<<<<<
             File.Delete(TEMP_SAVE_FILE);
             GameEngine.VisualEngine.PrintFOVMap(pc.X, pc.Y);

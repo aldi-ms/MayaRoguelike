@@ -55,7 +55,7 @@
     <Compile Include="Framework\GameCell.cs" />
     <Compile Include="Framework\GameObject.cs" />
     <Compile Include="Framework\GameTime.cs" />
-    <Compile Include="GameUI.cs" />
+    <Compile Include="UIElements.cs" />
     <Compile Include="Framework\Inventory.cs" />
     <Compile Include="Framework\RightInfoPane.cs" />
     <Compile Include="Framework\RNG.cs" />
@@ -69,8 +69,6 @@
     <Compile Include="Framework\MessageLog.cs" />
     <Compile Include="Framework\MonthsAndDaysEnum.cs" />
     <Compile Include="Framework\MRPAS.cs" />
-    <Compile Include="NonPlayerCharacter.cs" />
-    <Compile Include="PlayerCharacter.cs" />
     <Compile Include="Framework\SaveLoadTools.cs" />
     <Compile Include="Framework\ShadowCasting.cs" />
     <Compile Include="Framework\Stats.cs" />

@@ -5,16 +5,16 @@ namespace WorldOfCSharp
 {
     public struct StatStruct
     {
-        private double stat;
+        private int stat;
         private string statName;
 
-        public StatStruct(double stat, string statName)
+        public StatStruct(int stat, string statName)
         {
             this.stat = stat;
             this.statName = statName;
         }
 
-        public double Stat
+        public int Stat
         {
             get { return this.stat; }
             set { this.stat = value; }
@@ -30,15 +30,19 @@ namespace WorldOfCSharp
     public class UnitStats
     {
         public static readonly UnitStats MIN_STATS = new UnitStats(1, 1, 1, 1, 1);
-        //core rpg stats
-        private double strength;
-        private double dexterity;
-        private double stamina;
-        private double intelligence;
-        private double spirit;
-        private double hitPoints;
-        private double hpPerFive;
-        private double accuracy;
+        //RPG stats
+        private int strength;
+        private int dexterity;
+        private int stamina;
+        private int intelligence;
+        private int spirit;
+        private int currentHP;
+        private int actionSpeed = 10;
+        //derived rpg stats
+        private int maxHP;
+        private int HP5;
+        private int accuracy;
+        private int energy = 50;
         
         public UnitStats(int strength = 1, int dexterity = 1, int stamina = 1, int intelligence = 1, int spirit = 1)
         {
@@ -47,93 +51,125 @@ namespace WorldOfCSharp
             this.stamina = stamina;
             this.intelligence = intelligence;
             this.spirit = spirit;
-            CalcDerivedStats();
+            this.CalcDerivedStats();
+            this.currentHP = this.HitPoints;
         }
 
+        #region StatProperties
         //put limitations to who can touch the stats!
         public int Strength
         {
-            get { return (int)this.strength; }
+            get { return this.strength; }
             set
             {
                 this.strength = value;
-                CalcDerivedStats();
+                this.CalcDerivedStats();
             }
         }
 
         public int Dexterity
         {
-            get { return (int)this.dexterity; }
+            get { return this.dexterity; }
             set
             {
                 this.dexterity = value;
-                CalcDerivedStats();
+                this.CalcDerivedStats();
             }
         }
 
         public int Stamina
         {
-            get { return (int)this.stamina; }
+            get { return this.stamina; }
             set
             {
                 this.stamina = value;
-                CalcDerivedStats();
+                this.CalcDerivedStats();
             }
         }
 
         public int Intelligence
         {
-            get { return (int)this.intelligence; }
+            get { return this.intelligence; }
             set
             {
                 this.intelligence = value;
-                CalcDerivedStats();
+                this.CalcDerivedStats();
             }
         }
 
         public int Spirit
         {
-            get { return (int)this.spirit; }
+            get { return this.spirit; }
             set
             {
                 this.spirit = value;
-                CalcDerivedStats();
+                this.CalcDerivedStats();
             }
         }
 
         public int HitPoints
         {
-            get { return (int)this.hitPoints; }
-            set { this.hitPoints = value; }
+            get { return this.maxHP; }
+            set { this.maxHP = value; }
         }
 
         public int Accuracy
         {
-            get { return (int)this.accuracy; }
+            get { return this.accuracy; }
             set { this.accuracy = value; }
         }
 
         public int HPPerFive
         {
-            get { return (int)this.hpPerFive; }
+            get { return this.HP5; }
         }
+
+        public int CurrentHP
+        {
+            get { return this.currentHP; }
+            set
+            {
+                if (value <= this.HitPoints)
+                    this.currentHP = value;
+                else
+                    this.currentHP = this.HitPoints;
+            }
+        }
+
+        public int ActionSpeed
+        {
+            get { return this.actionSpeed; }
+            set { this.actionSpeed = value; }
+        }
+
+        public int Energy
+        {
+            get { return this.energy; }
+            set { this.energy = value; }
+        }
+        #endregion
 
         private void CalcDerivedStats()
         {
-            this.hitPoints = stamina * 10 + (strength + dexterity + intelligence + spirit) * 0.2;
-            this.hpPerFive = (stamina * 10 + (strength + dexterity + intelligence)) * 0.05 + spirit * 2;
+            this.maxHP = (int)(stamina * 10 + (strength + dexterity + intelligence + spirit) * 0.2);
+            this.HP5 = (int)((stamina * 10 + (strength + dexterity + intelligence)) * 0.05 + spirit * 2);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0};{1};{2};{3};{4};{5};{6}", strength, dexterity, stamina, intelligence, spirit, currentHP, actionSpeed);
         }
     }
 
     public class ItemStats
     {
         //core rpg stats
-        private double strength;
-        private double dexterity;
-        private double stamina;
-        private double intelligence;
-        private double spirit;
-        private double hitPoints;
+        private int strength;
+        private int dexterity;
+        private int stamina;
+        private int intelligence;
+        private int spirit;
+        private int hitPoints;
         private List<StatStruct> activeStats = new List<StatStruct>();
         //weapon fields
         private int numberOfDies;
@@ -230,6 +266,7 @@ namespace WorldOfCSharp
         public int HitPoints
         {
             get { return (int)this.hitPoints; }
+            private set { this.hitPoints = value; }
         }
 
         public int NumberOfDies

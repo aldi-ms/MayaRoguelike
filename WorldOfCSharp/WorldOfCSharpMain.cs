@@ -17,7 +17,7 @@ namespace WorldOfCSharp
             ConsoleTools.ClearAndResetConsole();
             Console.CursorVisible = false;
             
-            GameUI.MainMenu();
+            UIElements.MainMenu();
         }
     }
 }

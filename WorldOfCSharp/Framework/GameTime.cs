@@ -36,7 +36,7 @@ namespace WorldOfCSharp
                 if (value >= 60)
                 {
                     this.seconds = 0;
-                    Minutes++;
+                    this.Minutes++;
                 }
                 else
                 {
@@ -54,7 +54,7 @@ namespace WorldOfCSharp
                 if (value >= 60)
                 {
                     this.minutes = 0;
-                    Hour++;
+                    this.Hour++;
                 }
                 else
                 {
@@ -72,7 +72,7 @@ namespace WorldOfCSharp
                 if (value >= 24)
                 {
                     this.hour = 0;
-                    Day++;
+                    this.Day++;
                 }
                 else
                 {
@@ -90,7 +90,7 @@ namespace WorldOfCSharp
                 if (value > 20)
                 {
                     this.day = 1;
-                    Month++;
+                    this.Month++;
                 }
                 else
                 {
@@ -108,7 +108,7 @@ namespace WorldOfCSharp
                 if (value > 12)
                 {
                     this.month = 0;
-                    Year++;
+                    this.Year++;
                 }
                 else
                 {
@@ -126,7 +126,15 @@ namespace WorldOfCSharp
 
         public void Tick()
         {
-            Seconds++;
+            this.Seconds++;
+        }
+
+        public void Tick(int ticks)
+        {
+            for (int i = 0; i < ticks; i+=2)
+            {
+                this.Tick();
+            }
         }
 
         public string GetCurrentTime()

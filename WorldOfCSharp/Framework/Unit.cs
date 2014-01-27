@@ -5,35 +5,44 @@ namespace WorldOfCSharp
 {
     public class Unit : GameObject
     {
-        private int unitSpeed;
-        private int energy = 50;
-        private int uniqueID;
-        private UnitStats unitStats;
         private static List<int> listOfUnitIDs = new List<int>();
         private static MT19937.MersenneTwister mt = new MT19937.MersenneTwister();
+        private UnitStats unitStats;
         private Equipment equipment;
         private Inventory inventory;
-        private int currentHP = 0;
+        private int uniqueID = 0;
 
-        public Unit(int x, int y, int flags, int unitSpeed, char visualChar, ConsoleColor color, string name)
+        public Unit(int x, int y, int flags, char visualChar, ConsoleColor color, string name)
             : base(x, y, flags, visualChar, color, name)
         {
-            this.unitSpeed = unitSpeed;
-            this.uniqueID = UniqueIDGenerator();
+            if (uniqueID == 0)
+                this.uniqueID = UniqueIDGenerator();
             this.unitStats = new UnitStats(1, 1, 1, 1, 1);
             this.inventory = new Inventory(this.equipment = new Equipment(this));
             this.equipment.InventoryConnected = this.inventory;
-            this.currentHP = this.unitStats.HitPoints;
         }
 
-        public Unit(int x, int y, int flags, int unitSpeed, char visualChar, ConsoleColor color, string name, UnitStats unitStats)
+        public Unit(int x, int y, int flags, int unitSpeed, char visualChar, ConsoleColor color, string name, UnitStats stats)
             : base(x, y, flags, visualChar, color, name)
         {
-            this.unitStats = unitStats;
+            this.unitStats = stats;
         }
 
+        public Unit(int x, int y, int flags, char visualChar, ConsoleColor color, string name, int ID)
+            : this(x, y, flags, visualChar, color, name)
+        {
+            this.uniqueID = ID;
+        }
+
+        //public Unit(int x, int y, int flags, char visualChar, ConsoleColor color, string name, UnitStats stats, int ID)
+        //    : this(x, y, flags, visualChar, color, name)
+        //{
+        //    this.uniqueID = ID;
+        //    this.unitStats = stats;
+        //}
+
         public Unit(Unit unit)
-            : this(unit.X, unit.Y, unit.Flags, unit.unitSpeed, unit.VisualChar, unit.Color, unit.Name)
+            : this(unit.X, unit.Y, unit.Flags, unit.VisualChar, unit.Color, unit.Name)
         { }
 
         #region Unit Properties
@@ -45,14 +54,14 @@ namespace WorldOfCSharp
 
         public int Energy
         {
-            get { return this.energy; }
-            set { this.energy = value; }
+            get { return this.unitStats.Energy; }
+            set { this.unitStats.Energy = value; }
         }
 
         public int Speed
         {
-            get { return this.unitSpeed; }
-            set { this.unitSpeed = value; }
+            get { return this.unitStats.ActionSpeed; }
+            //set { this.unitSpeed = value; }
         }
 
         public Equipment Equipment
@@ -98,7 +107,7 @@ namespace WorldOfCSharp
             {
                 if (value < this.unitStats.HitPoints)
                 {
-                    this.currentHP = value;
+                    this.unitStats.CurrentHP = value;
                     GameEngine.MessageLog.SendMessage(string.Format("You are missing {0} HP.", this.unitStats.HitPoints - this.CurrentHP));
                 }
                 else if (value > this.unitStats.HitPoints)
@@ -111,12 +120,7 @@ namespace WorldOfCSharp
 
         public int CurrentHP
         {
-            get 
-            {
-                if (this.currentHP > this.HitPoints)
-                    this.currentHP = this.HitPoints;
-                return this.currentHP;
-            }
+            get { return this.unitStats.CurrentHP; }
             private set { }
         }
 
@@ -135,6 +139,11 @@ namespace WorldOfCSharp
         {
             get { return this.inventory; }
             set { this.inventory = value; }
+        }
+
+        public UnitStats Stats
+        {
+            get { return this.unitStats; }
         }
         #endregion
         
@@ -159,7 +168,7 @@ namespace WorldOfCSharp
                 this.unitStats.Accuracy += item.ItemStats.Accuracy;
                     
             if (item.ItemStats.Speed != 0)
-                this.unitSpeed += item.ItemStats.Speed;
+                this.unitStats.ActionSpeed += item.ItemStats.Speed;
         }
 
         public void RemoveStats(Item item)
@@ -183,7 +192,7 @@ namespace WorldOfCSharp
                 this.unitStats.Accuracy -= item.ItemStats.Accuracy;
 
             if (item.ItemStats.Speed != 0)
-                this.unitSpeed -= item.ItemStats.Speed;
+                this.unitStats.ActionSpeed -= item.ItemStats.Speed;
         }
         
         public string ItemInSlot(EquipSlot slot)
@@ -194,9 +203,9 @@ namespace WorldOfCSharp
         public void EffectsPerFive()
         {
             //HP regen
-            if (this.currentHP + this.unitStats.HPPerFive < this.HitPoints)
-                this.currentHP += this.unitStats.HPPerFive;
-            else this.currentHP = this.HitPoints;
+            if (this.unitStats.CurrentHP + this.unitStats.HPPerFive < this.HitPoints)
+                this.unitStats.CurrentHP += this.unitStats.HPPerFive;
+            else this.unitStats.CurrentHP = this.HitPoints;
         }
 
         internal protected void MakeAMove(Direction direction)
@@ -254,10 +263,6 @@ namespace WorldOfCSharp
                             }
                             else
                             {
-                                if (GameEngine.GameField[this.X - 1, this.Y].Unit != null)
-                                {
-                                    
-                                }
                                 if (this.VisualChar == '@') //keeping this just for savepoint & testing, make game save every X seconds, and remove this
                                 {
                                     GameEngine.CheckForEffect(this, this.X - 1, this.Y);
@@ -370,13 +375,6 @@ namespace WorldOfCSharp
                 }
             }
         }
-        
-        private int Attack()
-        {
-            //make checks (accuracy, critical, etc.)
-            return RNG.Roll(this.Equipment[(int)EquipSlot.MainHand].ItemStats.NumberOfDies, 
-                this.Equipment[(int)EquipSlot.MainHand].ItemStats.SidesPerDie);
-        }
 
         private int UniqueIDGenerator()
         {
@@ -396,7 +394,6 @@ namespace WorldOfCSharp
         private bool CheckIfLegalMove(int x, int y)
         {
             bool unit = false;
-
             if (!GameEngine.GameField[x, y].Terrain.GetFlag(1))
             {
                 if (GameEngine.GameField[x, y].Unit != null)
@@ -409,7 +406,6 @@ namespace WorldOfCSharp
                 else unit = true;
 
                 bool ingObj = false;
-
                 if (GameEngine.GameField[x, y].IngameObject != null)
                 {
                     if (!GameEngine.GameField[x, y].IngameObject.GetFlag(1))
@@ -421,6 +417,7 @@ namespace WorldOfCSharp
 
                 return unit && ingObj;
             }
+
             return false;
         }
     }

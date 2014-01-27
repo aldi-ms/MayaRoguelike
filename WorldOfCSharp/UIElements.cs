@@ -4,7 +4,7 @@ using System.Text;
 
 namespace WorldOfCSharp
 {
-    public static class GameUI
+    public static class UIElements
     {
         private static int maxLengthOption = 0;
 
@@ -51,7 +51,7 @@ namespace WorldOfCSharp
             while (key.KeyChar != 'n' || key.KeyChar != 'l');
         }
 
-        public static string NewCharacterName()
+        public static string PromptForName()
         {
             Coordinate dialogCoords = new Coordinate(6 + maxLengthOption, 2);
             ConsoleTools.WriteOnPosition(">>>", dialogCoords.X, dialogCoords.Y);

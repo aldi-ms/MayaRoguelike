@@ -15,6 +15,7 @@ namespace WorldOfCSharp
         private static VisualEngine VEngine;
         private static GameTime gameTime = new GameTime();
         private static RightInfoPane rightInfoPane;
+        private static int ticks = 0;       //use bigger integer type!
 
         public static VisualEngine VisualEngine
         {
@@ -48,6 +49,11 @@ namespace WorldOfCSharp
             get { return rightInfoPane; }
         }
 
+        public static int Ticks
+        {
+            get { return ticks; }
+            set { ticks = value; }
+        }
 
         public static void CheckForEffect(Unit unit, int objX, int objY)
         {
@@ -59,8 +65,11 @@ namespace WorldOfCSharp
                     {
                             //add hit/walk related objects+events here
                         case "savepoint":
-                            SaveLoadTools.SaveGame(unit);
-                            MessageLog.SendMessage("Game Saved.");
+                            if (unit.GetFlag(4))
+                            {
+                                SaveLoadTools.SaveGame();
+                                MessageLog.SendMessage("Game Saved.");
+                            }
                             break;
                         default:
                             break;
@@ -71,9 +80,9 @@ namespace WorldOfCSharp
         
         public static void New()
         {
-            string pcName = GameUI.NewCharacterName();
+            string pcName = UIElements.PromptForName();
 
-            GameUI.InGameUI();
+            UIElements.InGameUI();
 
             messageLog = new MessageLog(0, Globals.CONSOLE_HEIGHT - 1, Globals.GAME_FIELD_BOTTOM_RIGHT.X,
                 (Globals.CONSOLE_HEIGHT - (Globals.GAME_FIELD_BOTTOM_RIGHT.Y + 1)), true);
@@ -81,21 +90,22 @@ namespace WorldOfCSharp
             MessageLog.DeleteLog();
 
             gameField = MapTools.LoadMap(SaveLoadTools.LoadSavedMapName());       //load map<<<<<<<<
-            PlayerCharacter pc = new PlayerCharacter(10, 10, pcName);
+            Unit pc = new Unit(10, 10, 3, '@', ConsoleColor.White, pcName);
+            pc.SetFlag(4, true);
             
             Initialize(pc);
         }
         
         public static void Load()
         {
-            GameUI.InGameUI();
+            UIElements.InGameUI();
 
             messageLog = new MessageLog(0, Globals.CONSOLE_HEIGHT - 1, Globals.GAME_FIELD_BOTTOM_RIGHT.X,
                 (Globals.CONSOLE_HEIGHT - (Globals.GAME_FIELD_BOTTOM_RIGHT.Y + 1)), true);
             MessageLog.SendMessage("Message log initialized.");
 
             gameField = MapTools.LoadMap(SaveLoadTools.LoadSavedMapName());       //load map<<<<<<<<
-            PlayerCharacter pc = SaveLoadTools.LoadSavedPlayerCharacter();
+            Unit pc = SaveLoadTools.LoadUnits();
             
             Initialize(pc);
         }
@@ -106,13 +116,13 @@ namespace WorldOfCSharp
         }
 
         //!!!POTENTIAL BUG!!! REMOVES THE UNIT AFTER TimeTick() FOREACH HAS FINISHED
-        //do NOT use for a "kill" method
+        //do NOT use for killing a unit!
         public static void RemoveUnit(Unit unit)
         {
             removedUnits.Add(unit);
         }
 
-        private static void Initialize(PlayerCharacter pc)
+        private static void Initialize(Unit pc)
         {
             rightInfoPane = new RightInfoPane(pc);
 
@@ -122,13 +132,13 @@ namespace WorldOfCSharp
             TimeTick(pc);
         }
 
-        private static void TimeTick(PlayerCharacter pc)
+        private static void TimeTick(Unit pc)
         {
             Units.Clear();
             AddUnit(pc);
 
             bool loop = true;
-            int ticks = 0;
+            int energyCost = 0;
 
             while (loop)
             {
@@ -159,14 +169,13 @@ namespace WorldOfCSharp
                     unit.Energy += unit.Speed;
                     if (unit.Energy >= 100)
                     {
-                        int energyCost = 0;
-                        if (unit.UniqueID != pc.UniqueID)
-                        {
-                            energyCost = AI.ArtificialIntelligence.DrunkardWalk(unit);
-                        }
-                        else if (unit.UniqueID == pc.UniqueID)
+                        if (unit.GetFlag(4))
                         {
                             energyCost = PlayerControl(pc);
+                        }
+                        else 
+                        {
+                            energyCost = AI.ArtificialIntelligence.DrunkardWalk(unit);
                         }
                         unit.Energy = unit.Energy - (unit.Speed + energyCost);
                     }
@@ -174,7 +183,7 @@ namespace WorldOfCSharp
             }
         }
         
-        private static int PlayerControl(PlayerCharacter pc)
+        private static int PlayerControl(Unit pc)
         {
             bool loop = true;
             while (loop)
@@ -252,7 +261,7 @@ namespace WorldOfCSharp
 
                         case ConsoleKey.Escape:
                             loop = false;
-                            GameUI.MainMenu();
+                            UIElements.MainMenu();
                             return 0;
 
                         default:
@@ -268,7 +277,7 @@ namespace WorldOfCSharp
             return 100;
         }
 
-        private static void ShowInventoryWindow(PlayerCharacter pc)
+        private static void ShowInventoryWindow(Unit pc)
         {
             int letterCount = 0;
             bool CTRLModifier = false;
