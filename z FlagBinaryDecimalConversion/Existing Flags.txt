@@ -6,3 +6,4 @@
 1 – is collidable
 2 - has effect
 3 - isTransparent
+4 - isPlayerControl
