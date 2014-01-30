@@ -252,7 +252,7 @@ namespace WorldOfCSharp
                             unit.Stats.Stamina = int.Parse(stamina.ToString());
                             unit.Stats.Intelligence = int.Parse(intelligence.ToString());
                             unit.Stats.Spirit = int.Parse(spirit.ToString());
-                            unit.Stats.CurrentHP = int.Parse(currentHP.ToString());
+                            unit.Stats.CurrentHitPoints = int.Parse(currentHP.ToString());
                             unit.Stats.ActionSpeed = int.Parse(actionSpeed.ToString());
 
                             GameEngine.AddUnit(unit);

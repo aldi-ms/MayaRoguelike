@@ -33,21 +33,21 @@ namespace WorldOfCSharp
 
         private void ShowHPBar(Unit unit)
         {
-            hitPointsLabel = string.Format("{0}/{1} ", unit.CurrentHP, unit.HitPoints);
+            hitPointsLabel = string.Format("{0}/{1} ", unit.Stats.CurrentHitPoints, unit.Stats.MaxHitPoints);
             ConsoleTools.WriteOnPosition(hitPointsLabel.ToString(), topRight.X + HIT_POINTS_STRING.Length, topRight.Y + 2, ConsoleColor.Cyan);
 
-            double hitPointsPerCell = (double)unit.HitPoints / (double)HPBarLength;
-            hitPointsBar.Append('\u2588', (int)(unit.CurrentHP / hitPointsPerCell));
+            double hitPointsPerCell = (double)unit.Stats.MaxHitPoints / (double)HPBarLength;
+            hitPointsBar.Append('\u2588', (int)(unit.Stats.CurrentHitPoints / hitPointsPerCell));
             hitPointsBar.Append(' ', Globals.CONSOLE_WIDTH - (topRight.X + HIT_POINTS_STRING.Length + hitPointsLabel.Length + hitPointsBar.Length));
 
             ConsoleColor color = ConsoleColor.Red;
-            if (((double)unit.CurrentHP / (double)unit.HitPoints) > 0.2)
+            if (((double)unit.Stats.CurrentHitPoints / (double)unit.Stats.MaxHitPoints) > 0.2)
                 color = ConsoleColor.DarkYellow;
-            if (((double)unit.CurrentHP / (double)unit.HitPoints) > 0.5)
+            if (((double)unit.Stats.CurrentHitPoints / (double)unit.Stats.MaxHitPoints) > 0.5)
                 color = ConsoleColor.Yellow;
-            if (((double)unit.CurrentHP / (double)unit.HitPoints) > 0.7)
+            if (((double)unit.Stats.CurrentHitPoints / (double)unit.Stats.MaxHitPoints) > 0.7)
                 color = ConsoleColor.Green;
-            if (((double)unit.CurrentHP / (double)unit.HitPoints) > 0.9)
+            if (((double)unit.Stats.CurrentHitPoints / (double)unit.Stats.MaxHitPoints) > 0.9)
                 color = ConsoleColor.DarkGreen;
             
             ConsoleTools.WriteOnPosition(hitPointsBar.ToString(), topRight.X + HIT_POINTS_STRING.Length + hitPointsLabel.Length, topRight.Y + 2, color);

@@ -51,9 +51,8 @@ namespace WorldOfCSharp
                 {
                     return inGObj;
                 }
-                else throw new ArgumentException("Search does not find such in-game object in the database.");
             }
-            return new IngameObject("eff off", 0, ' ', ConsoleColor.Black);
+            throw new ArgumentException("Search does not find such in-game object in the database.");
         }
 
         private static List<TerrainType> LoadTerrain()

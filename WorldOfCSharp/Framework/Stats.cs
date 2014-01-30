@@ -52,7 +52,7 @@ namespace WorldOfCSharp
             this.intelligence = intelligence;
             this.spirit = spirit;
             this.CalcDerivedStats();
-            this.currentHP = this.HitPoints;
+            this.currentHP = this.MaxHitPoints;
         }
 
         #region StatProperties
@@ -107,7 +107,7 @@ namespace WorldOfCSharp
             }
         }
 
-        public int HitPoints
+        public int MaxHitPoints
         {
             get { return this.maxHP; }
             set { this.maxHP = value; }
@@ -124,15 +124,15 @@ namespace WorldOfCSharp
             get { return this.HP5; }
         }
 
-        public int CurrentHP
+        public int CurrentHitPoints
         {
             get { return this.currentHP; }
             set
             {
-                if (value <= this.HitPoints)
+                if (value <= this.MaxHitPoints)
                     this.currentHP = value;
                 else
-                    this.currentHP = this.HitPoints;
+                    this.currentHP = this.MaxHitPoints;
             }
         }
 

@@ -33,106 +33,22 @@ namespace WorldOfCSharp
         {
             this.uniqueID = ID;
         }
-
-        //public Unit(int x, int y, int flags, char visualChar, ConsoleColor color, string name, UnitStats stats, int ID)
-        //    : this(x, y, flags, visualChar, color, name)
-        //{
-        //    this.uniqueID = ID;
-        //    this.unitStats = stats;
-        //}
-
+        
         public Unit(Unit unit)
             : this(unit.X, unit.Y, unit.Flags, unit.VisualChar, unit.Color, unit.Name)
         { }
 
-        #region Unit Properties
+        #region UnitProperties
 
         public int UniqueID
         {
             get { return this.uniqueID; }
         }
 
-        public int Energy
-        {
-            get { return this.unitStats.Energy; }
-            set { this.unitStats.Energy = value; }
-        }
-
-        public int Speed
-        {
-            get { return this.unitStats.ActionSpeed; }
-            //set { this.unitSpeed = value; }
-        }
-
         public Equipment Equipment
         {
             get { return this.equipment; }
             set { this.equipment = value; }
-        }
-                
-        public int Strength
-        {
-            get { return this.unitStats.Strength; }
-            set { this.unitStats.Strength = value; }
-        }
-
-        public int Dexterity
-        {
-            get { return this.unitStats.Dexterity; }
-            set { this.unitStats.Dexterity = value; }
-        }
-
-        public int Stamina
-        {
-            get { return this.unitStats.Stamina; }
-            set { this.unitStats.Stamina = value; }
-        }
-
-        public int Intelligence
-        {
-            get { return this.unitStats.Intelligence; }
-            set { this.unitStats.Intelligence = value; }
-        }
-
-        public int Spirit
-        {
-            get { return this.unitStats.Spirit; }
-            set { this.unitStats.Spirit = value; }
-        }
-
-        public int HitPoints
-        {
-            get { return this.unitStats.HitPoints; }
-            set 
-            {
-                if (value < this.unitStats.HitPoints)
-                {
-                    this.unitStats.CurrentHP = value;
-                    GameEngine.MessageLog.SendMessage(string.Format("You are missing {0} HP.", this.unitStats.HitPoints - this.CurrentHP));
-                }
-                else if (value > this.unitStats.HitPoints)
-                {
-                    GameEngine.MessageLog.SendMessage(string.Format("You recovered {0} HP.", value - this.unitStats.HitPoints));
-                }
-                this.unitStats.HitPoints = value;
-            }
-        }
-
-        public int CurrentHP
-        {
-            get { return this.unitStats.CurrentHP; }
-            private set { }
-        }
-
-        public int HPPerFive
-        {
-            get { return this.unitStats.HPPerFive; }
-        }
-
-        public int Accuracy
-        {
-            get { return this.unitStats.Accuracy; }
-            set { this.unitStats.Accuracy = value; }
         }
 
         public Inventory Inventory
@@ -203,9 +119,9 @@ namespace WorldOfCSharp
         public void EffectsPerFive()
         {
             //HP regen
-            if (this.unitStats.CurrentHP + this.unitStats.HPPerFive < this.HitPoints)
-                this.unitStats.CurrentHP += this.unitStats.HPPerFive;
-            else this.unitStats.CurrentHP = this.HitPoints;
+            if (this.unitStats.CurrentHitPoints + this.unitStats.HPPerFive < this.Stats.MaxHitPoints)
+                this.unitStats.CurrentHitPoints += this.unitStats.HPPerFive;
+            else this.unitStats.CurrentHitPoints = this.Stats.MaxHitPoints;
         }
 
         internal protected void MakeAMove(Direction direction)

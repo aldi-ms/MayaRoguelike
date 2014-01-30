@@ -166,8 +166,8 @@ namespace WorldOfCSharp
 
                 foreach (Unit unit in Units)
                 {
-                    unit.Energy += unit.Speed;
-                    if (unit.Energy >= 100)
+                    unit.Stats.Energy += unit.Stats.ActionSpeed;
+                    if (unit.Stats.Energy >= 100)
                     {
                         if (unit.GetFlag(4))
                         {
@@ -177,7 +177,7 @@ namespace WorldOfCSharp
                         {
                             energyCost = AI.ArtificialIntelligence.DrunkardWalk(unit);
                         }
-                        unit.Energy = unit.Energy - (unit.Speed + energyCost);
+                        unit.Stats.Energy = unit.Stats.Energy - (unit.Stats.ActionSpeed + energyCost);
                     }
                 }
             }
@@ -220,7 +220,7 @@ namespace WorldOfCSharp
                             return 100;
 
                         case ConsoleKey.I:
-                            ShowInventoryWindow(pc);
+                            OpenInventory(pc);
                             return 100;
 
                         case ConsoleKey.UpArrow:
@@ -277,49 +277,10 @@ namespace WorldOfCSharp
             return 100;
         }
 
-        private static void ShowInventoryWindow(Unit pc)
+        private static void OpenInventory(Unit pc)
         {
-            int letterCount = 0;
-            bool CTRLModifier = false;
-            int letterSize = 65;
-            //show equipment/inventory window
             Window invWindow = new Window(pc, "inventory");
-            Item[] itemsOwned = new Item[pc.Inventory.Count + pc.Equipment.Count];
-            int itemsCount = 0;
-
-            invWindow.Show();
-
-            invWindow.WriteLine("Equipment:", ConsoleColor.Red);
-            for (int i = 0; i < pc.Equipment.IsSlotUsed.Length; i++)
-            {
-                if (pc.Equipment.IsSlotUsed[i] == true)
-                {
-                    itemsOwned[itemsCount++] = pc.Equipment[i];
-                    invWindow.Write(string.Format("{0} - {1}: {2}", (char)(pc.Equipment[i].Slot + letterSize), pc.Equipment[i].Slot, pc.Equipment[i].ToString()), ConsoleColor.Yellow);
-                }
-            }
-
-            letterCount = 0;
-            letterSize = 97;
-            invWindow.WriteLine("Inventory:", ConsoleColor.Red);
-            invWindow.Write("");
-            for (int i = 0; i < pc.Inventory.IsSlotUsed.Length; i++)
-            {
-                if (pc.Inventory.IsSlotUsed[i] == true)
-                {
-                    itemsOwned[itemsCount++] = pc.Inventory[i];
-                    if (!CTRLModifier)
-                        invWindow.Write(string.Format("{0} - {1}", (char)(pc.Inventory[i].InventorySlot + letterSize), pc.Inventory[i].ToString()), ConsoleColor.White);
-                    else
-                        invWindow.Write(string.Format("^{0} - {1}", (char)(pc.Inventory[i].InventorySlot + letterSize), pc.Inventory[i].ToString()), ConsoleColor.White);
-
-                    if (letterCount > 25 && !CTRLModifier)
-                    {
-                        letterCount = 0;
-                        CTRLModifier = true;
-                    }
-                }
-            }
+            ShowWindow(pc, invWindow);
 
             ConsoleKeyInfo key;
             bool loop = true;
@@ -364,6 +325,50 @@ namespace WorldOfCSharp
             } while(loop);
         }
 
+        private static void ShowWindow(Unit unit, Window invWindow)
+        {
+            int letterCount = 0;
+            bool CTRLMod = false;
+            int letterSize = 65;
+            //show equipment/inventory window
+            Item[] itemsOwned = new Item[unit.Inventory.Count + unit.Equipment.Count];
+            int itemsCount = 0;
+
+            invWindow.Show();
+
+            invWindow.WriteLine("Equipment:", ConsoleColor.Red);
+            for (int i = 0; i < unit.Equipment.IsSlotUsed.Length; i++)
+            {
+                if (unit.Equipment.IsSlotUsed[i] == true)
+                {
+                    itemsOwned[itemsCount++] = unit.Equipment[i];
+                    invWindow.Write(string.Format("{0} - {1}: {2}", (char)(unit.Equipment[i].Slot + letterSize), unit.Equipment[i].Slot, unit.Equipment[i].ToString()), ConsoleColor.Yellow);
+                }
+            }
+
+            letterCount = 0;
+            letterSize = 97;
+            invWindow.WriteLine("Inventory:", ConsoleColor.Red);
+            invWindow.Write("");
+            for (int i = 0; i < unit.Inventory.IsSlotUsed.Length; i++)
+            {
+                if (unit.Inventory.IsSlotUsed[i] == true)
+                {
+                    itemsOwned[itemsCount++] = unit.Inventory[i];
+                    if (!CTRLMod)
+                        invWindow.Write(string.Format("{0} - {1}", (char)(unit.Inventory[i].InventorySlot + letterSize), unit.Inventory[i].ToString()), ConsoleColor.White);
+                    else
+                        invWindow.Write(string.Format("^{0} - {1}", (char)(unit.Inventory[i].InventorySlot + letterSize), unit.Inventory[i].ToString()), ConsoleColor.White);
+
+                    if (letterCount > 25 && !CTRLMod)
+                    {
+                        letterCount = 0;
+                        CTRLMod = true;
+                    }
+                }
+            }
+        }
+
         private static void ItemActions(Unit unit, Item item)
         {
             if (item != null)
@@ -377,10 +382,12 @@ namespace WorldOfCSharp
                         case ConsoleKey.D:
                             unit.Equipment.Unequip(item);
                             GameField[unit.X, unit.Y].Item = unit.Inventory.DropItem(item);
+                            RefreshInventoryScreen(unit);
                             MessageLog.SendMessage(string.Format("{0} ({1}) dropped.", item.ToString(), item.Slot));
                             break;
                         case ConsoleKey.T:
                             unit.Equipment.Unequip(item);
+                            RefreshInventoryScreen(unit);
                             MessageLog.SendMessage(string.Format("You are taking off {0} ({1}).", item.ToString(), item.Slot));
                             break;
                         default:
@@ -398,10 +405,12 @@ namespace WorldOfCSharp
                     {
                         case ConsoleKey.D:
                             GameField[unit.X, unit.Y].Item = unit.Inventory.DropItem(item);
+                            RefreshInventoryScreen(unit);
                             MessageLog.SendMessage(string.Format("{0} dropped.", item.ToString()));
                             break;
                         case ConsoleKey.E:
                             unit.Equipment.EquipItem(item);
+                            RefreshInventoryScreen(unit);
                             MessageLog.SendMessage(string.Format("Equipping {0} to {1}.", item.ToString(), item.Slot));
                             break;
                         default:
@@ -410,6 +419,19 @@ namespace WorldOfCSharp
                     }
                 }
         }
+
+        private static void RefreshInventoryScreen(Unit unit)
+        {
+            for (int i = 0; i < Window.ActiveWindows.Count; i++)
+            {
+                if (Window.ActiveWindows[i].Title == "INVENTORY")
+                {
+                    Window.ActiveWindows[i].ResetLinePosition();
+                    ShowWindow(unit, Window.ActiveWindows[i]);
+                }
+            }
+        }
+
 
         //Method to fill the whole map with a single type of terrain.
         //public static void FillGameField(TerrainType terrain)

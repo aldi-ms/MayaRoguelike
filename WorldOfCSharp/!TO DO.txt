@@ -1,15 +1,17 @@
-﻿1. Make Inventory window changes happen immediately.
+﻿1. Add Equipment/Inventory to save method.
+1.1. Save items on ground to the map.
 
 2. Implement options to scroll the log history.
 
-3. Remove stats properties from unit, they should be accessed through UnitStats.
+3. Make each map cell able to hold multiple items.
+3.1. Listing items / Selecting an item from a cell, holding multiple items.
 
-4. 
+4. Fix save issues where the saved unit/info is dublicated, and wrong info is saved / old info is not deleted.
 
-5. Implement combat
-5.1. Move all combat related actions/code to CombatEngine class.
+5. Implement CombatEngine class, to do everything combat-related.
 
 6. Make all array initializations (esp. in ItemType and VisualEngine) load from file/s.
+6.1. Use databases for items, units, terrain, ingame objects, etc.
 
 7. 
 
