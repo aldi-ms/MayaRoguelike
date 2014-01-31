@@ -128,167 +128,62 @@ namespace WorldOfCSharp
         {
             if (this.GetFlag(0))
             {
+                int deltaX = 0;
+                int deltaY = 0;
+
                 switch (direction)
                 {
                     case Direction.North:
-                        if ((this.Y - 1) >= 0)
-                        {
-                            if (CheckIfLegalMove(this.X, this.Y - 1))
-                            {
-                                GameEngine.VisualEngine.ClearGameObject(this);
-                                this.Y--;
-                                GameEngine.VisualEngine.PrintUnit(this);
-                            }
-                            else
-                            {
-                                if (this.VisualChar == '@')
-                                {
-                                    GameEngine.CheckForEffect(this, this.X, this.Y - 1);
-                                }
-                            }
-                        }
+                        deltaY = -1;
                         break;
 
                     case Direction.South:
-                        if (this.Y + 1 < Globals.GAME_FIELD_BOTTOM_RIGHT.Y)
-                        {
-                            if (CheckIfLegalMove(this.X, this.Y + 1))
-                            {
-                                GameEngine.VisualEngine.ClearGameObject(this);
-                                this.Y++;
-                                GameEngine.VisualEngine.PrintUnit(this);
-                            }
-                            else
-                            {
-                                if (this.VisualChar == '@')
-                                {
-                                    GameEngine.CheckForEffect(this, this.X, this.Y + 1);
-                                }
-                            }
-                        }
+                        deltaY = 1;
                         break;
 
                     case Direction.West:
-                        if (this.X - 1 >= 0)
-                        {
-                            if (CheckIfLegalMove(this.X - 1, this.Y))
-                            {
-                                GameEngine.VisualEngine.ClearGameObject(this);
-                                this.X--;
-                                GameEngine.VisualEngine.PrintUnit(this);
-                            }
-                            else
-                            {
-                                if (this.VisualChar == '@') //keeping this just for savepoint & testing, make game save every X seconds, and remove this
-                                {
-                                    GameEngine.CheckForEffect(this, this.X - 1, this.Y);
-                                }
-                            }
-                        }
+                        deltaX = -1;
                         break;
 
                     case Direction.East:
-                        if (this.X + 1 < Globals.GAME_FIELD_BOTTOM_RIGHT.X)
-                        {
-                            if (CheckIfLegalMove(this.X + 1, this.Y))
-                            {
-                                GameEngine.VisualEngine.ClearGameObject(this);
-                                this.X++;
-                                GameEngine.VisualEngine.PrintUnit(this);
-                            }
-                            else
-                            {
-                                if (this.VisualChar == '@')
-                                {
-                                    GameEngine.CheckForEffect(this, this.X + 1, this.Y);
-                                }
-                            }
-                        }
+                        deltaX = 1;
                         break;
 
                     case Direction.NorthWest:
-                        if ((this.Y - 1) >= 0 && this.X - 1 >= 0)
-                        {
-                            if (CheckIfLegalMove(this.X - 1, this.Y - 1))
-                            {
-                                GameEngine.VisualEngine.ClearGameObject(this);
-                                this.Y--;
-                                this.X--;
-                                GameEngine.VisualEngine.PrintUnit(this);
-                            }
-                            else
-                            {
-                                if (this.VisualChar == '@')
-                                {
-                                    GameEngine.CheckForEffect(this, this.X - 1, this.Y - 1);
-                                }
-                            }
-                        }
+                        deltaX = -1;
+                        deltaY = -1;
                         break;
 
                     case Direction.NorthEast:
-                        if ((this.Y - 1) >= 0 && this.X + 1 < Globals.GAME_FIELD_BOTTOM_RIGHT.X)
-                        {
-                            if (CheckIfLegalMove(this.X + 1, this.Y - 1))
-                            {
-                                GameEngine.VisualEngine.ClearGameObject(this);
-                                this.Y--;
-                                this.X++;
-                                GameEngine.VisualEngine.PrintUnit(this);
-                            }
-                            else
-                            {
-                                if (this.VisualChar == '@')
-                                {
-                                    GameEngine.CheckForEffect(this, this.X + 1, this.Y - 1);
-                                }
-                            }
-                        }
+                        deltaX = 1;
+                        deltaY = -1;
                         break;
 
                     case Direction.SouthEast:
-                        if (this.Y + 1 < Globals.GAME_FIELD_BOTTOM_RIGHT.Y && this.X + 1 < Globals.GAME_FIELD_BOTTOM_RIGHT.X)
-                        {
-                            if (CheckIfLegalMove(this.X + 1, this.Y + 1))
-                            {
-                                GameEngine.VisualEngine.ClearGameObject(this);
-                                this.Y++;
-                                this.X++;
-                                GameEngine.VisualEngine.PrintUnit(this);
-                            }
-                            else
-                            {
-                                if (this.VisualChar == '@')
-                                {
-                                    GameEngine.CheckForEffect(this, this.X + 1, this.Y + 1);
-                                }
-                            }
-                        }
+                        deltaX = 1;
+                        deltaY = 1;
                         break;
 
                     case Direction.SouthWest:
-                        if (this.Y + 1 < Globals.GAME_FIELD_BOTTOM_RIGHT.Y && this.X - 1 >= 0)
-                        {
-                            if (CheckIfLegalMove(this.X - 1, this.Y + 1))
-                            {
-                                GameEngine.VisualEngine.ClearGameObject(this);
-                                this.Y++;
-                                this.X--;
-                                GameEngine.VisualEngine.PrintUnit(this);
-                            }
-                            else
-                            {
-                                if (this.VisualChar == '@')
-                                {
-                                    GameEngine.CheckForEffect(this, this.X - 1, this.Y + 1);
-                                }
-                            }
-                        }
+                        deltaX = -1;
+                        deltaY = 1;
                         break;
 
                     default:
                         break;
                 }
+
+                if (IsALegalMove(this.X + deltaX, this.Y + deltaY))
+                {
+                    GameEngine.VisualEngine.ClearGameObject(this);
+                    this.X += deltaX;
+                    this.Y += deltaY;
+                    GameEngine.VisualEngine.PrintUnit(this);
+                }
+                else
+                    if (!(this.X + deltaX < 0 || this.X + deltaX >= Globals.GAME_FIELD_BOTTOM_RIGHT.X ||
+                        this.Y + deltaY < 0 || this.Y + deltaY >= Globals.GAME_FIELD_BOTTOM_RIGHT.Y))
+                        GameEngine.CheckForEffect(this, this.X + deltaX, this.Y + deltaY);
             }
         }
 
@@ -307,8 +202,11 @@ namespace WorldOfCSharp
             } while (true);
         }
 
-        private bool CheckIfLegalMove(int x, int y)
+        private bool IsALegalMove(int x, int y)
         {
+            if (x < 0 || x >= Globals.GAME_FIELD_BOTTOM_RIGHT.X || y < 0 || y >= Globals.GAME_FIELD_BOTTOM_RIGHT.Y)
+                return false;
+
             bool unit = false;
             if (!GameEngine.GameField[x, y].Terrain.GetFlag(1))
             {

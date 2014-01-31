@@ -104,35 +104,35 @@ namespace WorldOfCSharp
             return '.';
         }
 
-        //Method to generate new map     
-        //public static void GenerateMapFile(GameCell[,] gameField)
-        //{
-        //    StringBuilder parseMap = new StringBuilder();
+             
+        public static void SaveMap(GameCell[,] gameField)
+        {
+            StringBuilder parseMap = new StringBuilder();
 
-        //    for (int x = 0; x < gameField.GetLength(0); x++)
-        //    {
-        //        for (int y = 0; y < gameField.GetLength(1); y++)
-        //        {
-        //            parseMap.AppendFormat("[{0};{1};{2}", gameField[x, y].Terrain.X, gameField[x, y].Terrain.Y, gameField[x, y].Terrain.VisualChar);
+            for (int x = 0; x < gameField.GetLength(0); x++)
+            {
+                for (int y = 0; y < gameField.GetLength(1); y++)
+                {
+                    parseMap.AppendFormat("[{0}", gameField[x, y].Terrain.X, gameField[x, y].Terrain.Y, gameField[x, y].Terrain.VisualChar);
 
-        //            if (gameField[x, y].IngameObject == null)
-        //            {
-        //                parseMap.Append("]");
-        //            }
-        //            else
-        //            {
-        //                parseMap.AppendFormat("<{0}>]", gameField[x, y].IngameObject.VisualChar);
-        //            }
-        //        }
-        //    }
+                    if (gameField[x, y].IngameObject == null)
+                    {
+                        parseMap.Append("]");
+                    }
+                    else
+                    {
+                        parseMap.AppendFormat("<{0}>]", gameField[x, y].IngameObject.VisualChar);
+                    }
+                }
+            }
 
-        //    StreamWriter sWriter = new StreamWriter(@"../../maps/testmap.wocm", false, encoding);
-        //    using (sWriter)
-        //    {
-        //        string nullString = null;
-        //        sWriter.Write(nullString);  //creates a new file, overwrites old
-        //        sWriter.Write(parseMap.ToString());
-        //    }
-        //}
+            StreamWriter sWriter = new StreamWriter(@"../../maps/testmap.wocm", false, encoding);
+            using (sWriter)
+            {
+                string nullString = null;
+                sWriter.Write(nullString);  //creates a new file, overwrites old
+                sWriter.Write(parseMap.ToString());
+            }
+        }
     }
 }

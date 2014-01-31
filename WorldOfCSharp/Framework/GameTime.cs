@@ -11,6 +11,7 @@ namespace WorldOfCSharp
         private int day;
         private int month;
         private int year;
+        private int ticks;
 
         public GameTime(int seconds, int minutes, int hour, int day, int month, int year)
         {
@@ -25,6 +26,13 @@ namespace WorldOfCSharp
         public GameTime()
             : this(0, 0, 0, 1, 1, 1)
         { }
+
+        public GameTime(int ticks)
+            : this()
+        {
+            this.Tick(ticks);
+            this.ticks = ticks;
+        }
 
         #region Properties. Always use these!
         public int Seconds
@@ -122,18 +130,26 @@ namespace WorldOfCSharp
             get { return this.year; }
             set { this.year = value; }
         }
+
+        public int Ticks
+        { 
+            get { return this.ticks; }
+        }
         #endregion
 
         public void Tick()
         {
-            this.Seconds++;
+            if (ticks % 2 == 0)
+                this.Seconds++;
+            this.ticks++;
         }
 
         public void Tick(int ticks)
         {
-            for (int i = 0; i < ticks; i+=2)
+            for (int i = 0; i < ticks / 2; i++)
             {
                 this.Tick();
+                this.ticks++;
             }
         }
 

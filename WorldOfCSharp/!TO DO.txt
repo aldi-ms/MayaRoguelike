@@ -3,8 +3,7 @@
 
 2. Implement options to scroll the log history.
 
-3. Make each map cell able to hold multiple items.
-3.1. Listing items / Selecting an item from a cell, holding multiple items.
+3. Implement a way to print colored messages (colored letters even) in MessageLog.
 
 4. Fix save issues where the saved unit/info is dublicated, and wrong info is saved / old info is not deleted.
 
@@ -13,7 +12,7 @@
 6. Make all array initializations (esp. in ItemType and VisualEngine) load from file/s.
 6.1. Use databases for items, units, terrain, ingame objects, etc.
 
-7. 
+7. Update map structure for better performance.
 
 8. 
 

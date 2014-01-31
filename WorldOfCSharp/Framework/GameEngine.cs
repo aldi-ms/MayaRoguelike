@@ -15,7 +15,6 @@ namespace WorldOfCSharp
         private static VisualEngine VEngine;
         private static GameTime gameTime = new GameTime();
         private static RightInfoPane rightInfoPane;
-        private static int ticks = 0;       //use bigger integer type!
 
         public static VisualEngine VisualEngine
         {
@@ -42,17 +41,12 @@ namespace WorldOfCSharp
         public static GameTime GameTime
         {
             get { return gameTime; }
+            set { gameTime = value; }
         }
 
         public static RightInfoPane RightInfoPane
         {
             get { return rightInfoPane; }
-        }
-
-        public static int Ticks
-        {
-            get { return ticks; }
-            set { ticks = value; }
         }
 
         public static void CheckForEffect(Unit unit, int objX, int objY)
@@ -89,7 +83,8 @@ namespace WorldOfCSharp
             MessageLog.SendMessage("Message log initialized.");
             MessageLog.DeleteLog();
 
-            gameField = MapTools.LoadMap(SaveLoadTools.LoadSavedMapName());       //load map<<<<<<<<
+            gameField = MapTools.LoadMap(SaveLoadTools.LoadSavedMapName());       //load map; change it to generate map!
+            GameTime = new GameTime();
             Unit pc = new Unit(10, 10, 3, '@', ConsoleColor.White, pcName);
             pc.SetFlag(4, true);
             
@@ -142,10 +137,8 @@ namespace WorldOfCSharp
 
             while (loop)
             {
-                ticks++;
-                if (ticks % 2 == 0)
-                    gameTime.Tick();
-                if (ticks % 50 == 0)
+                gameTime.Tick();
+                if (GameTime.Ticks % 50 == 0)
                     pc.EffectsPerFive();
 
                 rightInfoPane.Update(pc);
@@ -203,7 +196,7 @@ namespace WorldOfCSharp
 
                         case ConsoleKey.E:
                             return 0;
-                            
+
                         case ConsoleKey.H:
                             MessageLog.ShowLogFile(pc);
                             return 0;
@@ -211,11 +204,64 @@ namespace WorldOfCSharp
                         case ConsoleKey.G:
                         case ConsoleKey.OemComma:
                             //pick up item
-                            if (GameField[pc.X, pc.Y].Item != null)
+                            if (GameField[pc.X, pc.Y].ItemList != null && GameField[pc.X, pc.Y].ItemList.Count > 0)
                             {
-                                pc.Inventory.PickUpItem(GameField[pc.X, pc.Y].Item);
-                                MessageLog.SendMessage(string.Format("Picked up {0}.", GameField[pc.X, pc.Y].Item.ToString()));
-                                GameField[pc.X, pc.Y].Item = null;
+                                if (GameField[pc.X, pc.Y].ItemList.Count == 1)
+                                {
+                                    pc.Inventory.PickUpItem(GameField[pc.X, pc.Y].ItemList[0]);
+                                    MessageLog.SendMessage(string.Format("Picked up {0}.", GameField[pc.X, pc.Y].ItemList[0].ToString()));
+                                    GameField[pc.X, pc.Y].ItemList.Remove(GameField[pc.X, pc.Y].ItemList[0]);
+                                }
+                                else
+                                {
+                                    bool itemLoop = true;
+                                    while (itemLoop)
+                                    {
+                                        for (int i = 0; i < GameField[pc.X, pc.Y].ItemList.Count; i++)
+                                        {
+                                            MessageLog.SendMessage(string.Format("Pick up {0}? Yes/No/All/Cancel", GameField[pc.X, pc.Y].ItemList[i].ToString()));
+
+                                            ConsoleKeyInfo itemKey = Console.ReadKey(true);
+                                            switch (itemKey.Key)
+                                            {
+                                                case ConsoleKey.Y:
+                                                    pc.Inventory.PickUpItem(GameField[pc.X, pc.Y].ItemList[i]);
+                                                    MessageLog.SendMessage(string.Format("Picked up {0}.", GameField[pc.X, pc.Y].ItemList[i].ToString()));
+                                                    GameField[pc.X, pc.Y].ItemList.Remove(GameField[pc.X, pc.Y].ItemList[i]);
+                                                    i--;
+                                                    break;
+
+                                                case ConsoleKey.A:
+                                                    MessageLog.SendMessage("Picking up all items.");
+                                                    for (int k = i; k < GameField[pc.X, pc.Y].ItemList.Count; k++)
+                                                    {
+                                                        pc.Inventory.PickUpItem(GameField[pc.X, pc.Y].ItemList[k]);
+                                                        MessageLog.SendMessage(string.Format("Picked up {0}.", GameField[pc.X, pc.Y].ItemList[k].ToString()));
+                                                        GameField[pc.X, pc.Y].ItemList.Remove(GameField[pc.X, pc.Y].ItemList[k]);
+                                                        k--;
+                                                    }
+                                                    itemLoop = false;
+                                                    i = GameField[pc.X, pc.Y].ItemList.Count;
+                                                    break;
+
+                                                case ConsoleKey.C:
+                                                case ConsoleKey.Escape:
+                                                    itemLoop = false;
+                                                    i = GameField[pc.X, pc.Y].ItemList.Count;
+                                                    MessageLog.SendMessage("Action canceled.");
+                                                    break;
+
+                                                case ConsoleKey.N:
+                                                    break;
+
+                                                default:
+                                                    i--;
+                                                    break;
+                                            }
+                                        }
+                                        break;
+                                    }
+                                }
                             }
                             return 100;
 
@@ -268,9 +314,24 @@ namespace WorldOfCSharp
                             loop = true;
                             break;
                     }
-                    if (GameField[pc.X, pc.Y].Item != null)
+
+                    if (GameField[pc.X, pc.Y].ItemList != null && GameField[pc.X, pc.Y].ItemList.Count > 0)
                     {
-                        MessageLog.SendMessage(string.Format("You see a {0} here.", GameField[pc.X, pc.Y].Item.ToString()));
+                        if (GameField[pc.X, pc.Y].ItemList.Count == 1)
+                            MessageLog.SendMessage(string.Format("You see a {0} here.", GameField[pc.X, pc.Y].ItemList[0].ToString()));
+                        else
+                        {
+                            StringBuilder itemsPresentSB = new StringBuilder();
+                            for (int i = 0; i < GameField[pc.X, pc.Y].ItemList.Count; i++)
+                            {
+                                itemsPresentSB.Append(GameField[pc.X, pc.Y].ItemList[i].ToString());
+                                if (i + 1 < GameField[pc.X, pc.Y].ItemList.Count)
+                                {
+                                    itemsPresentSB.Append(", ");
+                                }
+                            }
+                            MessageLog.SendMessage(string.Format("You see {0} items here: {1}.", GameField[pc.X, pc.Y].ItemList.Count, itemsPresentSB.ToString()));
+                        }
                     }
                 }
             }
@@ -381,7 +442,7 @@ namespace WorldOfCSharp
                     {
                         case ConsoleKey.D:
                             unit.Equipment.Unequip(item);
-                            GameField[unit.X, unit.Y].Item = unit.Inventory.DropItem(item);
+                            GameField[unit.X, unit.Y].ItemList.Add(unit.Inventory.DropItem(item));
                             RefreshInventoryScreen(unit);
                             MessageLog.SendMessage(string.Format("{0} ({1}) dropped.", item.ToString(), item.Slot));
                             break;
@@ -404,7 +465,7 @@ namespace WorldOfCSharp
                     switch (key.Key)
                     {
                         case ConsoleKey.D:
-                            GameField[unit.X, unit.Y].Item = unit.Inventory.DropItem(item);
+                            GameField[unit.X, unit.Y].ItemList.Add(unit.Inventory.DropItem(item));
                             RefreshInventoryScreen(unit);
                             MessageLog.SendMessage(string.Format("{0} dropped.", item.ToString()));
                             break;
@@ -431,7 +492,6 @@ namespace WorldOfCSharp
                 }
             }
         }
-
 
         //Method to fill the whole map with a single type of terrain.
         //public static void FillGameField(TerrainType terrain)

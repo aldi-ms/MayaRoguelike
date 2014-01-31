@@ -85,9 +85,9 @@ namespace WorldOfCSharp
                         {
                             ConsoleTools.WriteOnPosition(map[x, y].IngameObject);
                         }
-                        if (map[x, y].Item != null)
+                        if (map[x, y].ItemList != null && map[x, y].ItemList.Count > 0)
                         {
-                            ConsoleTools.WriteOnPosition(itemCharacters[map[x, y].Item.ItemType.ItemCode.BaseTypeInt], x, y);
+                            ConsoleTools.WriteOnPosition(itemCharacters[map[x, y].ItemList[0].ItemType.ItemCode.BaseTypeInt], x, y);
                         }
                         if (map[x, y].Unit != null)
                         {

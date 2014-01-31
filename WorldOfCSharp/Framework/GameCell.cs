@@ -1,15 +1,17 @@
-﻿using WorldOfCSharp.FieldOfView;
+﻿using System.Collections.Generic;
+using WorldOfCSharp.FieldOfView;
 
 namespace WorldOfCSharp
 {
     public class GameCell : IFovCell
     {
         private bool isVisible;
+        private bool hasEffect;
 
         private TerrainType terrain;
         private Unit unit;
         private IngameObject ingameObject;
-        private Item item;
+        private List<Item> item = new List<Item>();
 
         public bool IsTransparent
         {
@@ -41,7 +43,7 @@ namespace WorldOfCSharp
             set { this.ingameObject = value; }
         }
 
-        public Item Item
+        public List<Item> ItemList
         {
             get { return this.item; }
             set { this.item = value; }

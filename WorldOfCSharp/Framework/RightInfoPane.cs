@@ -5,10 +5,10 @@ namespace WorldOfCSharp
 {
     public class RightInfoPane
     {
-        private Unit unit;
+        private static int HPBarLength = (Globals.CONSOLE_WIDTH - Globals.GAME_FIELD_BOTTOM_RIGHT.X) - (HIT_POINTS_STRING.Length + 8);
+        private Unit unit = new Unit(0,0,0,'\0', ConsoleColor.Red, "temp"); 
         private Coordinate topRight = new Coordinate(Globals.GAME_FIELD_BOTTOM_RIGHT.X + 1, 0);
         private StringBuilder hitPointsBar = new StringBuilder(HPBarLength);
-        private static int HPBarLength = (Globals.CONSOLE_WIDTH - Globals.GAME_FIELD_BOTTOM_RIGHT.X) - (HIT_POINTS_STRING.Length + 8);
         private const string HIT_POINTS_STRING = "Hit Points: ";
         private const string GAME_TIME_STRING = "Current Time: ";
         private StringBuilder timeLabel = new StringBuilder();
@@ -16,9 +16,9 @@ namespace WorldOfCSharp
 
         public RightInfoPane(Unit unit)
         {
-            this.unit = new Unit(unit);
+            this.unit = unit;
 
-            ConsoleTools.WriteOnPosition(this.unit.Name, topRight.X, topRight.Y, ConsoleColor.Yellow);
+            ConsoleTools.WriteOnPosition(string.Format("{0}", this.unit.Name), topRight.X + (HPBarLength / 2 + (this.unit.Name.Length / 2)), topRight.Y, ConsoleColor.Yellow);
             ConsoleTools.WriteOnPosition(HIT_POINTS_STRING, topRight.X, topRight.Y + 2, ConsoleColor.Cyan);
             ConsoleTools.WriteOnPosition(GAME_TIME_STRING, Globals.GAME_FIELD_BOTTOM_RIGHT.X + 2, Globals.CONSOLE_HEIGHT - 2, ConsoleColor.Cyan);
 
@@ -36,19 +36,23 @@ namespace WorldOfCSharp
             hitPointsLabel = string.Format("{0}/{1} ", unit.Stats.CurrentHitPoints, unit.Stats.MaxHitPoints);
             ConsoleTools.WriteOnPosition(hitPointsLabel.ToString(), topRight.X + HIT_POINTS_STRING.Length, topRight.Y + 2, ConsoleColor.Cyan);
 
-            double hitPointsPerCell = (double)unit.Stats.MaxHitPoints / (double)HPBarLength;
-            hitPointsBar.Append('\u2588', (int)(unit.Stats.CurrentHitPoints / hitPointsPerCell));
-            hitPointsBar.Append(' ', Globals.CONSOLE_WIDTH - (topRight.X + HIT_POINTS_STRING.Length + hitPointsLabel.Length + hitPointsBar.Length));
+            int bars = (int)(unit.Stats.CurrentHitPoints / ((double)unit.Stats.MaxHitPoints / (double)HPBarLength));
+            hitPointsBar.Append('\u2588', bars);
+            if (bars < HPBarLength)
+                hitPointsBar.Append(' ', Globals.CONSOLE_WIDTH - (topRight.X + HIT_POINTS_STRING.Length + hitPointsLabel.Length + hitPointsBar.Length));
 
             ConsoleColor color = ConsoleColor.Red;
-            if (((double)unit.Stats.CurrentHitPoints / (double)unit.Stats.MaxHitPoints) > 0.2)
-                color = ConsoleColor.DarkYellow;
-            if (((double)unit.Stats.CurrentHitPoints / (double)unit.Stats.MaxHitPoints) > 0.5)
-                color = ConsoleColor.Yellow;
-            if (((double)unit.Stats.CurrentHitPoints / (double)unit.Stats.MaxHitPoints) > 0.7)
-                color = ConsoleColor.Green;
             if (((double)unit.Stats.CurrentHitPoints / (double)unit.Stats.MaxHitPoints) > 0.9)
                 color = ConsoleColor.DarkGreen;
+            else
+                if (((double)unit.Stats.CurrentHitPoints / (double)unit.Stats.MaxHitPoints) > 0.7)
+                    color = ConsoleColor.Green;
+            else
+                if (((double)unit.Stats.CurrentHitPoints / (double)unit.Stats.MaxHitPoints) > 0.5)
+                    color = ConsoleColor.Yellow;
+            else
+                if (((double)unit.Stats.CurrentHitPoints / (double)unit.Stats.MaxHitPoints) > 0.2)
+                    color = ConsoleColor.DarkYellow;
             
             ConsoleTools.WriteOnPosition(hitPointsBar.ToString(), topRight.X + HIT_POINTS_STRING.Length + hitPointsLabel.Length, topRight.Y + 2, color);
             hitPointsBar.Clear();

@@ -21,7 +21,7 @@ namespace WorldOfCSharp
                 using (unitFile)
                 {
                     unitFile.WriteLine(currentMapName);
-                    unitFile.WriteLine(GameEngine.Ticks);
+                    unitFile.WriteLine(GameEngine.GameTime.Ticks);
 
                     StringBuilder saveSB = new StringBuilder();
                     foreach (Unit unit in GameEngine.Units)
@@ -59,7 +59,7 @@ namespace WorldOfCSharp
                 using (file)
                 {
                     file.WriteLine(currentMapName);
-                    file.WriteLine(GameEngine.Ticks);
+                    file.WriteLine(GameEngine.GameTime.Ticks);
 
                     StringBuilder saveSB = new StringBuilder();
                     foreach (Unit unit in GameEngine.Units)
@@ -111,11 +111,12 @@ namespace WorldOfCSharp
 
                 using (infoFile)
                 {
-                    while (readInt != -1 && readInt != 13)
+                    while (readInt != -1 && readInt != 13) //at eof returns 13 (CR) for some reason...
                     {
                         unitFile.ReadLine();
-                        GameEngine.Ticks = int.Parse(unitFile.ReadLine());
-                        GameEngine.GameTime.Tick(GameEngine.Ticks);
+
+                        GameEngine.GameTime = new GameTime(int.Parse(unitFile.ReadLine()));
+
                         char readChar = (char)unitFile.Read();
 
                         StringBuilder coordX = new StringBuilder(4);    //--> read X -coord
