@@ -1,6 +1,6 @@
 ﻿Flags:
 
-# - description
+i - description
 
 0 – is movable
 1 – is collidable
