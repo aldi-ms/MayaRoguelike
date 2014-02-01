@@ -124,7 +124,7 @@ namespace WorldOfCSharp
             else this.unitStats.CurrentHitPoints = this.Stats.MaxHitPoints;
         }
 
-        internal protected void MakeAMove(Direction direction)
+        internal protected void MakeAMove(CardinalDirection direction)
         {
             if (this.GetFlag(0))
             {
@@ -133,38 +133,38 @@ namespace WorldOfCSharp
 
                 switch (direction)
                 {
-                    case Direction.North:
+                    case CardinalDirection.North:
                         deltaY = -1;
                         break;
 
-                    case Direction.South:
+                    case CardinalDirection.South:
                         deltaY = 1;
                         break;
 
-                    case Direction.West:
+                    case CardinalDirection.West:
                         deltaX = -1;
                         break;
 
-                    case Direction.East:
+                    case CardinalDirection.East:
                         deltaX = 1;
                         break;
 
-                    case Direction.NorthWest:
+                    case CardinalDirection.NorthWest:
                         deltaX = -1;
                         deltaY = -1;
                         break;
 
-                    case Direction.NorthEast:
+                    case CardinalDirection.NorthEast:
                         deltaX = 1;
                         deltaY = -1;
                         break;
 
-                    case Direction.SouthEast:
+                    case CardinalDirection.SouthEast:
                         deltaX = 1;
                         deltaY = 1;
                         break;
 
-                    case Direction.SouthWest:
+                    case CardinalDirection.SouthWest:
                         deltaX = -1;
                         deltaY = 1;
                         break;

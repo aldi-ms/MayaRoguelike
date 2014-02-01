@@ -47,7 +47,7 @@
     <Compile Include="Framework\ConsoleTools.cs" />
     <Compile Include="Framework\Coordinate.cs" />
     <Compile Include="Framework\Database.cs" />
-    <Compile Include="Framework\DirectionEnum.cs" />
+    <Compile Include="Framework\CardinalDirection.cs" />
     <Compile Include="Framework\Equipment.cs" />
     <Compile Include="Framework\FieldOfView.cs" />
     <Compile Include="Framework\FOVAlgorithm.cs" />
@@ -57,17 +57,17 @@
     <Compile Include="Framework\GameTime.cs" />
     <Compile Include="UIElements.cs" />
     <Compile Include="Framework\Inventory.cs" />
-    <Compile Include="Framework\RightInfoPane.cs" />
+    <Compile Include="Framework\RightPane.cs" />
     <Compile Include="Framework\RNG.cs" />
     <Compile Include="GlobalValues.cs" />
-    <Compile Include="IngameObject.cs" />
+    <Compile Include="Framework\IngameObject.cs" />
     <Compile Include="Framework\Item.cs" />
     <Compile Include="Framework\ItemCode.cs" />
     <Compile Include="Framework\ItemType.cs" />
     <Compile Include="Framework\MapTools.cs" />
     <Compile Include="Framework\MersenneTwister.cs" />
     <Compile Include="Framework\MessageLog.cs" />
-    <Compile Include="Framework\MonthsAndDaysEnum.cs" />
+    <Compile Include="Framework\GameTimeEnums.cs" />
     <Compile Include="Framework\MRPAS.cs" />
     <Compile Include="Framework\SaveLoadTools.cs" />
     <Compile Include="Framework\ShadowCasting.cs" />
@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="!TO DO.txt" />

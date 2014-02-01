@@ -11,85 +11,159 @@ namespace WorldOfCSharp
 
         public static GameCell[,] LoadMap(string mapFileName)  //return gameField
         {
-            GameCell[,] gameField = new GameCell[Globals.GAME_FIELD_BOTTOM_RIGHT.X, Globals.GAME_FIELD_BOTTOM_RIGHT.Y];
+            GameCell[,] gameGrid = new GameCell[Globals.GAME_FIELD_BOTTOM_RIGHT.X, Globals.GAME_FIELD_BOTTOM_RIGHT.Y];
             Database.LoadDatabase();
 
             StreamReader sReader = new StreamReader(mapFileName, encoding);
-            using (sReader)
+            using (sReader) 
             {
-                IngameObject inGObj = null;
-                bool hasIngameObject = false;
 
-                int readInt = sReader.Peek();
-                while (readInt != -1)
+                StringBuilder mapName = new StringBuilder();        //--> map name
+                char procCh = (char)sReader.Read();
+                do
                 {
-                    char readChar = (char)sReader.Read();
+                    mapName.Append(procCh);
+                    procCh = (char)sReader.Read();
+                } while (procCh != '[');
 
-                    StringBuilder coordX = new StringBuilder(4);        //--> read X -coord
-                    readChar = (char)sReader.Read();
-                    do
+                GameEngine.MapName = mapName.ToString();
+                GameEngine.MapFileName = string.Format(@"../../maps/{0}.wocm", mapName.ToString());
+
+                StringBuilder xSize = new StringBuilder(4);        //--> gameField.GetLength(0)
+                procCh = (char)sReader.Read();
+                do
+                {
+                    xSize.Append(procCh);
+                    procCh = (char)sReader.Read();
+                } while (procCh != ';');
+
+                StringBuilder ySize = new StringBuilder(4);        //--> gameField.GetLength(1)
+                procCh = (char)sReader.Read();
+                do
+                {
+                    ySize.Append(procCh);
+                    procCh = (char)sReader.Read();
+                } while (procCh != ']');
+
+
+                int charCode = sReader.Peek();
+                for (int x = 0; x < int.Parse(xSize.ToString()); x++)
+                {
+                    for (int y = 0; y < int.Parse(ySize.ToString()); y++)
                     {
-                        coordX.Append(readChar);
-                        readChar = (char)sReader.Read();
-                    } while (readChar != ';');
+                        gameGrid[x, y] = new GameCell();
+                        if (charCode != -1)
+                        {
+                            char readChar = (char)sReader.Read();
 
-                    StringBuilder coordY = new StringBuilder(4);        //--> read Y -coord
-                    readChar = (char)sReader.Read();
-                    do
-                    {
-                        coordY.Append(readChar);
-                        readChar = (char)sReader.Read();
-                    } while (readChar != ';');
+                            StringBuilder posInTerrainDB = new StringBuilder(4);        //--> position in DB
+                            readChar = (char)sReader.Read();
+                            do
+                            {
+                                posInTerrainDB.Append(readChar);
+                                readChar = (char)sReader.Read();
+                            } while (readChar != ']' && readChar != '<');
 
-                    char visualChar = '\0';             //--> read visCh
-                    visualChar = (char)sReader.Read();
-                    visualChar = RandomTerrain();   //remove this row for normal map load
-                    readChar = (char)sReader.Read();
+                            int index = int.Parse(posInTerrainDB.ToString());
+                            gameGrid[x, y].Terrain = new TerrainType(index, Database.TerrainDatabase[index]);
+                            gameGrid[x, y].Terrain.X = x;
+                            gameGrid[x, y].Terrain.Y = y;
+                         
+                            if (readChar == '<')
+                            {
+                                StringBuilder posInInGameObjDB = new StringBuilder(4);        //--> position in DB
+                                readChar = (char)sReader.Read();
+                                do
+                                {
+                                    posInInGameObjDB.Append(readChar);
+                                    readChar = (char)sReader.Read();
+                                } while (readChar != '>');
 
-                    int parsedCoordX;
-                    int parsedCoordY;
+                                readChar = (char)sReader.Read();
 
-                    if (readChar == '<')                     //ingameObject exists in this cell, begin fetchin info for it
-                    {
-                        hasIngameObject = true;
-
-                        char inGObjVisualChar = '\0';               //--> read visCh
-                        inGObjVisualChar = (char)sReader.Read();
-                        readChar = (char)sReader.Read();        //read '>'                        
-                        readChar = (char)sReader.Read();    //read ']'
-                        //finish reading ingameObject info
-                        //parse variables to a complete IngameObject
-                        parsedCoordX = int.Parse(coordX.ToString());
-                        parsedCoordY = int.Parse(coordY.ToString());
-                        inGObj = Database.SearchIngameObjectDB(inGObjVisualChar);
-                    }
-
-                    readInt = sReader.Peek();
-
-                    //parse variables to a complete TerrainType object
-                    parsedCoordX = int.Parse(coordX.ToString());
-                    if (parsedCoordX >= Globals.GAME_FIELD_BOTTOM_RIGHT.X)
-                        break;
-                    parsedCoordY = int.Parse(coordY.ToString());
-                    if (parsedCoordY >= Globals.GAME_FIELD_BOTTOM_RIGHT.Y)
-                        break;
-
-                    gameField[parsedCoordX, parsedCoordY] = new GameCell();
-                    gameField[parsedCoordX, parsedCoordY].Terrain = new TerrainType(Database.SearchTerrainDB(visualChar));
-                    gameField[parsedCoordX, parsedCoordY].Terrain.X = parsedCoordX;
-                    gameField[parsedCoordX, parsedCoordY].Terrain.Y = parsedCoordY;
-
-                    if (hasIngameObject)
-                    {
-                        gameField[parsedCoordX, parsedCoordY].IngameObject = inGObj;
-                        gameField[parsedCoordX, parsedCoordY].IngameObject.X = parsedCoordX;
-                        gameField[parsedCoordX, parsedCoordY].IngameObject.Y = parsedCoordY;
-                        hasIngameObject = false;
+                                int objIndex = int.Parse(posInInGameObjDB.ToString());
+                                gameGrid[x, y].IngameObject = new InGameObject(objIndex, Database.IngameObjectDatabase[objIndex]);
+                                gameGrid[x, y].IngameObject.X = x;
+                                gameGrid[x, y].IngameObject.Y = y;
+                            }
+                        }
                     }
                 }
 
-                //ConsoleTools.PrintDebugInfo("Map loaded.");
-                return gameField;
+                GameEngine.MessageLog.SendMessage("Map loaded.");
+                return gameGrid;
+
+                //InGameObject inGObj = null;
+                //bool hasIngameObject = false;
+                //
+                //int readInt = sReader.Peek();
+                //while (readInt != -1)
+                //{
+                //    char readChar = (char)sReader.Read();
+                //
+                //    StringBuilder coordX = new StringBuilder(4);        //--> read X -coord
+                //    readChar = (char)sReader.Read();
+                //    do
+                //    {
+                //        coordX.Append(readChar);
+                //        readChar = (char)sReader.Read();
+                //    } while (readChar != ';');
+                //
+                //    StringBuilder coordY = new StringBuilder(4);        //--> read Y -coord
+                //    readChar = (char)sReader.Read();
+                //    do
+                //    {
+                //        coordY.Append(readChar);
+                //        readChar = (char)sReader.Read();
+                //    } while (readChar != ';');
+                //
+                //    char visualChar = '\0';             //--> read visCh
+                //    visualChar = (char)sReader.Read();
+                //    visualChar = RandomTerrain();   //remove this row for normal map load
+                //    readChar = (char)sReader.Read();
+                //
+                //    int parsedCoordX;
+                //    int parsedCoordY;
+                //
+                //    if (readChar == '<')                     //ingameObject exists in this cell, begin fetchin info for it
+                //    {
+                //        hasIngameObject = true;
+                //
+                //        char inGObjVisualChar = '\0';               //--> read visCh
+                //        inGObjVisualChar = (char)sReader.Read();
+                //        readChar = (char)sReader.Read();        //read '>'                        
+                //        readChar = (char)sReader.Read();    //read ']'
+                //        //finish reading ingameObject info
+                //        //parse variables to a complete IngameObject
+                //        parsedCoordX = int.Parse(coordX.ToString());
+                //        parsedCoordY = int.Parse(coordY.ToString());
+                //        inGObj = Database.SearchIngameObjectDB(inGObjVisualChar);
+                //    }
+                //
+                //    readInt = sReader.Peek();
+                //
+                //    //parse variables to a complete TerrainType object
+                //    parsedCoordX = int.Parse(coordX.ToString());
+                //    if (parsedCoordX >= Globals.GAME_FIELD_BOTTOM_RIGHT.X)
+                //        break;
+                //    parsedCoordY = int.Parse(coordY.ToString());
+                //    if (parsedCoordY >= Globals.GAME_FIELD_BOTTOM_RIGHT.Y)
+                //        break;
+                //
+                //    gameGrid[parsedCoordX, parsedCoordY] = new GameCell();
+                //    TerrainType tt = Database.SearchTerrainDB(visualChar);
+                //    gameGrid[parsedCoordX, parsedCoordY].Terrain = new TerrainType(tt.PositionInDB, tt);
+                //    gameGrid[parsedCoordX, parsedCoordY].Terrain.X = parsedCoordX;
+                //    gameGrid[parsedCoordX, parsedCoordY].Terrain.Y = parsedCoordY;
+                //
+                //    if (hasIngameObject)
+                //    {
+                //        gameGrid[parsedCoordX, parsedCoordY].IngameObject = inGObj;
+                //        gameGrid[parsedCoordX, parsedCoordY].IngameObject.X = parsedCoordX;
+                //        gameGrid[parsedCoordX, parsedCoordY].IngameObject.Y = parsedCoordY;
+                //        hasIngameObject = false;
+                //    }
+                //}
             }
         }
 
@@ -113,7 +187,7 @@ namespace WorldOfCSharp
             {
                 for (int y = 0; y < gameField.GetLength(1); y++)
                 {
-                    parseMap.AppendFormat("[{0}", gameField[x, y].Terrain.X, gameField[x, y].Terrain.Y, gameField[x, y].Terrain.VisualChar);
+                    parseMap.AppendFormat("[{0}", gameField[x, y].Terrain.PositionInDB);
 
                     if (gameField[x, y].IngameObject == null)
                     {
@@ -121,16 +195,19 @@ namespace WorldOfCSharp
                     }
                     else
                     {
-                        parseMap.AppendFormat("<{0}>]", gameField[x, y].IngameObject.VisualChar);
+                        parseMap.AppendFormat("<{0}>]", gameField[x, y].IngameObject.PositionInDB);
                     }
                 }
             }
 
-            StreamWriter sWriter = new StreamWriter(@"../../maps/testmap.wocm", false, encoding);
+            StreamWriter sWriter = new StreamWriter(GameEngine.MapName, false, encoding);
             using (sWriter)
             {
                 string nullString = null;
                 sWriter.Write(nullString);  //creates a new file, overwrites old
+
+                sWriter.Write(GameEngine.MapName);
+                sWriter.Write(string.Format("[{0};{1}]", gameField.GetLength(0), gameField.GetLength(1)));
                 sWriter.Write(parseMap.ToString());
             }
         }

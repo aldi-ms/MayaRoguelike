@@ -14,13 +14,12 @@ namespace WorldOfCSharp
         //saves all basic unit info in UNITS_SAVE_FILE
         public static void SaveGame()
         {
-            string currentMapName = LoadSavedMapName();
-            if (!string.IsNullOrWhiteSpace(currentMapName))
+            if (!string.IsNullOrWhiteSpace(GameEngine.MapFileName))
             {
                 StreamWriter unitFile = new StreamWriter(UNITS_SAVE_FILE, false, ENCODING);
                 using (unitFile)
                 {
-                    unitFile.WriteLine(currentMapName);
+                    unitFile.WriteLine(GameEngine.MapFileName);
                     unitFile.WriteLine(GameEngine.GameTime.Ticks);
 
                     StringBuilder saveSB = new StringBuilder();
@@ -45,20 +44,19 @@ namespace WorldOfCSharp
                 }
             }
             else
-                throw new ArgumentException("On save time string currentMapName is null, empty, or contains only white spaces.");
+                throw new ArgumentException("On save time string mapName is null, empty, or contains only white spaces.");
         }
 
         public static void SaveGame(string fileName)
         {
-            string currentMapName = LoadSavedMapName();
             const string TEMP_INFO_FILE = @"../../saves/temp_info.wocs";
 
-            if (!string.IsNullOrWhiteSpace(currentMapName))
+            if (!string.IsNullOrWhiteSpace(GameEngine.MapFileName))
             {
                 StreamWriter file = new StreamWriter(fileName, false, ENCODING);
                 using (file)
                 {
-                    file.WriteLine(currentMapName);
+                    file.WriteLine(GameEngine.MapFileName);
                     file.WriteLine(GameEngine.GameTime.Ticks);
 
                     StringBuilder saveSB = new StringBuilder();
@@ -113,7 +111,7 @@ namespace WorldOfCSharp
                 {
                     while (readInt != -1 && readInt != 13) //at eof returns 13 (CR) for some reason...
                     {
-                        unitFile.ReadLine();
+                        GameEngine.MapFileName = unitFile.ReadLine();
 
                         GameEngine.GameTime = new GameTime(int.Parse(unitFile.ReadLine()));
 

@@ -6,13 +6,13 @@ namespace WorldOfCSharp
     public class GameCell : IFovCell
     {
         private bool isVisible;
-        private bool hasEffect;
+        //private bool hasEffect;
 
         private TerrainType terrain;
         private Unit unit;
-        private IngameObject ingameObject;
+        private InGameObject ingameObject;
         private List<Item> item = new List<Item>();
-
+        
         public bool IsTransparent
         {
             get { return this.Terrain.GetFlag(3); } //isTransparent flag
@@ -21,7 +21,7 @@ namespace WorldOfCSharp
 
         public bool IsVisible
         {
-            get { return this.isVisible; }
+            get { return isVisible; }
             set { this.isVisible = value; }
         }
 
@@ -37,7 +37,7 @@ namespace WorldOfCSharp
             set { this.unit = value; }
         }
 
-        public IngameObject IngameObject
+        public InGameObject IngameObject
         {
             get { return this.ingameObject; }
             set { this.ingameObject = value; }

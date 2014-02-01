@@ -3,7 +3,7 @@ using System.Text;
 
 namespace WorldOfCSharp
 {
-    public class RightInfoPane
+    public class RightPane
     {
         private static int HPBarLength = (Globals.CONSOLE_WIDTH - Globals.GAME_FIELD_BOTTOM_RIGHT.X) - (HIT_POINTS_STRING.Length + 8);
         private Unit unit = new Unit(0,0,0,'\0', ConsoleColor.Red, "temp"); 
@@ -14,7 +14,7 @@ namespace WorldOfCSharp
         private StringBuilder timeLabel = new StringBuilder();
         private string hitPointsLabel;
 
-        public RightInfoPane(Unit unit)
+        public RightPane(Unit unit)
         {
             this.unit = unit;
 

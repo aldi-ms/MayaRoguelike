@@ -5,12 +5,12 @@ namespace WorldOfCSharp
     public class Inventory
     {
         private const int BASE_BAG_SLOTS = 20;
-        //private int otherBagSlots = 0; //to be implemented...
-        private Item[] inventory = new Item[BASE_BAG_SLOTS];
-        private bool[] isSlotUsed = new bool[BASE_BAG_SLOTS];
-        private int count = 0;
         private readonly Equipment equipmentConnected;
+        private int count = 0;
+        private bool[] isSlotUsed = new bool[BASE_BAG_SLOTS];
+        private Item[] inventory = new Item[BASE_BAG_SLOTS];
         private Unit owner;
+        //other bag slots to be implemented
 
         public Inventory(Equipment equipmentToConnect)
         {
@@ -38,7 +38,7 @@ namespace WorldOfCSharp
             get { return this.isSlotUsed; }
         }
 
-        public void PickUpItem(Item item)
+        public void StoreItem(Item item)
         {
             for (int i = 0; i < this.inventory.Length; i++)
             {

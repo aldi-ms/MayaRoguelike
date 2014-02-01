@@ -7,12 +7,10 @@ namespace WorldOfCSharp.AI
     {
         public static int DrunkardWalk(Unit unit)
         {
-            if (unit.VisualChar != '@')
-            {
-                MersenneTwister mt = new MersenneTwister();
-                int randDir = mt.Next(0, 9);
-                unit.MakeAMove((Direction)randDir);
-            }
+            MersenneTwister mt = new MersenneTwister();
+            int randDir = mt.Next(0, 9);
+            unit.MakeAMove((CardinalDirection)randDir);
+
             return 100;
         }
     }

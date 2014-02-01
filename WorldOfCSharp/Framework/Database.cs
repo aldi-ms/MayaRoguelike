@@ -12,17 +12,20 @@ namespace WorldOfCSharp
         private static readonly Encoding ENCODING = Encoding.ASCII;
         
         private static List<TerrainType> terrainDatabase;
-        private static List<IngameObject> ingameObjectDatabase;
+        private static List<InGameObject> ingameObjectDatabase;
 
         public static List<TerrainType> TerrainDatabase
         {
             get { return terrainDatabase; }
+            set { terrainDatabase = value; }
         }
-
-        public static List<IngameObject> IngameObjectDatabase
+        
+        public static List<InGameObject> IngameObjectDatabase
         {
             get { return ingameObjectDatabase; }
+            set { ingameObjectDatabase = value; }
         }
+
 
         public static void LoadDatabase()
         {
@@ -43,7 +46,7 @@ namespace WorldOfCSharp
             //return new TerrainType("eff off", 0, ' ', ConsoleColor.Black);
         }
 
-        public static IngameObject SearchIngameObjectDB(char visCh)
+        public static InGameObject SearchIngameObjectDB(char visCh)
         {
             foreach (var inGObj in ingameObjectDatabase)
             {
@@ -62,6 +65,7 @@ namespace WorldOfCSharp
 
             using (sReader)
             {
+                int iTerrain = 0;
                 int readInt = sReader.Peek();
                 while (readInt != -1)
                 {
@@ -97,8 +101,7 @@ namespace WorldOfCSharp
 
                     int parsedFlag = int.Parse(flag.ToString());
                     ConsoleColor parsedColor = ConsoleTools.ParseColor(color.ToString());
-                    DB.Add(new TerrainType(name.ToString(), parsedFlag, visCh, parsedColor));
-
+                    DB.Add(new TerrainType(iTerrain++, name.ToString(), parsedFlag, visCh, parsedColor));
                     readInt = sReader.Peek();
                 }
             }
@@ -106,13 +109,14 @@ namespace WorldOfCSharp
             return DB;
         }
 
-        private static List<IngameObject> LoadIngameObjects()
+        private static List<InGameObject> LoadIngameObjects()
         {
             StreamReader sReader = new StreamReader(INGAME_OBJECT_DB, ENCODING);
-            List<IngameObject> DB = new List<IngameObject> { };
+            List<InGameObject> DB = new List<InGameObject> { };
 
             using (sReader)
             {
+                int iInGameObj = 0;
                 int readInt = sReader.Peek();
                 while (readInt != -1)
                 {
@@ -148,8 +152,7 @@ namespace WorldOfCSharp
 
                     int parsedFlag = int.Parse(flag.ToString());
                     ConsoleColor parsedColor = ConsoleTools.ParseColor(color.ToString());
-                    DB.Add(new IngameObject(name.ToString(), parsedFlag, visCh, parsedColor));
-
+                    DB.Add(new InGameObject(iInGameObj++, name.ToString(), parsedFlag, visCh, parsedColor));
                     readInt = sReader.Peek();
                 }
             }

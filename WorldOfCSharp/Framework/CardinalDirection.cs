@@ -1,6 +1,6 @@
 ﻿namespace WorldOfCSharp
 {
-    public enum Direction
+    public enum CardinalDirection
     {
         North = 0,
         South,

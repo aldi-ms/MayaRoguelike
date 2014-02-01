@@ -12,7 +12,7 @@
 6. Make all array initializations (esp. in ItemType and VisualEngine) load from file/s.
 6.1. Use databases for items, units, terrain, ingame objects, etc.
 
-7. Update map structure for better performance.
+7. 
 
 8. 
 

@@ -7,6 +7,8 @@ namespace WorldOfCSharp
 {
     public static class GameEngine
     {
+        private static string mapName;
+        private static string mapFileName;
         private static GameCell[,] gameField;
         private static MessageLog messageLog;
         private static List<Unit> units = new List<Unit>();
@@ -14,7 +16,7 @@ namespace WorldOfCSharp
         private static List<Unit> removedUnits = new List<Unit>();
         private static VisualEngine VEngine;
         private static GameTime gameTime = new GameTime();
-        private static RightInfoPane rightInfoPane;
+        private static RightPane rightInfoPane;
 
         public static VisualEngine VisualEngine
         {
@@ -44,9 +46,27 @@ namespace WorldOfCSharp
             set { gameTime = value; }
         }
 
-        public static RightInfoPane RightInfoPane
+        public static RightPane RightInfoPane
         {
             get { return rightInfoPane; }
+        }
+
+        public static string MapName
+        { 
+            get { return mapName; }
+            set
+            {
+                mapName = value; 
+            }
+        }
+
+        public static string MapFileName
+        {
+            get { return mapFileName; }
+            set
+            {
+                mapFileName = value;
+            }
         }
 
         public static void CheckForEffect(Unit unit, int objX, int objY)
@@ -62,6 +82,7 @@ namespace WorldOfCSharp
                             if (unit.GetFlag(4))
                             {
                                 SaveLoadTools.SaveGame();
+                                MapTools.SaveMap(gameField);
                                 MessageLog.SendMessage("Game Saved.");
                             }
                             break;
@@ -83,9 +104,9 @@ namespace WorldOfCSharp
             MessageLog.SendMessage("Message log initialized.");
             MessageLog.DeleteLog();
 
-            gameField = MapTools.LoadMap(SaveLoadTools.LoadSavedMapName());       //load map; change it to generate map!
-            GameTime = new GameTime();
+            //gameField = MapTools.LoadMap();       //load map; change it to generate map!
             Unit pc = new Unit(10, 10, 3, '@', ConsoleColor.White, pcName);
+            GameTime = new GameTime();
             pc.SetFlag(4, true);
             
             Initialize(pc);
@@ -119,7 +140,7 @@ namespace WorldOfCSharp
 
         private static void Initialize(Unit pc)
         {
-            rightInfoPane = new RightInfoPane(pc);
+            rightInfoPane = new RightPane(pc);
 
             VEngine = new VisualEngine(GameField);
             VEngine.PrintUnit(pc);
@@ -188,7 +209,6 @@ namespace WorldOfCSharp
                     switch (key.Key)
                     {
                         case ConsoleKey.T:      //Tests
-                            Tests.Testing.ItemTest(pc);
                             return 0;
 
                         case ConsoleKey.Y:
@@ -208,7 +228,7 @@ namespace WorldOfCSharp
                             {
                                 if (GameField[pc.X, pc.Y].ItemList.Count == 1)
                                 {
-                                    pc.Inventory.PickUpItem(GameField[pc.X, pc.Y].ItemList[0]);
+                                    pc.Inventory.StoreItem(GameField[pc.X, pc.Y].ItemList[0]);
                                     MessageLog.SendMessage(string.Format("Picked up {0}.", GameField[pc.X, pc.Y].ItemList[0].ToString()));
                                     GameField[pc.X, pc.Y].ItemList.Remove(GameField[pc.X, pc.Y].ItemList[0]);
                                 }
@@ -225,7 +245,7 @@ namespace WorldOfCSharp
                                             switch (itemKey.Key)
                                             {
                                                 case ConsoleKey.Y:
-                                                    pc.Inventory.PickUpItem(GameField[pc.X, pc.Y].ItemList[i]);
+                                                    pc.Inventory.StoreItem(GameField[pc.X, pc.Y].ItemList[i]);
                                                     MessageLog.SendMessage(string.Format("Picked up {0}.", GameField[pc.X, pc.Y].ItemList[i].ToString()));
                                                     GameField[pc.X, pc.Y].ItemList.Remove(GameField[pc.X, pc.Y].ItemList[i]);
                                                     i--;
@@ -235,7 +255,7 @@ namespace WorldOfCSharp
                                                     MessageLog.SendMessage("Picking up all items.");
                                                     for (int k = i; k < GameField[pc.X, pc.Y].ItemList.Count; k++)
                                                     {
-                                                        pc.Inventory.PickUpItem(GameField[pc.X, pc.Y].ItemList[k]);
+                                                        pc.Inventory.StoreItem(GameField[pc.X, pc.Y].ItemList[k]);
                                                         MessageLog.SendMessage(string.Format("Picked up {0}.", GameField[pc.X, pc.Y].ItemList[k].ToString()));
                                                         GameField[pc.X, pc.Y].ItemList.Remove(GameField[pc.X, pc.Y].ItemList[k]);
                                                         k--;
@@ -271,38 +291,38 @@ namespace WorldOfCSharp
 
                         case ConsoleKey.UpArrow:
                         case ConsoleKey.NumPad8:
-                            pc.MakeAMove(Direction.North);
+                            pc.MakeAMove(CardinalDirection.North);
                             break;
 
                         case ConsoleKey.DownArrow:
                         case ConsoleKey.NumPad2:
-                            pc.MakeAMove(Direction.South);
+                            pc.MakeAMove(CardinalDirection.South);
                             break;
 
                         case ConsoleKey.LeftArrow:
                         case ConsoleKey.NumPad4:
-                            pc.MakeAMove(Direction.West);
+                            pc.MakeAMove(CardinalDirection.West);
                             break;
 
                         case ConsoleKey.RightArrow:
                         case ConsoleKey.NumPad6:
-                            pc.MakeAMove(Direction.East);
+                            pc.MakeAMove(CardinalDirection.East);
                             break;
 
                         case ConsoleKey.NumPad7:
-                            pc.MakeAMove(Direction.NorthWest);
+                            pc.MakeAMove(CardinalDirection.NorthWest);
                             break;
 
                         case ConsoleKey.NumPad9:
-                            pc.MakeAMove(Direction.NorthEast);
+                            pc.MakeAMove(CardinalDirection.NorthEast);
                             break;
 
                         case ConsoleKey.NumPad1:
-                            pc.MakeAMove(Direction.SouthWest);
+                            pc.MakeAMove(CardinalDirection.SouthWest);
                             break;
 
                         case ConsoleKey.NumPad3:
-                            pc.MakeAMove(Direction.SouthEast);
+                            pc.MakeAMove(CardinalDirection.SouthEast);
                             break;
 
                         case ConsoleKey.Escape:

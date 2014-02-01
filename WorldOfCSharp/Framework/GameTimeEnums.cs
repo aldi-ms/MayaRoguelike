@@ -88,7 +88,7 @@ namespace WorldOfCSharp
         Twentieth
     }
 
-    public static class DateEnumExtensions
+    public static class GameTimeExtensions
     {
         public static string GetName(this GameMonth month)
         {

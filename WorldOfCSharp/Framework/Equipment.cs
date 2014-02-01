@@ -5,12 +5,12 @@ namespace WorldOfCSharp
     public class Equipment
     {
         public const int ITEM_SLOTS = 16;
-        private bool hasChanged;
-        private Item[] equipment;
-        private bool[] isSlotUsed;
         private int count = 0;
-        private Inventory inventoryConnected;
         private bool inventoryReWriteProt = true;
+        private bool hasChanged;
+        private bool[] isSlotUsed;
+        private Item[] equipment;
+        private Inventory inventoryConnected;
         private Unit unitOwner;
 
         public Equipment(Unit owner)
@@ -94,22 +94,7 @@ namespace WorldOfCSharp
             this.Owner.RemoveStats(item);
 
             item.isEquipped = false;
-            this.inventoryConnected.PickUpItem(item);
+            this.inventoryConnected.StoreItem(item);
         }
-
-        //public List<string> ToStringListDEPRECATED()
-        //{
-        //    List<string> strList = new List<string>();
-
-        //    for (int i = 0; i < equipment.Length; i++)
-        //    {
-        //        if (equipment[i].Slot != EquipSlot.NotEquippable)
-        //        {
-        //            strList.Add(string.Format("{0}", equipment[i].ToString()));
-        //        }
-        //    }
-
-        //    return strList;
-        //}        
     }
 }

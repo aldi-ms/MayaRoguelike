@@ -7,11 +7,8 @@ namespace WorldOfCSharp
         private string name;
         private ItemType itemType = new ItemType();
         private ItemStats itemStats;
-        //private Unit owner;
-        public bool isEquipped = false;
-        //private bool isStored = false;
         private int inventorySlot;
-        //weapon fields
+        public bool isEquipped = false;
 
         public Item(string name, ItemType itemType, int strength = 0, int dexterity = 0, int stamina = 0, int intelligence = 0, int spirit = 0)
         {
@@ -45,10 +42,6 @@ namespace WorldOfCSharp
                 dexterity: dexterity, stamina: stamina, intelligence: intelligence, spirit: spirit);
         }
 
-        public Item()
-            : this("unknown item", new ItemType())
-        { }
-
         public ItemType ItemType
         {
             get { return this.itemType; }
@@ -70,12 +63,7 @@ namespace WorldOfCSharp
             get { return this.inventorySlot; }
             set { this.inventorySlot = value; }
         }
-        
-        //public override string ToString()
-        //{
-        //    return string.Format("[{0}]", this.name);
-        //}
-         
+                 
         public override string ToString()
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
