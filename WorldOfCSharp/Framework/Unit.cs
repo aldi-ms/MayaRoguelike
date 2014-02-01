@@ -38,8 +38,6 @@ namespace WorldOfCSharp
             : this(unit.X, unit.Y, unit.Flags, unit.VisualChar, unit.Color, unit.Name)
         { }
 
-        #region UnitProperties
-
         public int UniqueID
         {
             get { return this.uniqueID; }
@@ -61,7 +59,6 @@ namespace WorldOfCSharp
         {
             get { return this.unitStats; }
         }
-        #endregion
         
         public void AddStats(Item item)
         {

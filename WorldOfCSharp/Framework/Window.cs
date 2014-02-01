@@ -142,7 +142,7 @@ namespace WorldOfCSharp
         {
             if (!windowIsOpen)
             {
-                SaveGame(pc);
+                //SaveGame(pc);
                 ConsoleTools.Clear(windowBottomLeftX, windowBottomLeftY, windowWidth, windowHeight);
                 DrawWindow();
                 this.windowIsOpen = true;
@@ -178,9 +178,9 @@ namespace WorldOfCSharp
             ActiveWindows.Remove(this);
             this.windowIsOpen = false;
             ConsoleTools.Clear(windowBottomLeftX, windowBottomLeftY, windowWidth, windowHeight);
-            Unit pc = new Unit(SaveLoadTools.LoadUnits(TEMP_SAVE_FILE));
-            GameCell[,] gameField = MapTools.LoadMap(SaveLoadTools.LoadSavedMapName(TEMP_SAVE_FILE));       //load map<<<<<<<<
-            File.Delete(TEMP_SAVE_FILE);
+            //List<Unit> unitList = SaveLoadTools.LoadUnits(TEMP_SAVE_FILE);
+            //GameCell[,] gameField = MapTools.LoadMap(SaveLoadTools.LoadSavedMapName(TEMP_SAVE_FILE));       //load map<<<<<<<<
+            //File.Delete(TEMP_SAVE_FILE);
             GameEngine.VisualEngine.PrintFOVMap(pc.X, pc.Y);
             GameEngine.VisualEngine.PrintUnit(pc);
         }

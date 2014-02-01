@@ -95,7 +95,11 @@ namespace WorldOfCSharp
         
         public static void New()
         {
-            string pcName = UIElements.PromptForName();
+            string pcName = "SCiENiDE_TESTING";     
+            //for testing purposes we set the char name manually; 
+            //else use the bottom row.
+
+            //string pcName = UIElements.PromptForName();
 
             UIElements.InGameUI();
 
@@ -104,11 +108,13 @@ namespace WorldOfCSharp
             MessageLog.SendMessage("Message log initialized.");
             MessageLog.DeleteLog();
 
-            //gameField = MapTools.LoadMap();       //load map; change it to generate map!
+            Units.Clear();
+            gameField = MapTools.LoadMap(@"../../maps/testMapNewCode.wocm");       //load map; change it to generate map!
             Unit pc = new Unit(10, 10, 3, '@', ConsoleColor.White, pcName);
+            Units.Add(pc);
             GameTime = new GameTime();
             pc.SetFlag(4, true);
-            
+
             Initialize(pc);
         }
         
@@ -120,10 +126,16 @@ namespace WorldOfCSharp
                 (Globals.CONSOLE_HEIGHT - (Globals.GAME_FIELD_BOTTOM_RIGHT.Y + 1)), true);
             MessageLog.SendMessage("Message log initialized.");
 
-            gameField = MapTools.LoadMap(SaveLoadTools.LoadSavedMapName());       //load map<<<<<<<<
-            Unit pc = SaveLoadTools.LoadUnits();
-            
-            Initialize(pc);
+            Units.Clear();
+            gameField = MapTools.LoadMap(mapFileName = SaveLoadTools.LoadSavedMapName());       //load map<<<<<<<<
+            Units = SaveLoadTools.LoadUnits();
+            foreach (var unit in Units)
+            {
+                if (unit.GetFlag(4))
+                {
+                    Initialize(unit); 
+                }
+            }
         }
 
         public static void AddUnit(Unit unit)
@@ -150,20 +162,11 @@ namespace WorldOfCSharp
 
         private static void TimeTick(Unit pc)
         {
-            Units.Clear();
-            AddUnit(pc);
-
             bool loop = true;
             int energyCost = 0;
 
             while (loop)
             {
-                gameTime.Tick();
-                if (GameTime.Ticks % 50 == 0)
-                    pc.EffectsPerFive();
-
-                rightInfoPane.Update(pc);
-
                 //add queued units
                 foreach (Unit queuedUnit in queuedUnits)
                 {
@@ -177,6 +180,12 @@ namespace WorldOfCSharp
                     Units.Remove(unitToRemove);
                 }
                 removedUnits.Clear();
+
+                gameTime.Tick();
+                if (GameTime.Ticks % 50 == 0)
+                    pc.EffectsPerFive();
+
+                rightInfoPane.Update(pc);
 
                 foreach (Unit unit in Units)
                 {
@@ -209,6 +218,7 @@ namespace WorldOfCSharp
                     switch (key.Key)
                     {
                         case ConsoleKey.T:      //Tests
+                            Tests.Testing.ItemTest(pc);
                             return 0;
 
                         case ConsoleKey.Y:

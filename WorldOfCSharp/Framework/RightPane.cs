@@ -17,8 +17,12 @@ namespace WorldOfCSharp
         public RightPane(Unit unit)
         {
             this.unit = unit;
+            int width = Globals.CONSOLE_WIDTH - topRight.X;
+            string name = unit.Name;
+            if (name.Length >= width)
+                name = this.unit.Name.Substring(0, width - 2);
 
-            ConsoleTools.WriteOnPosition(string.Format("{0}", this.unit.Name), topRight.X + (HPBarLength / 2 + (this.unit.Name.Length / 2)), topRight.Y, ConsoleColor.Yellow);
+            ConsoleTools.WriteOnPosition(name, topRight.X + (width / 2 - name.Length / 2), topRight.Y, ConsoleColor.Yellow);
             ConsoleTools.WriteOnPosition(HIT_POINTS_STRING, topRight.X, topRight.Y + 2, ConsoleColor.Cyan);
             ConsoleTools.WriteOnPosition(GAME_TIME_STRING, Globals.GAME_FIELD_BOTTOM_RIGHT.X + 2, Globals.CONSOLE_HEIGHT - 2, ConsoleColor.Cyan);
 

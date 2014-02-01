@@ -27,7 +27,7 @@ namespace WorldOfCSharp
                 } while (procCh != '[');
 
                 GameEngine.MapName = mapName.ToString();
-                GameEngine.MapFileName = string.Format(@"../../maps/{0}.wocm", mapName.ToString());
+                //GameEngine.MapFileName = string.Format(@"../../maps/{0}.wocm", mapName.ToString());
 
                 StringBuilder xSize = new StringBuilder(4);        //--> gameField.GetLength(0)
                 procCh = (char)sReader.Read();

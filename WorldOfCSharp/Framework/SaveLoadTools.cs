@@ -14,37 +14,37 @@ namespace WorldOfCSharp
         //saves all basic unit info in UNITS_SAVE_FILE
         public static void SaveGame()
         {
-            if (!string.IsNullOrWhiteSpace(GameEngine.MapFileName))
+            if (string.IsNullOrWhiteSpace(GameEngine.MapFileName))
+                GameEngine.MapFileName = LoadSavedMapName();
+
+            StreamWriter unitFile = new StreamWriter(UNITS_SAVE_FILE, false, ENCODING);
+            using (unitFile)
             {
-                StreamWriter unitFile = new StreamWriter(UNITS_SAVE_FILE, false, ENCODING);
-                using (unitFile)
-                {
-                    unitFile.WriteLine(GameEngine.MapFileName);
-                    unitFile.WriteLine(GameEngine.GameTime.Ticks);
+                unitFile.WriteLine(GameEngine.MapFileName);
+                unitFile.WriteLine(GameEngine.GameTime.Ticks);
 
-                    StringBuilder saveSB = new StringBuilder();
-                    foreach (Unit unit in GameEngine.Units)
-                    {
-                        saveSB.AppendFormat("[{0};{1};{2};{3};{4};{5};{6}]", unit.X, unit.Y, unit.Flags, unit.VisualChar, unit.Color, unit.Name, unit.UniqueID);
-                        unitFile.WriteLine(saveSB.ToString());
-                        saveSB.Clear();
-                    }
-                }
-
-                StreamWriter infoFile = new StreamWriter(UNITS_INFO_FILE, false, ENCODING);
-                using (infoFile)
+                StringBuilder saveSB = new StringBuilder();
+                foreach (Unit unit in GameEngine.Units)
                 {
-                    StringBuilder saveSB = new StringBuilder();
-                    foreach (Unit unit in GameEngine.Units)
-                    {
-                        saveSB.AppendFormat("[{0};{1}]", unit.UniqueID, unit.Stats.ToString());
-                        infoFile.WriteLine(saveSB.ToString());
-                        saveSB.Clear();
-                    }
+                    saveSB.AppendFormat("[{0};{1};{2};{3};{4};{5};{6}]", unit.X, unit.Y, unit.Flags, unit.VisualChar, unit.Color, unit.Name, unit.UniqueID);
+                    unitFile.WriteLine(saveSB.ToString());
+                    saveSB.Clear();
                 }
             }
-            else
-                throw new ArgumentException("On save time string mapName is null, empty, or contains only white spaces.");
+
+            StreamWriter infoFile = new StreamWriter(UNITS_INFO_FILE, false, ENCODING);
+            using (infoFile)
+            {
+                StringBuilder saveSB = new StringBuilder();
+                foreach (Unit unit in GameEngine.Units)
+                {
+                    saveSB.AppendFormat("[{0};{1}]", unit.UniqueID, unit.Stats.ToString());
+                    infoFile.WriteLine(saveSB.ToString());
+                    saveSB.Clear();
+                }
+            }
+            //else
+            //    throw new ArgumentException("On save time string mapName is null, empty, or contains only white spaces.");
         }
 
         public static void SaveGame(string fileName)
@@ -96,13 +96,13 @@ namespace WorldOfCSharp
             return mapName;
         }
 
-        public static Unit LoadUnits(string unitSaveFile = UNITS_SAVE_FILE)
+        public static List<Unit> LoadUnits(string unitSaveFile = UNITS_SAVE_FILE)
         {
             StreamReader unitFile = new StreamReader(unitSaveFile, ENCODING);
 
             using (unitFile)
             {
-                Unit unit;
+                List<Unit> loadedUnits = new List<Unit>();
                 Unit pc = new Unit(0,0,0,'\0', ConsoleColor.Red, "temp"); 
                 int readInt = unitFile.Peek();
                 StreamReader infoFile = new StreamReader(UNITS_INFO_FILE, ENCODING);
@@ -188,7 +188,7 @@ namespace WorldOfCSharp
 
                         if (parsedUnitID == parsedInfoID)
                         {
-                            unit = new Unit(parsedCoordX, parsedCoordY, parsedFlag, visCh, parsedColor, name.ToString(), parsedUnitID);
+                            Unit unit = new Unit(parsedCoordX, parsedCoordY, parsedFlag, visCh, parsedColor, name.ToString(), parsedUnitID);
 
                             StringBuilder strength = new StringBuilder();
                             readChar = (char)infoFile.Read();
@@ -254,16 +254,18 @@ namespace WorldOfCSharp
                             unit.Stats.CurrentHitPoints = int.Parse(currentHP.ToString());
                             unit.Stats.ActionSpeed = int.Parse(actionSpeed.ToString());
 
-                            GameEngine.AddUnit(unit);
-                            if (unit.GetFlag(4))
-                                pc = unit;
+                            //if (unit.GetFlag(4))
+                            //    pc = unit;
+                            //else
+                            //    GameEngine.AddUnit(unit);
+                            loadedUnits.Add(unit);
                         }
 
                         readInt = unitFile.Peek();
                     }
                 }
 
-                return pc;
+                return loadedUnits;
             }
         }
     }
