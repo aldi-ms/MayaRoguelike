@@ -101,7 +101,7 @@ namespace WorldOfCSharp
 
                     int parsedFlag = int.Parse(flag.ToString());
                     ConsoleColor parsedColor = ConsoleTools.ParseColor(color.ToString());
-                    DB.Add(new TerrainType(iTerrain++, name.ToString(), parsedFlag, visCh, parsedColor));
+                    DB.Add(new TerrainType(iTerrain++, name.ToString(), (Flags)parsedFlag, visCh, parsedColor));
                     readInt = sReader.Peek();
                 }
             }
@@ -152,7 +152,7 @@ namespace WorldOfCSharp
 
                     int parsedFlag = int.Parse(flag.ToString());
                     ConsoleColor parsedColor = ConsoleTools.ParseColor(color.ToString());
-                    DB.Add(new InGameObject(iInGameObj++, name.ToString(), parsedFlag, visCh, parsedColor));
+                    DB.Add(new InGameObject(iInGameObj++, name.ToString(), (Flags)parsedFlag, visCh, parsedColor));
                     readInt = sReader.Peek();
                 }
             }

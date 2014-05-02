@@ -15,7 +15,7 @@ namespace WorldOfCSharp
         
         public bool IsTransparent
         {
-            get { return this.Terrain.GetFlag(3); } //isTransparent flag
+            get { return this.Terrain.Flags.HasFlag(Flags.IsTransparent); }
             set { }
         }
 

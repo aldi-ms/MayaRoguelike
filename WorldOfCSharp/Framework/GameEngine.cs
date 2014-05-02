@@ -73,13 +73,13 @@ namespace WorldOfCSharp
         {
             if (gameField[objX, objY].IngameObject != null)
             {
-                if (gameField[objX, objY].IngameObject.GetFlag(2))
+                if (gameField[objX, objY].IngameObject.Flags.HasFlag(Flags.HasEffect))
                 {
                     switch (gameField[objX, objY].IngameObject.Name)
                     {
                             //add hit/walk related objects+events here
                         case "savepoint":
-                            if (unit.GetFlag(4))
+                            if (unit.Flags.HasFlag(Flags.IsPlayerControl))
                             {
                                 SaveLoadTools.SaveGame();
                                 MapTools.SaveMap(gameField);
@@ -110,10 +110,10 @@ namespace WorldOfCSharp
 
             Units.Clear();
             gameField = MapTools.LoadMap(@"../../maps/testMapNewCode.wocm");       //load map; change it to generate map!
-            Unit pc = new Unit(10, 10, 3, '@', ConsoleColor.White, pcName);
+            Flags pcFlags = Flags.IsCollidable | Flags.IsMovable | Flags.IsPlayerControl;
+            Unit pc = new Unit(10, 10, pcFlags, '@', ConsoleColor.White, pcName);
             Units.Add(pc);
             GameTime = new GameTime();
-            pc.SetFlag(4, true);
 
             Initialize(pc);
         }
@@ -131,7 +131,7 @@ namespace WorldOfCSharp
             Units = SaveLoadTools.LoadUnits();
             foreach (var unit in Units)
             {
-                if (unit.GetFlag(4))
+                if (unit.Flags.HasFlag(Flags.IsPlayerControl))
                 {
                     Initialize(unit); 
                 }
@@ -182,6 +182,7 @@ namespace WorldOfCSharp
                 removedUnits.Clear();
 
                 gameTime.Tick();
+                //make regen & effects that act each turn/every n-turns here, not ext.to Unit...
                 if (GameTime.Ticks % 50 == 0)
                     pc.EffectsPerFive();
 
@@ -192,7 +193,7 @@ namespace WorldOfCSharp
                     unit.Stats.Energy += unit.Stats.ActionSpeed;
                     if (unit.Stats.Energy >= 100)
                     {
-                        if (unit.GetFlag(4))
+                        if (unit.Flags.HasFlag(Flags.IsPlayerControl))
                         {
                             energyCost = PlayerControl(pc);
                         }

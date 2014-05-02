@@ -26,7 +26,7 @@ namespace WorldOfCSharp
                 StringBuilder saveSB = new StringBuilder();
                 foreach (Unit unit in GameEngine.Units)
                 {
-                    saveSB.AppendFormat("[{0};{1};{2};{3};{4};{5};{6}]", unit.X, unit.Y, unit.Flags, unit.VisualChar, unit.Color, unit.Name, unit.UniqueID);
+                    saveSB.AppendFormat("[{0};{1};{2};{3};{4};{5};{6}]", unit.X, unit.Y, (int)unit.Flags, unit.VisualChar, unit.Color, unit.Name, unit.UniqueID);
                     unitFile.WriteLine(saveSB.ToString());
                     saveSB.Clear();
                 }
@@ -62,7 +62,7 @@ namespace WorldOfCSharp
                     StringBuilder saveSB = new StringBuilder();
                     foreach (Unit unit in GameEngine.Units)
                     {
-                        saveSB.AppendFormat("[{0};{1};{2};{3};{4};{5};{6}]", unit.X, unit.Y, unit.Flags, unit.VisualChar, unit.Color, unit.Name, unit.UniqueID);
+                        saveSB.AppendFormat("[{0};{1};{2};{3};{4};{5};{6}]", unit.X, unit.Y, (int)unit.Flags, unit.VisualChar, unit.Color, unit.Name, unit.UniqueID);
                         file.WriteLine(saveSB.ToString());
                         saveSB.Clear();
                     }
@@ -188,7 +188,7 @@ namespace WorldOfCSharp
 
                         if (parsedUnitID == parsedInfoID)
                         {
-                            Unit unit = new Unit(parsedCoordX, parsedCoordY, parsedFlag, visCh, parsedColor, name.ToString(), parsedUnitID);
+                            Unit unit = new Unit(parsedCoordX, parsedCoordY, (Flags)parsedFlag, visCh, parsedColor, name.ToString(), parsedUnitID);
 
                             StringBuilder strength = new StringBuilder();
                             readChar = (char)infoFile.Read();

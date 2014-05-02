@@ -12,7 +12,7 @@ namespace WorldOfCSharp
         private Inventory inventory;
         private int uniqueID = 0;
 
-        public Unit(int x, int y, int flags, char visualChar, ConsoleColor color, string name)
+        public Unit(int x, int y, Flags flags, char visualChar, ConsoleColor color, string name)
             : base(x, y, flags, visualChar, color, name)
         {
             if (uniqueID == 0)
@@ -22,13 +22,13 @@ namespace WorldOfCSharp
             this.equipment.InventoryConnected = this.inventory;
         }
 
-        public Unit(int x, int y, int flags, int unitSpeed, char visualChar, ConsoleColor color, string name, UnitStats stats)
+        public Unit(int x, int y, Flags flags, int unitSpeed, char visualChar, ConsoleColor color, string name, UnitStats stats)
             : base(x, y, flags, visualChar, color, name)
         {
             this.unitStats = stats;
         }
 
-        public Unit(int x, int y, int flags, char visualChar, ConsoleColor color, string name, int ID)
+        public Unit(int x, int y, Flags flags, char visualChar, ConsoleColor color, string name, int ID)
             : this(x, y, flags, visualChar, color, name)
         {
             this.uniqueID = ID;
@@ -37,6 +37,7 @@ namespace WorldOfCSharp
         public Unit(Unit unit)
             : this(unit.X, unit.Y, unit.Flags, unit.VisualChar, unit.Color, unit.Name)
         { }
+
 
         public int UniqueID
         {
@@ -123,7 +124,7 @@ namespace WorldOfCSharp
 
         internal protected void MakeAMove(CardinalDirection direction)
         {
-            if (this.GetFlag(0))
+            if (this.Flags.HasFlag(Flags.IsMovable))
             {
                 int deltaX = 0;
                 int deltaY = 0;
@@ -205,11 +206,11 @@ namespace WorldOfCSharp
                 return false;
 
             bool unit = false;
-            if (!GameEngine.GameField[x, y].Terrain.GetFlag(1))
+            if (!GameEngine.GameField[x, y].Terrain.Flags.HasFlag(Flags.IsCollidable))
             {
                 if (GameEngine.GameField[x, y].Unit != null)
                 {
-                    if (!GameEngine.GameField[x, y].Unit.GetFlag(1))
+                    if (!GameEngine.GameField[x, y].Unit.Flags.HasFlag(Flags.IsCollidable))
                     {
                         unit = true;
                     }
@@ -219,7 +220,7 @@ namespace WorldOfCSharp
                 bool ingObj = false;
                 if (GameEngine.GameField[x, y].IngameObject != null)
                 {
-                    if (!GameEngine.GameField[x, y].IngameObject.GetFlag(1))
+                    if (!GameEngine.GameField[x, y].IngameObject.Flags.HasFlag(Flags.IsCollidable))
                     {
                         ingObj = true;
                     }

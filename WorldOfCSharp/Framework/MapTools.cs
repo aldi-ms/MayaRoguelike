@@ -65,7 +65,7 @@ namespace WorldOfCSharp
                             } while (readChar != ']' && readChar != '<');
 
                             int index = int.Parse(posInTerrainDB.ToString());
-                            gameGrid[x, y].Terrain = new TerrainType(index, Database.TerrainDatabase[index]);
+                            gameGrid[x, y].Terrain = new TerrainType(Database.TerrainDatabase[index]);
                             gameGrid[x, y].Terrain.X = x;
                             gameGrid[x, y].Terrain.Y = y;
                          
@@ -82,7 +82,7 @@ namespace WorldOfCSharp
                                 readChar = (char)sReader.Read();
 
                                 int objIndex = int.Parse(posInInGameObjDB.ToString());
-                                gameGrid[x, y].IngameObject = new InGameObject(objIndex, Database.IngameObjectDatabase[objIndex]);
+                                gameGrid[x, y].IngameObject = new InGameObject(Database.IngameObjectDatabase[objIndex]);
                                 gameGrid[x, y].IngameObject.X = x;
                                 gameGrid[x, y].IngameObject.Y = y;
                             }
@@ -167,17 +167,16 @@ namespace WorldOfCSharp
             }
         }
 
-        private static MersenneTwister mt = new MersenneTwister();
-        private static char RandomTerrain()
-        {
-            int roll = mt.Next(0, 101);
-            if (roll >= 90)
-            {
-                return '#';
-            }
-            return '.';
-        }
-
+        //private static MersenneTwister mt = new MersenneTwister();
+        //private static char RandomTerrain()
+        //{
+        //    int roll = mt.Next(0, 101);
+        //    if (roll >= 90)
+        //    {
+        //        return '#';
+        //    }
+        //    return '.';
+        //}
              
         public static void SaveMap(GameCell[,] gameField)
         {
@@ -197,6 +196,18 @@ namespace WorldOfCSharp
                     {
                         parseMap.AppendFormat("<{0}>]", gameField[x, y].IngameObject.PositionInDB);
                     }
+
+                    //if (gameField[x, y].ItemList.Capacity == 0)
+                    //{
+                    //    parseMap.Append("]");
+                    //}
+                    //else
+                    //{
+                    //    foreach (var item in gameField[x, y].ItemList)
+                    //    {
+                    //    parseMap.AppendFormat("<{0}>]", gameField[x, y].IngameObject.PositionInDB);
+                    //    }
+                    //}
                 }
             }
 

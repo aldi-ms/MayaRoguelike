@@ -11,24 +11,34 @@ Used Flags:
 
 namespace WorldOfCSharp
 {
+    [Flags]
+    public enum Flags : uint
+    {
+        IsMovable = 0x1,
+        IsCollidable = 0x2,
+        HasEffect = 0x4,
+        IsTransparent = 0x8,
+        IsPlayerControl = 0x10
+    }
+
     public class GameObject
     {
+        private Flags flags;
         private Coordinate coord;
-        private int flags;
         private char visualChar = '\0';
         private ConsoleColor color;
         private string name;
                 
-        public GameObject(Coordinate coordinates, int flags, char visualChar, ConsoleColor color, string name)
+        public GameObject(Coordinate coordinates, Flags flags, char visualChar, ConsoleColor color, string name)
         {
             this.coord = coordinates;
             this.flags = flags;
             this.visualChar = visualChar;
             this.color = color;
-            this.name = name;
+            this.name = name;            
         }
 
-        public GameObject(int x, int y, int flags, char visualChar, ConsoleColor color, string name)
+        public GameObject(int x, int y, Flags flags, char visualChar, ConsoleColor color, string name)
             : this(new Coordinate(x, y), flags, visualChar, color, name)
         { }
 
@@ -58,6 +68,12 @@ namespace WorldOfCSharp
             }
         }
 
+        public Flags Flags
+        {
+            get { return this.flags; }
+            set { this.flags = value; }
+        }
+
         public char VisualChar
         {
             get { return this.visualChar; }
@@ -67,22 +83,17 @@ namespace WorldOfCSharp
         {
             get { return this.color; }
         }
-
-        public int Flags
-        {
-            get { return this.flags; }
-        }
-
+        
         public string Name
         {
             get { return this.name; }
         }
-
+        /*
         public bool GetFlag(int position)
         {
             if (position >= 0 && position < 32) //32 flags - from 0 to 31
             {
-                int bitValue = (flags & (1 << position)) >> position;
+                int bitValue = (flagsDEPRECATED & (1 << position)) >> position;
 
                 if (bitValue == 1)
                 {
@@ -99,18 +110,18 @@ namespace WorldOfCSharp
                 throw new ArgumentOutOfRangeException("Flag position", exceptionStr);
             }
         }
-
+        
         public void SetFlag(int position, bool state)
         {
             if (position >= 0 && position < 32)
             {
                 if (state)
                 {
-                    flags = flags | (1 << position);
+                    flagsDEPRECATED = flagsDEPRECATED | (1 << position);
                 }
                 else
                 {
-                    flags = flags & ~(1 << position);
+                    flagsDEPRECATED = flagsDEPRECATED & ~(1 << position);
                 }
             }
             else
@@ -119,11 +130,11 @@ namespace WorldOfCSharp
                 throw new ArgumentOutOfRangeException("Flag position", exceptionStr);
             }
         }
-
+        */
         public override string ToString()
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            sb.AppendFormat("Game object: <{0}>\nChar: <{1}>\nCoordinates: <{2}>\nFlags: <{3}>", this.Name, this.VisualChar, this.coord, Convert.ToString(this.flags, 2));
+            sb.AppendFormat("Game object: <{0}>\nChar: <{1}>\nCoordinates: <{2}>\nFlags: <{3}>", this.Name, this.VisualChar, this.coord, Convert.ToString(this.Flags));
             return sb.ToString();
         }
     }

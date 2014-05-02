@@ -16,5 +16,17 @@ namespace WorldOfCSharp.Tests
             unit.Inventory.StoreItem(chest);
             unit.Inventory.StoreItem(helm);
         }
+
+        public static void EnumToConsole(Flags flOpt)
+        {
+            Console.WriteLine(flOpt);
+            Console.WriteLine((int)flOpt);
+        }
+
+        public static void IntToEnum(int flag)
+        {
+            Flags flOpt = (Flags)flag;
+            EnumToConsole(flOpt);
+        }
     }
 }

@@ -1,11 +1,12 @@
 ﻿1. Add Equipment/Inventory to save method.
 1.1. Save items on ground to the map.
+1.2. Make items load-able from a file (much like ingame obj?).
 
 2. Implement options to scroll the log history.
 
 3. Implement a way to print colored messages (colored letters even) in MessageLog.
 
-4. Fix save issues where the saved unit/info is dublicated, and wrong info is saved / old info is not deleted.
+4. 
 
 5. Implement CombatEngine class, to do everything combat-related.
 
@@ -16,4 +17,4 @@
 
 8. 
 
-9. 
+9. Weather sim

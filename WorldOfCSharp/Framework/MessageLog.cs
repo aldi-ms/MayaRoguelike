@@ -52,7 +52,7 @@ namespace WorldOfCSharp
             }
         }
 
-        public void SendMessage(string text)
+        public void SendMessage(string text, ConsoleColor color = ConsoleColor.DarkGray)
         {
             if (text.Length <= width)
             {
@@ -174,6 +174,18 @@ namespace WorldOfCSharp
             Console.ForegroundColor = foregroundColor;
             Console.BackgroundColor = backgroundColor;
             Console.Write(text.ToString());
+        }
+
+        private struct LineTextColor
+        {
+            public StringBuilder line;
+            public ConsoleColor color;
+
+            public LineTextColor(int length, ConsoleColor color)
+            {
+                this.line = new StringBuilder(length);
+                this.color = color;
+            }
         }
     }
 }

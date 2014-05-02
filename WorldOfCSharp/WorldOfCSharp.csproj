@@ -60,7 +60,7 @@
     <Compile Include="Framework\RightPane.cs" />
     <Compile Include="Framework\RNG.cs" />
     <Compile Include="GlobalValues.cs" />
-    <Compile Include="Framework\IngameObject.cs" />
+    <Compile Include="Framework\InGameObject.cs" />
     <Compile Include="Framework\Item.cs" />
     <Compile Include="Framework\ItemCode.cs" />
     <Compile Include="Framework\ItemType.cs" />
