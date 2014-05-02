@@ -6,7 +6,6 @@ namespace WorldOfCSharp
     public class GameCell : IFovCell
     {
         private bool isVisible;
-        //private bool hasEffect;
 
         private TerrainType terrain;
         private Unit unit;

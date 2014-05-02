@@ -51,7 +51,7 @@ namespace WorldOfCSharp.FieldOfView
 
         public override void ComputeFOV()
         {
-            maxDepth = Math.Max(Map.grid.Width(), Map.grid.Height());
+            maxDepth = Math.Max(Map.grid.Height, Map.grid.Width);
 
             for (int octant = 1; octant < 9; octant++)
             {

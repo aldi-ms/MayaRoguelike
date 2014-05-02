@@ -28,5 +28,35 @@ namespace WorldOfCSharp.Tests
             Flags flOpt = (Flags)flag;
             EnumToConsole(flOpt);
         }
+
+        public static void FlatArrayTest()
+        {
+            Framework.FlatArray<int> flatArray = new Framework.FlatArray<int>(5, 20);
+
+            for (int i = 0; i < flatArray.Width; i++)
+            {
+                for (int j = 0; j < flatArray.Height; j++)
+                {
+                    Console.Write(flatArray[i, j]);
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine();
+
+            flatArray[0, 0] = 1;
+            flatArray[4, 19] = 1;
+            flatArray[3, 14] = 1;
+            flatArray[1, 1] = 1;
+            flatArray[0, 19] = 2;
+
+            for (int i = 0; i < flatArray.Width; i++)
+            {
+                for (int j = 0; j < flatArray.Height; j++)
+                {
+                    Console.Write(flatArray[i, j]);
+                }
+                Console.WriteLine();
+            }
+        }
     }
 }

@@ -43,13 +43,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Framework\AI.cs" />
-    <Compile Include="Framework\ArrayExtension.cs" />
     <Compile Include="Framework\ConsoleTools.cs" />
     <Compile Include="Framework\Coordinate.cs" />
     <Compile Include="Framework\Database.cs" />
     <Compile Include="Framework\CardinalDirection.cs" />
     <Compile Include="Framework\Equipment.cs" />
     <Compile Include="Framework\FieldOfView.cs" />
+    <Compile Include="Framework\FlatArray.cs" />
     <Compile Include="Framework\FOVAlgorithm.cs" />
     <Compile Include="Framework\GameEngine.cs" />
     <Compile Include="Framework\GameCell.cs" />

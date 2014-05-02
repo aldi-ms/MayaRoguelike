@@ -136,24 +136,24 @@ namespace WorldOfCSharp.FieldOfView
         ShadowCasting<TFovCell> shadowCaster;
         MRPAS<TFovCell> mrps;
 
-        internal TFovCell[,] grid;
+        internal Framework.FlatArray<TFovCell> grid;
         /// <summary>
-        /// Construct a FieldOfView instance given a amp of IFovCell objects
+        /// Construct a FieldOfView instance given a map of IFovCell objects
         /// </summary>
         /// <param name="inGrid"></param>
-        public FieldOfView(TFovCell[,] inGrid)
+        public FieldOfView(Framework.FlatArray<TFovCell> inGrid)
         {
             grid = inGrid;
         }
 
         public int Width()
         {
-            return this.grid.GetLength(0);
+            return this.grid.Height;
         }
 
         public int Height()
         {
-            return this.grid.GetLength(1);
+            return this.grid.Width;
         }
 
         /// <summary>
@@ -187,9 +187,9 @@ namespace WorldOfCSharp.FieldOfView
 
         void ClearFov()
         {
-            for (int y = 0; y < grid.Height(); y++)
+            for (int y = 0; y < grid.Width; y++)
             {
-                for (int x = 0; x < grid.Width(); x++)
+                for (int x = 0; x < grid.Height; x++)
                 {
                     grid[x, y].IsVisible = false;
                 }

@@ -3,6 +3,7 @@ using System.Text;
 using System.Threading;
 using System.Globalization;
 using MT19937;
+using WorldOfCSharp.Tests;
 
 namespace WorldOfCSharp
 {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using WorldOfCSharp.FieldOfView;
+using WorldOfCSharp.Framework;
 
 namespace WorldOfCSharp
 {
@@ -9,7 +10,8 @@ namespace WorldOfCSharp
     {
         private static string mapName;
         private static string mapFileName;
-        private static GameCell[,] gameField;
+        //private static GameCell[,] gameField_DEPRECATED_;
+        private static FlatArray<GameCell> gameField;
         private static MessageLog messageLog;
         private static List<Unit> units = new List<Unit>();
         private static List<Unit> queuedUnits = new List<Unit>();
@@ -23,7 +25,7 @@ namespace WorldOfCSharp
             get { return VEngine; }
         }
 
-        public static GameCell[,] GameField
+        public static FlatArray<GameCell> GameField
         {
             get { return gameField; }
             set { gameField = value; }
@@ -186,6 +188,11 @@ namespace WorldOfCSharp
                 if (GameTime.Ticks % 50 == 0)
                     pc.EffectsPerFive();
 
+                if (GameTime.Ticks >= 20000)       //for performance testing purposes
+                {
+                    ConsoleTools.Quit();
+                }
+
                 rightInfoPane.Update(pc);
 
                 foreach (Unit unit in Units)
@@ -195,7 +202,8 @@ namespace WorldOfCSharp
                     {
                         if (unit.Flags.HasFlag(Flags.IsPlayerControl))
                         {
-                            energyCost = PlayerControl(pc);
+                            //energyCost = PlayerControl(pc);
+                            energyCost = AI.ArtificialIntelligence.DrunkardWalk(unit);      //for performance testing purposes
                         }
                         else 
                         {

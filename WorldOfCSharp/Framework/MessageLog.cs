@@ -66,7 +66,7 @@ namespace WorldOfCSharp
                 line[0].Clear();
                 line[0].Append(text);
                 PrintMessageLog();
-                WriteLogFile(text);
+                WriteLogFile(text);     //make log file save on game save instead of every message?
             }
             else
             {
@@ -174,18 +174,6 @@ namespace WorldOfCSharp
             Console.ForegroundColor = foregroundColor;
             Console.BackgroundColor = backgroundColor;
             Console.Write(text.ToString());
-        }
-
-        private struct LineTextColor
-        {
-            public StringBuilder line;
-            public ConsoleColor color;
-
-            public LineTextColor(int length, ConsoleColor color)
-            {
-                this.line = new StringBuilder(length);
-                this.color = color;
-            }
         }
     }
 }

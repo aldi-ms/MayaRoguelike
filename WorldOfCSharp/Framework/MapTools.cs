@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using MT19937;
+using WorldOfCSharp.Framework;
 
 namespace WorldOfCSharp
 {
@@ -9,9 +10,9 @@ namespace WorldOfCSharp
     {
         private static readonly Encoding encoding = Encoding.ASCII;
 
-        public static GameCell[,] LoadMap(string mapFileName)  //return gameField
+        public static FlatArray<GameCell> LoadMap(string mapFileName)  //return gameField
         {
-            GameCell[,] gameGrid = new GameCell[Globals.GAME_FIELD_BOTTOM_RIGHT.X, Globals.GAME_FIELD_BOTTOM_RIGHT.Y];
+            FlatArray<GameCell> gameGrid = new FlatArray<GameCell>(Globals.GAME_FIELD_BOTTOM_RIGHT.X, Globals.GAME_FIELD_BOTTOM_RIGHT.Y);
             Database.LoadDatabase();
 
             StreamReader sReader = new StreamReader(mapFileName, encoding);
@@ -27,7 +28,6 @@ namespace WorldOfCSharp
                 } while (procCh != '[');
 
                 GameEngine.MapName = mapName.ToString();
-                //GameEngine.MapFileName = string.Format(@"../../maps/{0}.wocm", mapName.ToString());
 
                 StringBuilder xSize = new StringBuilder(4);        //--> gameField.GetLength(0)
                 procCh = (char)sReader.Read();
@@ -178,13 +178,13 @@ namespace WorldOfCSharp
         //    return '.';
         //}
              
-        public static void SaveMap(GameCell[,] gameField)
+        public static void SaveMap(FlatArray<GameCell> gameField)
         {
             StringBuilder parseMap = new StringBuilder();
 
-            for (int x = 0; x < gameField.GetLength(0); x++)
+            for (int x = 0; x < gameField.Width; x++)
             {
-                for (int y = 0; y < gameField.GetLength(1); y++)
+                for (int y = 0; y < gameField.Height; y++)
                 {
                     parseMap.AppendFormat("[{0}", gameField[x, y].Terrain.PositionInDB);
 
@@ -218,7 +218,7 @@ namespace WorldOfCSharp
                 sWriter.Write(nullString);  //creates a new file, overwrites old
 
                 sWriter.Write(GameEngine.MapName);
-                sWriter.Write(string.Format("[{0};{1}]", gameField.GetLength(0), gameField.GetLength(1)));
+                sWriter.Write(string.Format("[{0};{1}]", gameField.Width, gameField.Height));
                 sWriter.Write(parseMap.ToString());
             }
         }

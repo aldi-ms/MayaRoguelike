@@ -68,9 +68,9 @@ namespace WorldOfCSharp.FieldOfView
 
         protected bool IsInMap(int x, int y)
         {
-            if (x < 0 || x >= map.grid.Width())
+            if (x < 0 || x >= map.grid.Height)
                 return false;
-            if (y < 0 || y >= map.grid.Height())
+            if (y < 0 || y >= map.grid.Width)
                 return false;
 
             return true;

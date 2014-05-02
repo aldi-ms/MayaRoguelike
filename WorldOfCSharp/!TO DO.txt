@@ -17,4 +17,4 @@
 
 8. 
 
-9. Weather sim
+9. Day/night, weather and other time related simulations.

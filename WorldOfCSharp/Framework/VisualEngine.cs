@@ -9,7 +9,7 @@ namespace WorldOfCSharp
         private int range = 12;
         private FOVMethod method = FOVMethod.MRPAS;
         private RangeLimitShape shape = RangeLimitShape.Circle;
-        private GameCell[,] map;
+        private Framework.FlatArray<GameCell> map;
         private char[] itemCharacters;
 
         private int xStart;
@@ -17,13 +17,12 @@ namespace WorldOfCSharp
         private int yStart;
         private int yEnd;
 
-        public VisualEngine(GameCell[,] map, int range, FOVMethod method, RangeLimitShape shape)
+        public VisualEngine(Framework.FlatArray<GameCell> map, int range, FOVMethod method, RangeLimitShape shape)
         {
             this.fieldOfView = new FieldOfView<GameCell>(map);
             this.range = range;
             this.method = method;
             this.shape = shape;
-            this.map = new GameCell[0, 0];
             this.map = map;
 
             this.itemCharacters = new char[Enum.GetNames(typeof(BaseType)).Length];
@@ -43,7 +42,7 @@ namespace WorldOfCSharp
             this.itemCharacters[(int)BaseType.Miscellaneous] = '}';
         }
 
-        public VisualEngine(GameCell[,] map)
+        public VisualEngine(Framework.FlatArray<GameCell> map)
             : this(map, 12, FOVMethod.MRPAS, RangeLimitShape.Octagon)
         { }
 

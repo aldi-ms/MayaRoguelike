@@ -1,73 +1,80 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="WorldOfCSharp.AI.ArtificialIntelligence" Collapsed="true">
-    <Position X="9.5" Y="0.5" Width="1.5" />
+    <Position X="7.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
       <FileName>Framework\AI.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="WorldOfCSharp.ArrayExtension" Collapsed="true">
-    <Position X="7.75" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAABAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Framework\ArrayExtension.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="WorldOfCSharp.ConsoleTools" Collapsed="true">
-    <Position X="11.25" Y="0.5" Width="1.5" />
+    <Position X="9.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAgAAAAAAQAAAAAAAgAAAAQAAEAAAAAABAAQg=</HashCode>
       <FileName>Framework\ConsoleTools.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="WorldOfCSharp.Database" Collapsed="true">
-    <Position X="13" Y="0.5" Width="1.5" />
+    <Position X="11.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAIAASAgQAAAAAAAAAAAAAEAYAAQACIAAAAACAAAAAA=</HashCode>
       <FileName>Framework\Database.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="WorldOfCSharp.Equipment" Collapsed="true">
-    <Position X="16.5" Y="0.5" Width="1.5" />
+    <Position X="13" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>JAIAAICAAAAAAIAgLAAAAAQAACAEAAAgAAAAAIAAAAA=</HashCode>
       <FileName>Framework\Equipment.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="WorldOfCSharp.GameCell" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="9.5" Y="1.5" Width="1.5" />
+    <Position X="7.75" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAgUAAAIBwAgAAEAAAAAAAAAEAAAABEAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAgEAAAIBwAgAAEAAAAAAAAAEAAAABEAAA=</HashCode>
       <FileName>Framework\GameCell.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="WorldOfCSharp.GameEngine" Collapsed="true">
-    <Position X="11.25" Y="1.5" Width="1.5" />
+    <Position X="9.5" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAgAQAAAEAASgAACgIAACwAQUQAACBEAAABABASAQ=</HashCode>
+      <HashCode>AAAAkAQAABEAASgAACgIAACwARUQAACREAAABABASAQ=</HashCode>
       <FileName>Framework\GameEngine.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="WorldOfCSharp.GameObject" Collapsed="true">
     <Position X="3" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAABAAAAAAAAAEEAAAAAAQgAABGAAGAAAAAgAAAYAQ=</HashCode>
+      <HashCode>AAAABAAAAAAAAAEEAAAAAAQAAABEAAGAAAAAgAAAYAQ=</HashCode>
       <FileName>Framework\GameObject.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="WorldOfCSharp.GameTime" Collapsed="true">
-    <Position X="13" Y="1.5" Width="1.5" />
+    <Position X="11.25" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AABkAAAAJABAAAAEQAAAAAAIAAQACAIEAAADAAEAQQA=</HashCode>
       <FileName>Framework\GameTime.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="WorldOfCSharp.GameTimeExtensions" Collapsed="true">
+    <Position X="13" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>Framework\GameTimeEnums.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WorldOfCSharp.InGameObject" Collapsed="true">
+    <Position X="0.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAIA=</HashCode>
+      <FileName>Framework\InGameObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Class Name="WorldOfCSharp.Inventory" Collapsed="true">
     <Position X="16.5" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAABAAAAAgAgADAAAAAQAACAAAAAiACAAACAAAAA=</HashCode>
+      <HashCode>AAAAAABAAAgAgAgADAAAAAQAACAAAAAiACAAAAAAAAA=</HashCode>
       <FileName>Framework\Inventory.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -88,7 +95,7 @@
   <Class Name="WorldOfCSharp.MapTools" Collapsed="true">
     <Position X="13" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAQBAAAAAAAAAAAEAAAAAAIAACAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAAEAAAAAAIAAAAAAAAAAAAA=</HashCode>
       <FileName>Framework\MapTools.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -97,13 +104,6 @@
     <TypeIdentifier>
       <HashCode>AAMAAAAAAAIACRQAQCASAAAIACAAAAAEAAAAAAAAEAI=</HashCode>
       <FileName>Framework\MessageLog.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="WorldOfCSharp.GameTimeExtensions" Collapsed="true">
-    <Position X="14.75" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
-      <FileName>Framework\GameTimeEnums.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="WorldOfCSharp.RightPane" Collapsed="true">
@@ -142,14 +142,14 @@
     </TypeIdentifier>
   </Class>
   <Class Name="WorldOfCSharp.TerrainType" Collapsed="true">
-    <Position X="0.75" Y="1.75" Width="1.5" />
+    <Position X="3" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAIA=</HashCode>
       <FileName>Framework\TerrainType.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="WorldOfCSharp.Unit" Collapsed="true">
-    <Position X="3" Y="1.75" Width="1.5" />
+    <Position X="5.25" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AhQAAAAAAAAAAAAAAAQAgCQAUAAEAAACCAAIAggAAoA=</HashCode>
       <FileName>Framework\Unit.cs</FileName>
@@ -176,13 +176,6 @@
       <FileName>GlobalValues.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="WorldOfCSharp.IngameObject" Collapsed="true">
-    <Position X="5.25" Y="1.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>IngameObject.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="WorldOfCSharp.UIElements" Collapsed="true">
     <Position X="7.75" Y="4.5" Width="1.5" />
     <TypeIdentifier>
@@ -198,7 +191,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="WorldOfCSharp.FieldOfView.FieldOfView&lt;TFovCell&gt;" Collapsed="true">
-    <Position X="7.75" Y="1.5" Width="1.5" />
+    <Position X="14.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>BAAAAAAABAIAAAAAAAAAAEBAgAAIAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Framework\FieldOfView.cs</FileName>
@@ -239,6 +232,13 @@
       <FileName>Framework\ShadowCasting.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="WorldOfCSharp.Framework.FlatArray&lt;T&gt;" Collapsed="true">
+    <Position X="16.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAQASAgAAEAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Framework\FlatArray.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Class Name="MT19937.MersenneTwister" Collapsed="true">
     <Position X="14.75" Y="2.5" Width="1.5" />
     <TypeIdentifier>
@@ -249,7 +249,7 @@
   <Class Name="WorldOfCSharp.Tests.Testing" Collapsed="true">
     <Position X="16.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAIAAAAAAACAAAAAAAAAAAAAACAAAAAAAAgAAAAAAA=</HashCode>
       <FileName>Testing.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -288,6 +288,27 @@
       <FileName>Framework\CardinalDirection.cs</FileName>
     </TypeIdentifier>
   </Enum>
+  <Enum Name="WorldOfCSharp.Flags" Collapsed="true">
+    <Position X="13" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAgAAAAAAAAAAAAAABAAQABAAAA=</HashCode>
+      <FileName>Framework\GameObject.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="WorldOfCSharp.GameMonth" Collapsed="true">
+    <Position X="7.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAgAAAABAAQAIAhACIgIAYgABIAAAAAAIAAAAAYA=</HashCode>
+      <FileName>Framework\GameTimeEnums.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="WorldOfCSharp.GameDay" Collapsed="true">
+    <Position X="16.5" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAgAAAABAAQAIAhACIgIAcgABIAAAAAAIAAAAAYA=</HashCode>
+      <FileName>Framework\GameTimeEnums.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
   <Enum Name="WorldOfCSharp.BaseType" Collapsed="true">
     <Position X="7.75" Y="8" Width="1.5" />
     <TypeIdentifier>
@@ -302,29 +323,15 @@
       <FileName>Framework\ItemType.cs</FileName>
     </TypeIdentifier>
   </Enum>
-  <Enum Name="WorldOfCSharp.GameMonth" Collapsed="true">
-    <Position X="16.5" Y="8" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAQAAgAAAABAAQAIAhACIgIAYgABIAAAAAAIAAAAAYA=</HashCode>
-      <FileName>Framework\GameTimeEnums.cs</FileName>
-    </TypeIdentifier>
-  </Enum>
-  <Enum Name="WorldOfCSharp.GameDay" Collapsed="true">
-    <Position X="14.75" Y="8" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAQAAgAAAABAAQAIAhACIgIAcgABIAAAAAAIAAAAAYA=</HashCode>
-      <FileName>Framework\GameTimeEnums.cs</FileName>
-    </TypeIdentifier>
-  </Enum>
   <Enum Name="WorldOfCSharp.FieldOfView.FOVMethod" Collapsed="true">
-    <Position X="13" Y="8" Width="1.5" />
+    <Position X="14.75" Y="8" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAgAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Framework\FieldOfView.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="WorldOfCSharp.FieldOfView.RangeLimitShape" Collapsed="true">
-    <Position X="7.75" Y="8.75" Width="1.5" />
+    <Position X="9.5" Y="8.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAABAAAAAAAgAAAAAAAAgAAAAAAA=</HashCode>
       <FileName>Framework\FieldOfView.cs</FileName>
