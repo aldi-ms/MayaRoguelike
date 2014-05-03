@@ -69,13 +69,17 @@ namespace WorldOfCSharp
                 }
             }
         }
-        //to be fixed to return item if there was one before equipping.
+
         public void EquipItem(Item item)
         {
             if (item.Slot != EquipSlot.NotEquippable && item != null)
             {
                 this.inventoryConnected.DropItem(item);
-                
+
+                //if there is already equipped item, put it in the inventory
+                if (this.equipment[(int)item.Slot] != null)
+                    this.Unequip(this.equipment[(int)item.Slot]);
+
                 this.equipment[(int)item.Slot] = item;
                 this.equipment[(int)item.Slot].isEquipped = true;
                 this.isSlotUsed[(int)item.Slot] = true;

@@ -190,7 +190,7 @@ namespace WorldOfCSharp
             this.linePosition = this.TopLeft.Y + 2;
             var emptySB = new StringBuilder(windowWidth - 8);
             emptySB.Append(new string(' ', windowWidth - 8));
-            while (this.Write(emptySB.ToString())) ;
+            while (this.Write(emptySB.ToString()));
             this.linePosition = this.TopLeft.Y + 2;
         }
 
@@ -208,36 +208,28 @@ namespace WorldOfCSharp
 
             //bottom side
             for (int y = windowBottomLeftX + windowMargin; y < (windowBottomLeftX + windowWidth) - windowMargin; y++)
-            {
                 ConsoleTools.WriteOnPosition('\u2550', y, windowBottomLeftY - windowMargin, ConsoleColor.Cyan);
-            }
 
             //bottom right corner
             ConsoleTools.WriteOnPosition('\u255d', (windowBottomLeftX + windowWidth) - windowMargin, windowBottomLeftY - windowMargin, ConsoleColor.Cyan);
 
             //right side
             for (int x = windowBottomLeftY - (windowMargin + 1); x >= windowMargin + 1; x--)
-            {
                 ConsoleTools.WriteOnPosition('\u2551', (windowBottomLeftX + windowWidth) - windowMargin, x, ConsoleColor.Cyan);
-            }
 
             //top right corner
             ConsoleTools.WriteOnPosition('\u2557', (windowBottomLeftX + windowWidth) - windowMargin, (windowHeight - windowBottomLeftY) + windowMargin, ConsoleColor.Cyan);
 
             //top side
             for (int y = (windowBottomLeftX + windowWidth) - (windowMargin + 1); y >= (windowBottomLeftY - windowHeight) + windowMargin; y--)
-            {
                 ConsoleTools.WriteOnPosition('\u2550', y, (windowHeight - windowBottomLeftY) + windowMargin, ConsoleColor.Cyan);
-            }
 
             //top left corner
             ConsoleTools.WriteOnPosition('\u2554', (windowHeight - windowBottomLeftY) + windowMargin - 1, windowBottomLeftX + windowMargin, ConsoleColor.Cyan);
 
             //left side
             for (int x = (windowBottomLeftY - windowHeight) + windowMargin + 1; x < windowBottomLeftY - windowMargin; x++)
-            {
                 ConsoleTools.WriteOnPosition('\u2551', windowBottomLeftX + windowMargin - 1, x, ConsoleColor.Cyan);
-            }
 
             //write window title
             StringBuilder SBTitle = new StringBuilder();

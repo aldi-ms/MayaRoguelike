@@ -70,9 +70,7 @@ namespace WorldOfCSharp
             for (int x = bottomLeftAnchorX; x < bottomLeftAnchorX + width; x++)
             {
                 for (int y = 0; y < bottomLeftAnchorY; y++)
-                {
                     WriteOnPosition(' ', x, y);
-                }
             }
         }
 
@@ -122,12 +120,8 @@ namespace WorldOfCSharp
             //show confirmation & goodbye message!
             Environment.Exit(0);
         }
-        
-        //public static void PrintDebugInfo(string str)
-        //{
-        //    GameEngine.MessageLog.SendMessage(string.Format("Debug: {0}", str));
-        //}
 
+        #region QuickSort
         public static void QuickSort(List<int> intList, int left, int right) //left = 0, right = IDList.Count - 1
         {
             if (left < right)       //for recursion
@@ -135,14 +129,10 @@ namespace WorldOfCSharp
                 int pivot = Partition(intList, left, right);
 
                 if (pivot > 1)
-                {
                     QuickSort(intList, left, pivot - 1);
-                }
 
                 if (pivot + 1 < right)
-                {
                     QuickSort(intList, pivot + 1, right);
-                }
             }
         }
 
@@ -153,14 +143,10 @@ namespace WorldOfCSharp
             while (true)
             {
                 while (numbers[left] < pivot)
-                {
                     left++;
-                }
 
                 while (numbers[right] > pivot)
-                {
                     right--;
-                }
 
                 if (left < right)
                 {
@@ -169,10 +155,9 @@ namespace WorldOfCSharp
                     numbers[left] = temp;
                 }
                 else
-                {
                     return right;
-                }
             }
         }
+        #endregion
     }
 }

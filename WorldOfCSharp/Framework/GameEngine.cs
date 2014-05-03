@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using WorldOfCSharp.FieldOfView;
 using WorldOfCSharp.Framework;
 
 namespace WorldOfCSharp
@@ -10,7 +9,6 @@ namespace WorldOfCSharp
     {
         private static string mapName;
         private static string mapFileName;
-        //private static GameCell[,] gameField_DEPRECATED_;
         private static FlatArray<GameCell> gameField;
         private static MessageLog messageLog;
         private static List<Unit> units = new List<Unit>();
@@ -54,11 +52,11 @@ namespace WorldOfCSharp
         }
 
         public static string MapName
-        { 
+        {
             get { return mapName; }
             set
             {
-                mapName = value; 
+                mapName = value;
             }
         }
 
@@ -79,7 +77,7 @@ namespace WorldOfCSharp
                 {
                     switch (gameField[objX, objY].IngameObject.Name)
                     {
-                            //add hit/walk related objects+events here
+                        //add hit/walk related objects+events here
                         case "savepoint":
                             if (unit.Flags.HasFlag(Flags.IsPlayerControl))
                             {
@@ -88,19 +86,20 @@ namespace WorldOfCSharp
                                 MessageLog.SendMessage("Game Saved.");
                             }
                             break;
+
                         default:
                             break;
                     }
                 }
             }
         }
-        
+
         public static void New()
         {
-            string pcName = "SCiENiDE_TESTING";     
-            //for testing purposes we set the char name manually; 
-            //else use the bottom row.
+            string pcName = "SCiENiDE_TESTING";
 
+            //for testing purposes we set the char name manually;
+            //else use the bottom row.
             //string pcName = UIElements.PromptForName();
 
             UIElements.InGameUI();
@@ -119,7 +118,7 @@ namespace WorldOfCSharp
 
             Initialize(pc);
         }
-        
+
         public static void Load()
         {
             UIElements.InGameUI();
@@ -135,7 +134,7 @@ namespace WorldOfCSharp
             {
                 if (unit.Flags.HasFlag(Flags.IsPlayerControl))
                 {
-                    Initialize(unit); 
+                    Initialize(unit);
                 }
             }
         }
@@ -202,10 +201,10 @@ namespace WorldOfCSharp
                     {
                         if (unit.Flags.HasFlag(Flags.IsPlayerControl))
                         {
-                            //energyCost = PlayerControl(pc);
-                            energyCost = AI.ArtificialIntelligence.DrunkardWalk(unit);      //for performance testing purposes
+                            energyCost = PlayerControl(pc);
+                            //energyCost = AI.ArtificialIntelligence.DrunkardWalk(unit);      //for performance testing purposes
                         }
-                        else 
+                        else
                         {
                             energyCost = AI.ArtificialIntelligence.DrunkardWalk(unit);
                         }
@@ -214,7 +213,7 @@ namespace WorldOfCSharp
                 }
             }
         }
-        
+
         private static int PlayerControl(Unit pc)
         {
             bool loop = true;
@@ -422,7 +421,7 @@ namespace WorldOfCSharp
                     loop = false;
                     invWindow.CloseWindow();
                 }
-            } while(loop);
+            } while (loop);
         }
 
         private static void ShowWindow(Unit unit, Window invWindow)
@@ -485,11 +484,13 @@ namespace WorldOfCSharp
                             RefreshInventoryScreen(unit);
                             MessageLog.SendMessage(string.Format("{0} ({1}) dropped.", item.ToString(), item.Slot));
                             break;
+
                         case ConsoleKey.T:
                             unit.Equipment.Unequip(item);
                             RefreshInventoryScreen(unit);
                             MessageLog.SendMessage(string.Format("You are taking off {0} ({1}).", item.ToString(), item.Slot));
                             break;
+
                         default:
                         case ConsoleKey.Escape:
                             GameEngine.MessageLog.SendMessage("No action taken.");
@@ -508,11 +509,13 @@ namespace WorldOfCSharp
                             RefreshInventoryScreen(unit);
                             MessageLog.SendMessage(string.Format("{0} dropped.", item.ToString()));
                             break;
+
                         case ConsoleKey.E:
                             unit.Equipment.EquipItem(item);
                             RefreshInventoryScreen(unit);
                             MessageLog.SendMessage(string.Format("Equipping {0} to {1}.", item.ToString(), item.Slot));
                             break;
+
                         default:
                             GameEngine.MessageLog.SendMessage("No action taken.");
                             break;
@@ -544,7 +547,6 @@ namespace WorldOfCSharp
         //        }
         //    }
         //}
-
 
         //Generate new map file (put in New())
         //gameField = MapTools.LoadMap(SaveLoadTools.LoadSavedMapName());

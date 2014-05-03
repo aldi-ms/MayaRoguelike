@@ -1,13 +1,11 @@
-﻿using System;
-
-namespace WorldOfCSharp.Framework
+﻿namespace WorldOfCSharp.Framework
 {
     public class FlatArray<T>
     {
         private int height;
         private int width;
         private T[] array;
-        
+
         public FlatArray(int height, int width)
         {
             this.height = height;

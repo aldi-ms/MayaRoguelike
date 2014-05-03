@@ -43,7 +43,6 @@ namespace WorldOfCSharp
                 }
             }
             throw new ArgumentException("Search does not find such terrain in the database.");
-            //return new TerrainType("eff off", 0, ' ', ConsoleColor.Black);
         }
 
         public static InGameObject SearchIngameObjectDB(char visCh)

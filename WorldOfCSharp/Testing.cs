@@ -8,13 +8,16 @@ namespace WorldOfCSharp.Tests
     {
         public static void ItemTest(Unit unit)
         {
-            Item knife = new Item("Knife", new ItemType((int)BaseType.Weapon, 2, EquipSlot.MainHand), 2, 4, 50, 60, strength: 1, dexterity: 2);
-            Item chest = new Item("Armor", new ItemType((int)BaseType.Armor, 3, EquipSlot.Chest), new ItemStats(stamina: 5));
-            Item helm = new Item("Helm", new ItemType((int)BaseType.Armor, 3, EquipSlot.Head), new ItemStats(intelligence: 3, stamina: 10));
+            Item[] itemArr = new Item[]
+            {
+                new Item("Knife", new ItemType((int)BaseType.Weapon, 2, EquipSlot.MainHand), 2, 4, 50, 60, strength: 1, dexterity: 2),
+                new Item("Armor", new ItemType((int)BaseType.Armor, 3, EquipSlot.Chest), new ItemStats(stamina: 5)),
+                new Item("Helm", new ItemType((int)BaseType.Armor, 3, EquipSlot.Head), new ItemStats(intelligence: 3, stamina: 10)),
+                new Item("Sword", new ItemType((int)BaseType.Weapon, 2, EquipSlot.MainHand), 3, 6, 40, 50, strength: 7),
+            };
 
-            unit.Inventory.StoreItem(knife);
-            unit.Inventory.StoreItem(chest);
-            unit.Inventory.StoreItem(helm);
+            foreach (Item item in itemArr)
+                GameEngine.GameField[unit.X, unit.Y].ItemList.Add(item);
         }
 
         public static void EnumToConsole(Flags flOpt)

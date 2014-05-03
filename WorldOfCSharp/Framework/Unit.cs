@@ -33,11 +33,10 @@ namespace WorldOfCSharp
         {
             this.uniqueID = ID;
         }
-        
+
         public Unit(Unit unit)
             : this(unit.X, unit.Y, unit.Flags, unit.VisualChar, unit.Color, unit.Name)
         { }
-
 
         public int UniqueID
         {
@@ -60,27 +59,27 @@ namespace WorldOfCSharp
         {
             get { return this.unitStats; }
         }
-        
+
         public void AddStats(Item item)
         {
             if (item.ItemStats.Strength != 0)
                 this.unitStats.Strength += item.ItemStats.Strength;
-                    
+
             if (item.ItemStats.Stamina != 0)
                 this.unitStats.Stamina += item.ItemStats.Stamina;
-                    
+
             if (item.ItemStats.Spirit != 0)
                 this.unitStats.Spirit += item.ItemStats.Spirit;
-                    
+
             if (item.ItemStats.Intelligence != 0)
                 this.unitStats.Intelligence += item.ItemStats.Intelligence;
-                    
+
             if (item.ItemStats.Dexterity != 0)
                 this.unitStats.Dexterity += item.ItemStats.Dexterity;
-                    
+
             if (item.ItemStats.Accuracy != 0)
                 this.unitStats.Accuracy += item.ItemStats.Accuracy;
-                    
+
             if (item.ItemStats.Speed != 0)
                 this.unitStats.ActionSpeed += item.ItemStats.Speed;
         }
@@ -108,7 +107,7 @@ namespace WorldOfCSharp
             if (item.ItemStats.Speed != 0)
                 this.unitStats.ActionSpeed -= item.ItemStats.Speed;
         }
-        
+
         public string ItemInSlot(EquipSlot slot)
         {
             return string.Format("Slot: {0}, equipped {1}.", Enum.GetName(typeof(EquipSlot), slot), this.equipment[(int)slot].ToString());
@@ -122,7 +121,7 @@ namespace WorldOfCSharp
             else this.unitStats.CurrentHitPoints = this.Stats.MaxHitPoints;
         }
 
-        internal protected void MakeAMove(CardinalDirection direction)
+        protected internal void MakeAMove(CardinalDirection direction)
         {
             if (this.Flags.HasFlag(Flags.IsMovable))
             {

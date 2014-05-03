@@ -6,7 +6,7 @@
 
 3. Implement a way to print colored messages (colored letters even) in MessageLog.
 
-4. 
+4. Re-write ItemType to use enumerations for item type.
 
 5. Implement CombatEngine class, to do everything combat-related.
 
