@@ -2,7 +2,7 @@
 
 namespace WorldOfCSharp
 {
-    public class TerrainType : GameObject
+    public class Terrain : GameObject
     {
         private int positionInDB = -1;
 
@@ -10,17 +10,17 @@ namespace WorldOfCSharp
         {
             get { return this.positionInDB; }
         }
-        public TerrainType(int x, int y, Flags flags, char visualChar, ConsoleColor color, string name)
+        public Terrain(int x, int y, Flags flags, char visualChar, ConsoleColor color, string name)
             : base(x, y, flags, visualChar, color, name)
         { }
 
-        public TerrainType(int positionInDB, string name, Flags flags, char visualChar, ConsoleColor color) //constructor for db load
+        public Terrain(int positionInDB, string name, Flags flags, char visualChar, ConsoleColor color) //constructor for db load
             : this(0, 0, flags, visualChar, color, name)
         {
             this.positionInDB = positionInDB;
         }
 
-        public TerrainType(TerrainType tt)
+        public Terrain(Terrain tt)
             : this(tt.PositionInDB, tt.Name, tt.Flags, tt.VisualChar, tt.Color)
         { }
     }

@@ -6,14 +6,14 @@ namespace WorldOfCSharp
 {
     public sealed class MessageLog
     {
-        private Coordinate bottomLeftAnchor;
+        private const string LOG_FILE = @"..\..\saves\history.log";
+        private static readonly Encoding ENCODING = Encoding.ASCII;
         private int width;      //in characters
         private int height;     //in rows
+        private Coordinate bottomLeftAnchor;
         private StringBuilder[] line;
         private StringBuilder emptySB;
         private Coordinate[] lineCoordinates;
-        private readonly Encoding ENCODING = Encoding.ASCII;
-        private const string LOG_FILE = @"..\..\saves\history.log";
 
         public MessageLog(int bottomLeftAnchorX, int bottomLeftAnchorY, int width, int height)
         {
@@ -41,15 +41,11 @@ namespace WorldOfCSharp
 
             line = new StringBuilder[height];
             for (int i = 0; i < height; i++)
-            {
                 line[i] = new StringBuilder(width);
-            }
 
             lineCoordinates = new Coordinate[height];
             for (int i = height - 1; i >= 0; i--)
-            {
                 lineCoordinates[i] = new Coordinate(bottomLeftAnchor.X, bottomLeftAnchor.Y - i);
-            }
         }
 
         public void SendMessage(string text, ConsoleColor color = ConsoleColor.DarkGray)
@@ -90,15 +86,12 @@ namespace WorldOfCSharp
 
                 StringBuilder secondPartText = new StringBuilder(width);
                 for (int i = firstUnappendedString; i < splitText.Length; i++)
-                {
                     secondPartText.AppendFormat("{0} ", splitText[i]);
-                }
 
                 SendMessage(firstPartText.ToString());
                 SendMessage(secondPartText.ToString());
             }
         }
-
 
         public void ClearLog()
         {

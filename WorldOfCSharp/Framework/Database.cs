@@ -11,16 +11,16 @@ namespace WorldOfCSharp
         private const string INGAME_OBJECT_DB = @"../../db/ingameobjects.db";
         private static readonly Encoding ENCODING = Encoding.ASCII;
         
-        private static List<TerrainType> terrainDatabase;
+        private static List<Terrain> terrainDatabase;
         private static List<InGameObject> ingameObjectDatabase;
 
-        public static List<TerrainType> TerrainDatabase
+        public static List<Terrain> TerrainDatabase
         {
             get { return terrainDatabase; }
             set { terrainDatabase = value; }
         }
         
-        public static List<InGameObject> IngameObjectDatabase
+        public static List<InGameObject> ObjectDatabase
         {
             get { return ingameObjectDatabase; }
             set { ingameObjectDatabase = value; }
@@ -33,7 +33,7 @@ namespace WorldOfCSharp
             ingameObjectDatabase = LoadIngameObjects();
         }
 
-        public static TerrainType SearchTerrainDB(char visCh)
+        public static Terrain SearchTerrainDB(char visCh)
         {
             foreach (var terrain in terrainDatabase)
             {
@@ -57,10 +57,10 @@ namespace WorldOfCSharp
             throw new ArgumentException("Search does not find such in-game object in the database.");
         }
 
-        private static List<TerrainType> LoadTerrain()
+        private static List<Terrain> LoadTerrain()
         {
             StreamReader sReader = new StreamReader(TERRAIN_DB, ENCODING);
-            List<TerrainType> DB = new List<TerrainType> { };
+            List<Terrain> DB = new List<Terrain> { };
 
             using (sReader)
             {
@@ -100,7 +100,7 @@ namespace WorldOfCSharp
 
                     int parsedFlag = int.Parse(flag.ToString());
                     ConsoleColor parsedColor = ConsoleTools.ParseColor(color.ToString());
-                    DB.Add(new TerrainType(iTerrain++, name.ToString(), (Flags)parsedFlag, visCh, parsedColor));
+                    DB.Add(new Terrain(iTerrain++, name.ToString(), (Flags)parsedFlag, visCh, parsedColor));
                     readInt = sReader.Peek();
                 }
             }

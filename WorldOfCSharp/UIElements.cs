@@ -31,11 +31,11 @@ namespace WorldOfCSharp
                 switch (key.Key)
                 {
                     case ConsoleKey.N:
-                        GameEngine.New();
+                        GameEngine.NewGame();
                         break;
 
                     case ConsoleKey.L:
-                        GameEngine.Load();
+                        GameEngine.LoadGame();
                         break;
 
                     case ConsoleKey.E:

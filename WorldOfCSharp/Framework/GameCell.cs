@@ -7,7 +7,7 @@ namespace WorldOfCSharp
     {
         private bool isVisible;
 
-        private TerrainType terrain;
+        private Terrain terrain;
         private Unit unit;
         private InGameObject ingameObject;
         private List<Item> item = new List<Item>();
@@ -24,7 +24,7 @@ namespace WorldOfCSharp
             set { this.isVisible = value; }
         }
 
-        public TerrainType Terrain
+        public Terrain Terrain
         {
             get { return this.terrain; }
             set { this.terrain = value; }

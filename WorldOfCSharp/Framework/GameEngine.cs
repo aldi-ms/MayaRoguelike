@@ -9,6 +9,7 @@ namespace WorldOfCSharp
     {
         private static string mapName;
         private static string mapFileName;
+        private static int mapID;
         private static FlatArray<GameCell> gameField;
         private static MessageLog messageLog;
         private static List<Unit> units = new List<Unit>();
@@ -16,7 +17,7 @@ namespace WorldOfCSharp
         private static List<Unit> removedUnits = new List<Unit>();
         private static VisualEngine VEngine;
         private static GameTime gameTime = new GameTime();
-        private static RightPane rightInfoPane;
+        private static SideBar rightInfoPane;
 
         public static VisualEngine VisualEngine
         {
@@ -46,7 +47,7 @@ namespace WorldOfCSharp
             set { gameTime = value; }
         }
 
-        public static RightPane RightInfoPane
+        public static SideBar RightInfoPane
         {
             get { return rightInfoPane; }
         }
@@ -67,6 +68,12 @@ namespace WorldOfCSharp
             {
                 mapFileName = value;
             }
+        }
+
+        public static int MapID
+        {
+            get { return mapID; }
+            set { mapID = value; }
         }
 
         public static void CheckForEffect(Unit unit, int objX, int objY)
@@ -94,7 +101,7 @@ namespace WorldOfCSharp
             }
         }
 
-        public static void New()
+        public static void NewGame()
         {
             string pcName = "SCiENiDE_TESTING";
 
@@ -110,7 +117,7 @@ namespace WorldOfCSharp
             MessageLog.DeleteLog();
 
             Units.Clear();
-            gameField = MapTools.LoadMap(@"../../maps/testMapNewCode.wocm");       //load map; change it to generate map!
+            gameField = MapTools.LoadMap(@"../../maps/0.wocm");       //load map; change it to generate map!
             Flags pcFlags = Flags.IsCollidable | Flags.IsMovable | Flags.IsPlayerControl;
             Unit pc = new Unit(10, 10, pcFlags, '@', ConsoleColor.White, pcName);
             Units.Add(pc);
@@ -119,7 +126,7 @@ namespace WorldOfCSharp
             Initialize(pc);
         }
 
-        public static void Load()
+        public static void LoadGame()
         {
             UIElements.InGameUI();
 
@@ -128,15 +135,12 @@ namespace WorldOfCSharp
             MessageLog.SendMessage("Message log initialized.");
 
             Units.Clear();
-            gameField = MapTools.LoadMap(mapFileName = SaveLoadTools.LoadSavedMapName());       //load map<<<<<<<<
+            gameField = MapTools.LoadMap(mapFileName = SaveLoadTools.LoadMapID());       //load map<<<<<<<<
             Units = SaveLoadTools.LoadUnits();
+
             foreach (var unit in Units)
-            {
                 if (unit.Flags.HasFlag(Flags.IsPlayerControl))
-                {
                     Initialize(unit);
-                }
-            }
         }
 
         public static void AddUnit(Unit unit)
@@ -153,7 +157,7 @@ namespace WorldOfCSharp
 
         private static void Initialize(Unit pc)
         {
-            rightInfoPane = new RightPane(pc);
+            rightInfoPane = new SideBar(pc);
 
             VEngine = new VisualEngine(GameField);
             VEngine.PrintUnit(pc);
@@ -164,7 +168,6 @@ namespace WorldOfCSharp
         private static void TimeTick(Unit pc)
         {
             bool loop = true;
-            int energyCost = 0;
 
             while (loop)
             {
@@ -187,16 +190,12 @@ namespace WorldOfCSharp
                 if (GameTime.Ticks % 50 == 0)
                     pc.EffectsPerFive();
 
-                if (GameTime.Ticks >= 20000)       //for performance testing purposes
-                {
-                    ConsoleTools.Quit();
-                }
-
                 rightInfoPane.Update(pc);
 
                 foreach (Unit unit in Units)
                 {
                     unit.Stats.Energy += unit.Stats.ActionSpeed;
+                    int energyCost = 0;
                     if (unit.Stats.Energy >= 100)
                     {
                         if (unit.Flags.HasFlag(Flags.IsPlayerControl))
@@ -208,7 +207,7 @@ namespace WorldOfCSharp
                         {
                             energyCost = AI.ArtificialIntelligence.DrunkardWalk(unit);
                         }
-                        unit.Stats.Energy = unit.Stats.Energy - (unit.Stats.ActionSpeed + energyCost);
+                        unit.Stats.Energy = unit.Stats.Energy - energyCost;
                     }
                 }
             }
@@ -229,10 +228,12 @@ namespace WorldOfCSharp
                             Tests.Testing.ItemTest(pc);
                             return 0;
 
-                        case ConsoleKey.Y:
+                        case ConsoleKey.U:
+                            Tests.Testing.UnitSpawn();
                             return 0;
 
-                        case ConsoleKey.E:
+                        case ConsoleKey.F1:
+                                MessageLog.SendMessage(string.Format("[{0}, {1}]", pc.X, pc.Y));
                             return 0;
 
                         case ConsoleKey.H:
@@ -364,9 +365,7 @@ namespace WorldOfCSharp
                             {
                                 itemsPresentSB.Append(GameField[pc.X, pc.Y].ItemList[i].ToString());
                                 if (i + 1 < GameField[pc.X, pc.Y].ItemList.Count)
-                                {
                                     itemsPresentSB.Append(", ");
-                                }
                             }
                             MessageLog.SendMessage(string.Format("You see {0} items here: {1}.", GameField[pc.X, pc.Y].ItemList.Count, itemsPresentSB.ToString()));
                         }
@@ -534,23 +533,5 @@ namespace WorldOfCSharp
                 }
             }
         }
-
-        //Method to fill the whole map with a single type of terrain.
-        //public static void FillGameField(TerrainType terrain)
-        //{
-        //    for (int x = 0; x < gameField.GetLength(0); x++)
-        //    {
-        //        for (int y = 0; y < gameField.GetLength(1); y++)
-        //        {
-        //            gameField[x, y] = new GameCell();
-        //            gameField[x, y].Terrain = new TerrainType(x, y, terrain.Flags, terrain.VisualChar, terrain.Color, terrain.Name);
-        //        }
-        //    }
-        //}
-
-        //Generate new map file (put in New())
-        //gameField = MapTools.LoadMap(SaveLoadTools.LoadSavedMapName());
-        //FillGameField(new TerrainType("floor", 0, '.', ConsoleColor.Gray));
-        //MapTools.GenerateMapFile(gameField);
     }
 }

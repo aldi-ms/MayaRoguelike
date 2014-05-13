@@ -57,7 +57,7 @@
     <Compile Include="Framework\GameTime.cs" />
     <Compile Include="UIElements.cs" />
     <Compile Include="Framework\Inventory.cs" />
-    <Compile Include="Framework\RightPane.cs" />
+    <Compile Include="Framework\SideBar.cs" />
     <Compile Include="Framework\RNG.cs" />
     <Compile Include="GlobalValues.cs" />
     <Compile Include="Framework\InGameObject.cs" />

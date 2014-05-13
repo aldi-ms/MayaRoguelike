@@ -1,20 +1,24 @@
 ﻿1. Add Equipment/Inventory to save method.
-1.1. Save items on ground to the map.
-1.2. Make items load-able from a file (much like ingame obj?).
+	--> Save items on ground to the map.
+	--> Make items load-able from a file (much like ingame obj?).
 
 2. Implement options to scroll the log history.
 
 3. Implement a way to print colored messages (colored letters even) in MessageLog.
+	--> Use special character (for the method) in front of the letter/word you want colored
+	--> Selector char & color char
 
-4. Re-write ItemType to use enumerations for item type.
+4. Re-write ItemType to use enumerations for item types.
 
 5. Implement CombatEngine class, to do everything combat-related.
 
 6. Make all array initializations (esp. in ItemType and VisualEngine) load from file/s.
-6.1. Use databases for items, units, terrain, ingame objects, etc.
+	--> Use databases for items, units, terrain, ingame objects, etc.
 
-7. 
+7. Day/night, weather and other time related simulations.
 
-8. 
+8. Re-write save files to use XML & LINQ - save/load/databases/etc.
 
-9. Day/night, weather and other time related simulations.
+9. Map ID based? Z-coordinate for map ID?
+
+10. ///<document> 

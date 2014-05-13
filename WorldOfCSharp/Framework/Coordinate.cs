@@ -2,12 +2,22 @@
 
 namespace WorldOfCSharp
 {
+    /// <summary>
+    /// Coordinate struct for positioning every (game) object in the game.
+    /// </summary>
     public struct Coordinate
     {
         private int x;
         private int y;
+        private int z;
 
-        public Coordinate(int x, int y)
+        /// <summary>
+        /// Coordinate instance.
+        /// </summary>
+        /// <param name="x">X dimension (horizontal).</param>
+        /// <param name="y">Y dimension (vertical).</param>
+        /// <param name="z">Z dimension is used for map ID.</param>
+        public Coordinate(int x, int y, int z = 0)
         {
             if (x >= 0 && x <= Globals.CONSOLE_WIDTH)
             {
@@ -30,6 +40,8 @@ namespace WorldOfCSharp
                     y, Globals.CONSOLE_HEIGHT);
                 throw new ArgumentOutOfRangeException("Constructor check.", exceptionStr);
             }
+
+            this.z = z;
         }
 
         public int X

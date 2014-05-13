@@ -6,6 +6,7 @@ namespace WorldOfCSharp.Tests
 {
     public static class Testing
     {
+        public static MersenneTwister mt = new MersenneTwister();
         public static void ItemTest(Unit unit)
         {
             Item[] itemArr = new Item[]
@@ -60,6 +61,23 @@ namespace WorldOfCSharp.Tests
                 }
                 Console.WriteLine();
             }
+        }
+
+        public static void UnitSpawn(int x = 10, int y = 10)
+        {
+            while (GameEngine.GameField[x, y].Terrain.Flags.HasFlag(Flags.IsCollidable)
+                || GameEngine.GameField[x, y].Unit != null 
+                || GameEngine.GameField[x, y].IngameObject != null)
+            {
+                x += mt.Next(2);
+                y += mt.Next(2);
+            }
+            Flags unitFlags = Flags.IsCollidable | Flags.IsMovable;
+            char randChar = (char)mt.Next(97, 123);
+            ConsoleColor randColor = (ConsoleColor)mt.Next(1, 16);
+            string name = "TestUnit_" + (char)mt.Next(65, 91) + (char)mt.Next(65, 91) + (char)mt.Next(65, 91);
+            Unit testUnit = new Unit(x, y, unitFlags, randChar, randColor, name);
+            GameEngine.AddUnit(testUnit);
         }
     }
 }

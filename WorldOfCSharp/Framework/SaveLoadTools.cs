@@ -15,12 +15,11 @@ namespace WorldOfCSharp
         public static void SaveGame()
         {
             if (string.IsNullOrWhiteSpace(GameEngine.MapFileName))
-                GameEngine.MapFileName = LoadSavedMapName();
+                GameEngine.MapFileName = LoadMapID();
 
-            StreamWriter unitFile = new StreamWriter(UNITS_SAVE_FILE, false, ENCODING);
-            using (unitFile)
+            using (var unitFile = new StreamWriter(UNITS_SAVE_FILE, false, ENCODING))
             {
-                unitFile.WriteLine(GameEngine.MapFileName);
+                unitFile.WriteLine(GameEngine.MapID);
                 unitFile.WriteLine(GameEngine.GameTime.Ticks);
 
                 StringBuilder saveSB = new StringBuilder();
@@ -32,8 +31,7 @@ namespace WorldOfCSharp
                 }
             }
 
-            StreamWriter infoFile = new StreamWriter(UNITS_INFO_FILE, false, ENCODING);
-            using (infoFile)
+            using (var infoFile = new StreamWriter(UNITS_INFO_FILE, false, ENCODING))
             {
                 StringBuilder saveSB = new StringBuilder();
                 foreach (Unit unit in GameEngine.Units)
@@ -43,8 +41,6 @@ namespace WorldOfCSharp
                     saveSB.Clear();
                 }
             }
-            //else
-            //    throw new ArgumentException("On save time string mapName is null, empty, or contains only white spaces.");
         }
 
         public static void SaveGame(string fileName)
@@ -53,10 +49,9 @@ namespace WorldOfCSharp
 
             if (!string.IsNullOrWhiteSpace(GameEngine.MapFileName))
             {
-                StreamWriter file = new StreamWriter(fileName, false, ENCODING);
-                using (file)
+                using (var file = new StreamWriter(fileName, false, ENCODING))
                 {
-                    file.WriteLine(GameEngine.MapFileName);
+                    file.WriteLine(GameEngine.MapID);
                     file.WriteLine(GameEngine.GameTime.Ticks);
 
                     StringBuilder saveSB = new StringBuilder();
@@ -68,8 +63,7 @@ namespace WorldOfCSharp
                     }
                 }
 
-                StreamWriter infoFile = new StreamWriter(TEMP_INFO_FILE, false, ENCODING);
-                using (infoFile)
+                using (var infoFile = new StreamWriter(TEMP_INFO_FILE, false, ENCODING))
                 {
                     StringBuilder saveSB = new StringBuilder();
 
@@ -85,40 +79,30 @@ namespace WorldOfCSharp
                 throw new ArgumentException("On save time string currentMapName is null, empty, or contains only white spaces.");
         }
 
-        public static string LoadSavedMapName(string saveFileName = UNITS_SAVE_FILE)
+        public static string LoadMapID(string saveFileName = UNITS_SAVE_FILE)
         {
-            string mapName;
-            StreamReader sReader = new StreamReader(saveFileName, ENCODING);
-
-            using (sReader)
-                mapName = sReader.ReadLine();
-
-            return mapName;
+            using (var sReader = new StreamReader(saveFileName, ENCODING))
+                return string.Format(@"../../maps/{0}.wocm", sReader.ReadLine());
         }
 
         public static List<Unit> LoadUnits(string unitSaveFile = UNITS_SAVE_FILE)
         {
-            StreamReader unitFile = new StreamReader(unitSaveFile, ENCODING);
-
-            using (unitFile)
+            using (var unitFile = new StreamReader(unitSaveFile, ENCODING))
             {
+                GameEngine.MapFileName = unitFile.ReadLine();
+                GameEngine.GameTime = new GameTime(int.Parse(unitFile.ReadLine()));
+
                 List<Unit> loadedUnits = new List<Unit>();
-                Unit pc = new Unit(0,0,0,'\0', ConsoleColor.Red, "temp"); 
                 int readInt = unitFile.Peek();
-                StreamReader infoFile = new StreamReader(UNITS_INFO_FILE, ENCODING);
 
-                using (infoFile)
+                using (var infoFile = new StreamReader(UNITS_INFO_FILE, ENCODING))
                 {
-                    while (readInt != -1 && readInt != 13) //at eof returns 13 (CR) for some reason...
+                    char readChar;
+                    while (readInt > -1) //at eof returns 13 (CR) for some reason...
                     {
-                        GameEngine.MapFileName = unitFile.ReadLine();
-
-                        GameEngine.GameTime = new GameTime(int.Parse(unitFile.ReadLine()));
-
-                        char readChar = (char)unitFile.Read();
-
+                        while ((readChar = (char)unitFile.Read()) == '\r' || readChar == '\n' || readChar == '[') ;
+                        if ((int)readChar > 255) break;
                         StringBuilder coordX = new StringBuilder(4);    //--> read X -coord
-                        readChar = (char)unitFile.Read();
                         do
                         {
                             coordX.Append(readChar);
@@ -170,8 +154,8 @@ namespace WorldOfCSharp
                         } while (readChar != ']');
 
                         StringBuilder infoID = new StringBuilder();       //--> read ID from unit info file
-                        readChar = (char)infoFile.Read();
-                        readChar = (char)infoFile.Read();
+
+                        while ((readChar = (char)infoFile.Read()) == '\n' || readChar == '\r' || readChar == '[') ;
                         do
                         {
                             infoID.Append(readChar);
@@ -254,10 +238,6 @@ namespace WorldOfCSharp
                             unit.Stats.CurrentHitPoints = int.Parse(currentHP.ToString());
                             unit.Stats.ActionSpeed = int.Parse(actionSpeed.ToString());
 
-                            //if (unit.GetFlag(4))
-                            //    pc = unit;
-                            //else
-                            //    GameEngine.AddUnit(unit);
                             loadedUnits.Add(unit);
                         }
 

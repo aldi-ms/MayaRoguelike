@@ -186,10 +186,9 @@ namespace WorldOfCSharp
 
         private int UniqueIDGenerator()
         {
-            int id;
             do
             {
-                id = mt.Next(10000000, int.MaxValue);
+                int id = mt.Next(10000000, int.MaxValue);
                 ConsoleTools.QuickSort(listOfUnitIDs, 0, listOfUnitIDs.Count - 1);
                 if (listOfUnitIDs.BinarySearch(id) < 0)
                 {
@@ -210,9 +209,7 @@ namespace WorldOfCSharp
                 if (GameEngine.GameField[x, y].Unit != null)
                 {
                     if (!GameEngine.GameField[x, y].Unit.Flags.HasFlag(Flags.IsCollidable))
-                    {
                         unit = true;
-                    }
                 }
                 else unit = true;
 
@@ -220,9 +217,7 @@ namespace WorldOfCSharp
                 if (GameEngine.GameField[x, y].IngameObject != null)
                 {
                     if (!GameEngine.GameField[x, y].IngameObject.Flags.HasFlag(Flags.IsCollidable))
-                    {
                         ingObj = true;
-                    }
                 }
                 else ingObj = true;
 
