@@ -1,174 +1,89 @@
-﻿namespace WorldOfCSharp
+﻿using System;
+
+namespace Maya
 {
-    public class ItemType
+    #region ItemTypeEnums
+    public enum ArmorType
     {
-        private static string[][] itemTypeArr = new string[System.Enum.GetNames(typeof(BaseType)).Length][];
-        private ItemCode itemCode;
-        private EquipSlot slot = EquipSlot.NotEquippable;
+        Cloth,
+        Leather,
+        Mail,
+        Plate,
+        Shields,
+        Librams,
+        Idols,
+        Totems,
+        Sigils,
+        Miscellaneous
+    }
 
-        public ItemType(int itemType, int subType, EquipSlot slot)
-        {
-            this.itemCode = new ItemCode(itemType, subType);
-            this.slot = slot;
-            Initialize();
-        }
-
-        public ItemType(int itemType, int subType)
-            : this(itemType, subType, EquipSlot.NotEquippable)
-        { }
-
-        public ItemType()
-            : this(13, 0)   //miscellaneous item
-        { }
-
-        public static string[][] ItemTypeArr
-        {
-            get { return itemTypeArr; }
-        }
-
-        public EquipSlot Slot
-        {
-            get { return this.slot; }
-        }
-
-        public ItemCode ItemCode
-        {
-            get { return this.itemCode; }
-        }
-
-        public int ItemCodeToInt
-        {
-            get 
-            {
-                string itemCode = string.Format("{0}{1}", this.itemCode.BaseTypeInt, this.itemCode.SubTypeInt);
-                return int.Parse(itemCode);
-            }
-        }
-        
-        private static void Initialize()
-        {
-            itemTypeArr[(int)BaseType.Armor] = new string[]
-            {
-                "Cloth",
-                "Leather",
-                "Mail",
-                "Plate",
-                "Shields",
-                "Librams",
-                "Idols",
-                "Totems",
-                "Sigils",
-                "Miscellaneous"
-            };
-
-            itemTypeArr[(int)BaseType.Weapon] = new string[]
-            {
-                "Bows",
-                "Crossbows",
-                "Daggers",
-                "Guns",
-                "Fishing Poles",
-                "Fist Weapons",
-                "One-Handed Axes",
-                "One-Handed Maces",
-                "One-Handed Swords",
-                "Polearms",
-                "Staves",
-                "Thrown",
-                "Two-Handed Axes",
-                "Two-Handed Maces",
-                "Two-Handed Swords",
-                "Wands",
-                "Miscellaneous"
-            };
-
-            itemTypeArr[(int)BaseType.Consumable] = new string[]
-            {
-                "Food & Drink",
-                "Potion",
-                "Elixir",
-                "Flask",
-                "Bandage",
-                "Item Enhancement",
-                "Scroll",
-                "Other",
-                "Consumable"
-            };
-
-            itemTypeArr[(int)BaseType.Container] = new string[]
-            {
-                "Bag",
-                "Enchanting Bag",
-                "Engineering Bag",
-                "Gem Bag",
-                "Herb Bag",
-                "Mining Bag",
-                "Soul Bag",
-                "Leatherworking Bag" ,
-            };
-
-            itemTypeArr[(int)BaseType.Gem] = new string[] 
-            {
-                "Blue",
-                "Green",
-                "Orange",
-                "Meta",
-                "Prismatic",
-                "Purple",
-                "Red",
-                "Simple",
-                "Yellow" 
-            };
-
-            itemTypeArr[(int)BaseType.Key] = new string[] { "Key" };
-
-            itemTypeArr[(int)BaseType.Money] = new string[] {  };
-
-            itemTypeArr[(int)BaseType.Reagent] = new string[] { "Reagent" };
-
-            itemTypeArr[(int)BaseType.Recipe] = new string[] 
-            { 
-                "Alchemy",
-                "Blacksmithing",
-                "Book",
-                "Cooking",
-                "Enchanting",
-                "Engineering",
-                "First Aid",
-                "Leatherworking",
-                "Tailoring" 
-            };
-
-            itemTypeArr[(int)BaseType.Projectile] = new string[] { "Arrow", "Bullet" };
-
-            itemTypeArr[(int)BaseType.Quest] = new string[] { "Quest" };
-
-            itemTypeArr[(int)BaseType.Quiver] = new string[] { "Ammo Pouch", "Quiver" };
-
-            itemTypeArr[(int)BaseType.TradeGoods] = new string[] 
-            {
-                "Armor Enchantment",
-                "Cloth",
-                "Devices",
-                "Elemental",
-                "Enchanting",
-                "Explosives",
-                "Herb",
-                "Jewelcrafting",
-                "Leather",
-                "Materials",
-                "Meat",
-                "Metal & Stone",
-                "Parts",
-                "Weapon Enchantment" ,
-                "Trade Goods",
-                "Other"
-            };
-
-            itemTypeArr[(int)BaseType.Miscellaneous] = new string[] { "Miscellaneous" };
-        }
+    public enum WeaponType
+    {
+        Bows,
+        Crossbows,
+        Daggers,
+        Guns,
+        FishingPoles,
+        FistWeapons,
+        OneHandedAxes,
+        OneHandedMaces,
+        OneHandedSwords,
+        Polearms,
+        Staves,
+        Thrown,
+        TwoHandedAxes,
+        TwoHandedMaces,
+        TwoHandedSwords,
+        Wands,
+        Miscellaneous
     }
     
+    public enum ConsumableType
+    {
+        FoodDrink,
+        Potion,
+        Elixir,
+        Flask,
+        Bandage,
+        ItemEnhancement,
+        Scroll,
+        Other,
+        Consumable
+    }
+
+    public enum ProjectileType
+    {
+        Arrow,
+        Bullet
+    }
+
+    public enum TradeGoodsType
+    {
+        ArmorEnchantment,
+        Cloth,
+        Devices,
+        Elemental,
+        Enchanting,
+        Explosives,
+        Herb,
+        Jewelcrafting,
+        Leather,
+        Materials,
+        Meat,
+        MetalStone,
+        Parts,
+        WeaponEnchantment,
+        TradeGoods,
+        Other
+    }
+
+    public enum JewelleryType
+    {
+        Ring,
+        Necklace,
+        Amulet
+    }
+
     public enum BaseType
     {
         Armor = 0,
@@ -181,10 +96,11 @@
         Reagent = 7,
         Recipe = 8,
         Projectile = 9,
-        Quest = 10,
+        QuestPlot = 10,
         Quiver = 11,
         TradeGoods = 12,
-        Miscellaneous = 13
+        Miscellaneous = 13,
+        Jewellery = 14
     }
 
     public enum EquipSlot
@@ -198,17 +114,89 @@
         Hands = 5,
         Waist = 6,
         Legs = 7,
-        Feet = 8,
+        Feet = 8,   //-->Feet used as pointer for last armor equip slot
+
         //accessories
         Neck = 9,
-        Trinket = 10,
-        Finger = 11,
-        //weapons
-        MainHand = 12,
-        OffHand = 13,
-        RangedRelic = 14,
-        Ammo = 15,
-        //for items that are not equipped
-        NotEquippable = 16
+        AmuletA = 10,
+        AmuletB = 11,
+        FingerA = 12,
+        FingerB = 13,
+
+        //weapons/ammo (equips in hand)
+        MainHand = 14,
+        OffHand = 15,
+        RangedOrRelic = 16,
+
+        //projectiles
+        Ammo = 17,
+
+        NotEquippable = 18
+    }
+    #endregion
+
+    public class ItemType
+    {
+        //private static string[][] itemTypeArr = new string[System.Enum.GetNames(typeof(BaseType)).Length][];
+        //private ItemCode itemCode;
+
+        private EquipSlot itemSlot = EquipSlot.NotEquippable;
+        private BaseType itemBaseType = BaseType.Miscellaneous;
+        private int subItemType;
+
+        public ItemType(BaseType baseItemType, int subItemType)
+        {
+            this.itemBaseType = baseItemType;
+            this.subItemType = subItemType;
+        }
+
+        public ItemType(ArmorType armorType, EquipSlot itemSlot)
+            : this(BaseType.Armor, (int)armorType)
+        {
+            if (itemSlot <= EquipSlot.Feet)
+                this.itemSlot = itemSlot;
+            else throw new ArgumentException("Item slot given is not armor!");
+        }
+
+        public ItemType(WeaponType weaponType, EquipSlot itemSlot)
+            : this(BaseType.Weapon, (int)weaponType)
+        {
+            if (itemSlot >= EquipSlot.MainHand && itemSlot <= EquipSlot.RangedOrRelic)
+                this.itemSlot = itemSlot;
+            else throw new ArgumentException("Item slot given is not weapon!");
+        }
+
+        public ItemType(JewelleryType jewelleryType, EquipSlot itemSlot)
+            : this(BaseType.Jewellery, (int)jewelleryType)
+        {
+            if (itemSlot >= EquipSlot.Neck && itemSlot <= EquipSlot.FingerB)
+                this.itemSlot = itemSlot;
+            else throw new ArgumentException("Item slot given is not jewellery!");
+        }
+
+        public ItemType(ProjectileType projectileType)
+            : this(BaseType.Projectile, (int)projectileType)
+        {
+            this.itemSlot = EquipSlot.Ammo;
+        }
+
+        public ItemType(ConsumableType consumableType)
+            : this(BaseType.Consumable, (int)consumableType)
+        { }
+
+
+        public ItemType(TradeGoodsType tradeGoodsType)
+            : this(BaseType.TradeGoods, (int)tradeGoodsType)
+        { }
+
+        public EquipSlot Slot
+        {
+            get { return this.itemSlot; }
+        }
+
+        public BaseType BaseType
+        {
+            get { return this.itemBaseType; }
+        }
     }
 }

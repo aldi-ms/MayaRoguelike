@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace WorldOfCSharp
+namespace Maya
 {
     public class Equipment
     {
@@ -57,7 +57,7 @@ namespace WorldOfCSharp
                 return false;
             }
         }
-
+        
         public Inventory InventoryConnected
         {
             set 
@@ -72,11 +72,11 @@ namespace WorldOfCSharp
 
         public void EquipItem(Item item)
         {
-            if (item.Slot != EquipSlot.NotEquippable && item != null)
+            if (item != null && item.Slot != EquipSlot.NotEquippable)
             {
                 this.inventoryConnected.DropItem(item);
 
-                //if there is already equipped item, put it in the inventory
+                    //if there is already equipped item, put it in the inventory
                 if (this.equipment[(int)item.Slot] != null)
                     this.Unequip(this.equipment[(int)item.Slot]);
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WorldOfCSharp
+namespace Maya
 {
     [Flags]
     public enum Flags
@@ -19,15 +19,19 @@ namespace WorldOfCSharp
         private Coordinate coord;
         private char visualChar;
         private string name;
-
-        public GameObject(int x, int y, Flags flags, char visualChar, ConsoleColor color, string name)
+        
+        public GameObject(int x, int y, int z, Flags flags, char visualChar, ConsoleColor color, string name)
         {
-            this.coord = new Coordinate(x, y);
+            this.coord = new Coordinate(x, y, z);
             this.flags = flags;
             this.visualChar = visualChar;
             this.color = color;
             this.name = name;
         }
+
+        public GameObject(int x, int y, Flags flags, char visualChar, ConsoleColor color, string name)
+            : this(x, y, 0, flags, visualChar, color, name)
+        { }
 
         public int X
         {
@@ -47,6 +51,12 @@ namespace WorldOfCSharp
                 if (value >= 0 && value <= Globals.GAME_FIELD_BOTTOM_RIGHT.Y)
                     this.coord.Y = value;
             }
+        }
+
+        public int Z
+        {
+            get { return this.coord.Z; }
+            set { this.coord.Z = value; }
         }
 
         public Flags Flags

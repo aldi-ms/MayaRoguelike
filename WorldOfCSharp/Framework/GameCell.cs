@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using WorldOfCSharp.FieldOfView;
+using Maya.FieldOfView;
 
-namespace WorldOfCSharp
+namespace Maya
 {
     public class GameCell : IFovCell
     {

@@ -1,6 +1,6 @@
 ﻿using MT19937;
 
-namespace WorldOfCSharp
+namespace Maya
 {
     public static class RNG
     {
@@ -10,10 +10,14 @@ namespace WorldOfCSharp
         {
             int result = 0;
             for (int i = 0; i < numberOfDies; i++)
-            {
                 result += mt.Next(1, sidesOfDie + 1);
-            }
             return result;
+        }
+
+        public static int RollDice(string str)
+        {
+            string[] split = str.Split('d');
+            return Roll(int.Parse(split[0]), int.Parse(split[1]));
         }
     }
 }

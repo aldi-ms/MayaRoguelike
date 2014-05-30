@@ -2,9 +2,9 @@
 using System.IO;
 using System.Text;
 using MT19937;
-using WorldOfCSharp.Framework;
+using Maya.Framework;
 
-namespace WorldOfCSharp
+namespace Maya
 {
     public static class MapTools
     {

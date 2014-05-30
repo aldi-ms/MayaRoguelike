@@ -1,20 +1,25 @@
 ﻿using System;
-using WorldOfCSharp;
+using Maya;
 using MT19937;
 
-namespace WorldOfCSharp.Tests
+namespace Maya.Tests
 {
     public static class Testing
     {
         public static MersenneTwister mt = new MersenneTwister();
         public static void ItemTest(Unit unit)
         {
+            var amuletType = new ItemType(JewelleryType.Amulet, EquipSlot.AmuletA);
+            var chestArmorType = new ItemType(ArmorType.Leather, EquipSlot.Chest);
+            var hoodArmorType = new ItemType(ArmorType.Leather, EquipSlot.Head);
+            var swordType = new ItemType(WeaponType.OneHandedSwords, EquipSlot.MainHand);
+
             Item[] itemArr = new Item[]
             {
-                new Item("Knife", new ItemType((int)BaseType.Weapon, 2, EquipSlot.MainHand), 2, 4, 50, 60, strength: 1, dexterity: 2),
-                new Item("Armor", new ItemType((int)BaseType.Armor, 3, EquipSlot.Chest), new ItemStats(stamina: 5)),
-                new Item("Helm", new ItemType((int)BaseType.Armor, 3, EquipSlot.Head), new ItemStats(intelligence: 3, stamina: 10)),
-                new Item("Sword", new ItemType((int)BaseType.Weapon, 2, EquipSlot.MainHand), 3, 6, 40, 50, strength: 7),
+                new Item("Lucky Charm", new ItemAttributes(amuletType, 0.2f, 1, 1, 1, 1, 1, 5)),
+                new Item("Rugged L.Chest", new ItemAttributes(chestArmorType, 2.2f, str: 2, con: 3)),
+                new Item("Assassins Hood", new ItemAttributes(hoodArmorType, 1f, dex:5, luck:1)),
+                new Item("Dark Sword", new ItemAttributes(swordType, 3.5f, 30, "2d5", 30, 24, str: 5, con: 3))
             };
 
             foreach (Item item in itemArr)
@@ -78,6 +83,26 @@ namespace WorldOfCSharp.Tests
             string name = "TestUnit_" + (char)mt.Next(65, 91) + (char)mt.Next(65, 91) + (char)mt.Next(65, 91);
             Unit testUnit = new Unit(x, y, unitFlags, randChar, randColor, name);
             GameEngine.AddUnit(testUnit);
+        }
+
+        public static void StatTesting()
+        {
+            //test case where char starts with 1 in all stats, and X more stat points to allocate
+            int pointsToAllocate = 200;
+            while (true)
+            {
+                if (Console.KeyAvailable)
+                {
+                    if (Console.ReadKey(true).Key == ConsoleKey.Escape)
+                        return;
+
+                    UnitAttributes unitStats = new UnitAttributes(18);
+                    for (int i = 0; i < pointsToAllocate; i++)
+                        unitStats[mt.Next(6)]++;
+
+                    Console.WriteLine("\nSpeed = {0}\n{1}", unitStats.ActionSpeed, unitStats.ToString());
+                }
+            }
         }
     }
 }

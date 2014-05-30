@@ -1,4 +1,4 @@
-﻿namespace WorldOfCSharp
+﻿namespace Maya
 {
     public enum CardinalDirection
     {

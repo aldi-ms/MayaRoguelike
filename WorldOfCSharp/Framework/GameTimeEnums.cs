@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace WorldOfCSharp
+namespace Maya
 {
     public enum GameMonth
     {

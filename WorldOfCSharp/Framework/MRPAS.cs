@@ -36,7 +36,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace WorldOfCSharp.FieldOfView
+namespace Maya.FieldOfView
 {
     internal class MRPAS<TFovNode> : FOVAlgorithm<TFovNode> where TFovNode : IFovCell
     {

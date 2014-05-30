@@ -1,7 +1,7 @@
 ﻿using System;
 using MT19937;
 
-namespace WorldOfCSharp.AI
+namespace Maya.AI
 {
     public static class ArtificialIntelligence
     {

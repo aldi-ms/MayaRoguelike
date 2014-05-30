@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace WorldOfCSharp
+namespace Maya
 {
     public static class UIElements
     {

@@ -1,7 +1,7 @@
 ﻿using System;
-using WorldOfCSharp.FieldOfView;
+using Maya.FieldOfView;
 
-namespace WorldOfCSharp
+namespace Maya
 {
     public class VisualEngine
     {
@@ -36,10 +36,11 @@ namespace WorldOfCSharp
             this.itemCharacters[(int)BaseType.Reagent] = '\u220f';
             this.itemCharacters[(int)BaseType.Recipe] = '\u222b';
             this.itemCharacters[(int)BaseType.Projectile] = '(';
-            this.itemCharacters[(int)BaseType.Quest] = '\u2021';
+            this.itemCharacters[(int)BaseType.QuestPlot] = '\u2021';
             this.itemCharacters[(int)BaseType.Quiver] = '\u00b6';
             this.itemCharacters[(int)BaseType.TradeGoods] = '\u2211';
             this.itemCharacters[(int)BaseType.Miscellaneous] = '}';
+            this.itemCharacters[(int)BaseType.Jewellery] = '\u00a7';
         }
 
         public VisualEngine(Framework.FlatArray<GameCell> map)
@@ -86,22 +87,20 @@ namespace WorldOfCSharp
                         }
                         if (map[x, y].ItemList != null && map[x, y].ItemList.Count > 0)
                         {
-                            ConsoleTools.WriteOnPosition(itemCharacters[map[x, y].ItemList[0].ItemType.ItemCode.BaseTypeInt], x, y);
+                            ConsoleTools.WriteOnPosition(itemCharacters[(int)map[x, y].ItemList[0].ItemType.BaseType], x, y);
                         }
                         if (map[x, y].Unit != null)
                         {
                             if (map[x, y].Unit.VisualChar != '@')
                             {
-                                GameEngine.GameField[x, y].Unit = new Unit(map[x,y].Unit);
                                 if (x >= xStart && x <= xEnd && y >= yStart && y <= yEnd)
                                 {
-                                    if (GameEngine.GameField[x, y].IsVisible)
+                                    if (map[x, y].IsVisible)
                                         ConsoleTools.WriteOnPosition(map[x, y].Unit);
                                 }
                             }
                             else
                             {
-                                GameEngine.GameField[x, y].Unit = new Unit(map[x, y].Unit);
                                 fieldOfView.ComputeFov(x, y, range, true, method, shape);
                                 ConsoleTools.WriteOnPosition(map[x, y].Unit);
                             }
@@ -117,7 +116,7 @@ namespace WorldOfCSharp
 
         public void PrintUnit(Unit unit)
         {
-            GameEngine.GameField[unit.X, unit.Y].Unit = new Unit(unit);
+            GameEngine.GameField[unit.X, unit.Y].Unit = unit;
             if (unit.VisualChar == '@')
             {
                 ConsoleTools.WriteOnPosition(unit);

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WorldOfCSharp
+namespace Maya
 {
     public class GameTime
     {
@@ -12,6 +12,7 @@ namespace WorldOfCSharp
         private int month;
         private int year;
         private int ticks;
+        MT19937.MersenneTwister mt = new MT19937.MersenneTwister();
 
         public GameTime(int seconds, int minutes, int hour, int day, int month, int year)
         {
@@ -139,8 +140,10 @@ namespace WorldOfCSharp
 
         public void Tick()
         {
-            if (ticks % 2 == 0)
-                this.Seconds++;
+            if (ticks % 5 != 0)
+                this.Seconds += mt.Next(2, 6);
+            else
+                this.Seconds += mt.Next(4, 9);
             this.ticks++;
         }
 

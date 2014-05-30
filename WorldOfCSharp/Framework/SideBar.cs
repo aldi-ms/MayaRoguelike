@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Text;
 
-namespace WorldOfCSharp
+namespace Maya
 {
     public class SideBar
     {
-        private const string HIT_POINTS_STRING = "Hit Points: ";
+        private const string HIT_POINTS_STRING = "HP: ";
         private const string GAME_TIME_STRING = "Current Time: ";
         private static int HPBarLength = (Globals.CONSOLE_WIDTH - Globals.GAME_FIELD_BOTTOM_RIGHT.X) - (HIT_POINTS_STRING.Length + 8);
         private string hitPointsLabel;
@@ -51,25 +51,25 @@ namespace WorldOfCSharp
 
         private void ShowHPBar(Unit unit)
         {
-            hitPointsLabel = string.Format("{0}/{1} ", unit.Stats.CurrentHitPoints, unit.Stats.MaxHitPoints);
+            hitPointsLabel = string.Format("{0}/{1} ", unit.UnitStats.CurrentHealth, unit.UnitStats.MaxHealth);
             ConsoleTools.WriteOnPosition(hitPointsLabel.ToString(), topRight.X + HIT_POINTS_STRING.Length, topRight.Y + 4, ConsoleColor.Cyan);
 
-            int bars = (int)(unit.Stats.CurrentHitPoints / ((double)unit.Stats.MaxHitPoints / (double)HPBarLength));
+            int bars = (int)(unit.UnitStats.CurrentHealth / ((double)unit.UnitStats.MaxHealth / (double)HPBarLength));
             hitPointsBar.Append('\u2588', bars);
             if (bars < HPBarLength)
                 hitPointsBar.Append(' ', Globals.CONSOLE_WIDTH - (topRight.X + HIT_POINTS_STRING.Length + hitPointsLabel.Length + hitPointsBar.Length));
 
             ConsoleColor color = ConsoleColor.Red;
-            if (((double)unit.Stats.CurrentHitPoints / (double)unit.Stats.MaxHitPoints) > 0.9)
+            if (((double)unit.UnitStats.CurrentHealth / (double)unit.UnitStats.MaxHealth) > 0.9)
                 color = ConsoleColor.DarkGreen;
             else
-                if (((double)unit.Stats.CurrentHitPoints / (double)unit.Stats.MaxHitPoints) > 0.7)
+                if (((double)unit.UnitStats.CurrentHealth / (double)unit.UnitStats.MaxHealth) > 0.7)
                     color = ConsoleColor.Green;
             else
-                if (((double)unit.Stats.CurrentHitPoints / (double)unit.Stats.MaxHitPoints) > 0.5)
+                    if (((double)unit.UnitStats.CurrentHealth / (double)unit.UnitStats.MaxHealth) > 0.5)
                     color = ConsoleColor.Yellow;
             else
-                if (((double)unit.Stats.CurrentHitPoints / (double)unit.Stats.MaxHitPoints) > 0.2)
+                        if (((double)unit.UnitStats.CurrentHealth / (double)unit.UnitStats.MaxHealth) > 0.2)
                     color = ConsoleColor.DarkYellow;
             
             ConsoleTools.WriteOnPosition(hitPointsBar.ToString(), topRight.X + HIT_POINTS_STRING.Length + hitPointsLabel.Length, topRight.Y + 4, color);

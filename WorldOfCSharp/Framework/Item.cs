@@ -1,53 +1,29 @@
 ﻿using System;
 
-namespace WorldOfCSharp
+namespace Maya
 {
     public class Item
     {
         private string name;
-        private ItemType itemType = new ItemType();
-        private ItemStats itemStats;
+        //private ItemType itemType;
+        //private ItemStats_DEPRECATED itemStats;
+        private ItemAttributes itemStats;
         private int inventorySlot;
         public bool isEquipped = false;
 
-        public Item(string name, ItemType itemType, int strength = 0, int dexterity = 0, int stamina = 0, int intelligence = 0, int spirit = 0)
+        public Item(string name, ItemAttributes itemStats)
         {
             this.name = name;
-            if (itemType.Slot == EquipSlot.MainHand || itemType.Slot == EquipSlot.OffHand)
-                throw new ArgumentException("Use the weapon constructor for items of type Weapon!");
-            this.itemType = itemType;
-            this.itemStats = new ItemStats(strength: strength, dexterity: dexterity, stamina: stamina, intelligence: intelligence, spirit: spirit);
+            this.itemStats = itemStats;
             this.inventorySlot = -1;    //default value -1 for not in inventory.
         }
-
-        public Item(string name, ItemType itemType, ItemStats itemStats)
-        {
-            if (itemType.Slot == EquipSlot.MainHand || itemType.Slot == EquipSlot.OffHand)
-                throw new ArgumentException("Use the weapon constructor for items of type Weapon!");
-            this.name = name;
-            this.itemType = itemType;
-            this.itemStats = itemStats;
-        }
-
-        //weapon constructor
-        public Item(string name, ItemType itemType, int numberOfDies, int sidesPerDie, int speed, int accuracy, 
-            int strength = 0, int dexterity = 0, int stamina = 0, int intelligence = 0, int spirit = 0)
-        {
-            this.name = name; 
-            this.itemType = itemType;
-            if (itemType.Slot != EquipSlot.MainHand && itemType.Slot != EquipSlot.OffHand)
-                throw new ArgumentException("Use the normal constructor for items which are not of type Weapon!");
-
-            this.itemStats = new ItemStats(numberOfDies, sidesPerDie, speed, accuracy, strength: strength, 
-                dexterity: dexterity, stamina: stamina, intelligence: intelligence, spirit: spirit);
-        }
-
+        
         public ItemType ItemType
         {
-            get { return this.itemType; }
+            get { return this.itemStats.ItemType; }
         }
 
-        public ItemStats ItemStats
+        public ItemAttributes ItemStats
         {
             get { return this.itemStats; }
             set { this.itemStats = value; }
@@ -55,7 +31,7 @@ namespace WorldOfCSharp
 
         public EquipSlot Slot
         {
-            get { return this.itemType.Slot; }
+            get { return this.ItemType.Slot; }
         }
 
         public int InventorySlot
@@ -67,19 +43,16 @@ namespace WorldOfCSharp
         public override string ToString()
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            sb.AppendFormat("[{0}", this.name);
+            sb.AppendFormat("[{0}", this.name, this.Slot.ToString()); //???????????!!!
 
-            if (this.ItemStats.ActiveStats.Count > 0)
-            {
-                sb.Append(" (");
-                foreach (var stat in this.ItemStats.ActiveStats)
-                {
-                    sb.AppendFormat("+{0}{1};", stat.Stat, stat.StatShortName);
-                }
-                sb.Append(")");
-            }
+            if (ItemStats.ItemType.BaseType == BaseType.Weapon)
+                sb.AppendFormat(", {0} dmg(\x00b1{1})", this.ItemStats.BaseDamage, this.ItemStats.RandomElement);
+
+            for (int i = 0; i < BaseAttributes.Count; i++)
+                if (ItemStats[i] > 0)
+                    sb.AppendFormat(", +{0} {1}", ItemStats[i], ItemStats[i, i]);
+
             sb.Append("]");
-
             return sb.ToString();
         }
     }

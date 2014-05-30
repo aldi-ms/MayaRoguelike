@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace WorldOfCSharp
+namespace Maya
 {
     public class Inventory
     {

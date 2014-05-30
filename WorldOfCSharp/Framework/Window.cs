@@ -3,7 +3,7 @@ using System.Text;
 using System.IO;
 using System.Collections.Generic;
 
-namespace WorldOfCSharp
+namespace Maya
 {
     public sealed class Window
     {
@@ -20,10 +20,15 @@ namespace WorldOfCSharp
         private Unit pc;
         private Coordinate topLeft, topRight, bottomLeft, bottomRight;  //window frame coordinates!
 
-        //Default Constructor (creates window over the game field)
+        /// <summary>
+        /// Default constructor for creating a window over the game field.
+        /// </summary>
+        /// <param name="pc">Information for this unit is used in the window.</param>
+        /// <param name="title">Window title.</param>
         public Window(Unit pc, string title)
         {
-            this.pc = new Unit(pc);
+            this.pc = pc;
+
             this.title = title.ToUpper();
 
             //save window coordinates
@@ -35,7 +40,13 @@ namespace WorldOfCSharp
             activeWindows.Add(this);
         }
         
-        //Manually set Window values
+        /// <summary>
+        /// Constructor for manually setting the size/position of the window.
+        /// </summary>
+        /// <param name="pc">Information for this unit is used in the window.</param>
+        /// <param name="title">Window title.</param>
+        /// <param name="windowBottomLeftX">Bottom-left window corner 'x' coordinate.</param>
+        /// <param name="windowBottomLeftY">Bottom-left window corner 'y' coordinate.</param>
         public Window(Unit pc, string title, int windowBottomLeftX, int windowBottomLeftY, int windowWidth, int windowHeight)
         {
             this.pc = new Unit(pc);
@@ -142,7 +153,6 @@ namespace WorldOfCSharp
         {
             if (!windowIsOpen)
             {
-                //SaveGame(pc);
                 ConsoleTools.Clear(windowBottomLeftX, windowBottomLeftY, windowWidth, windowHeight);
                 DrawWindow();
                 this.windowIsOpen = true;
@@ -178,9 +188,6 @@ namespace WorldOfCSharp
             ActiveWindows.Remove(this);
             this.windowIsOpen = false;
             ConsoleTools.Clear(windowBottomLeftX, windowBottomLeftY, windowWidth, windowHeight);
-            //List<Unit> unitList = SaveLoadTools.LoadUnits(TEMP_SAVE_FILE);
-            //GameCell[,] gameField = MapTools.LoadMap(SaveLoadTools.LoadSavedMapName(TEMP_SAVE_FILE));       //load map<<<<<<<<
-            //File.Delete(TEMP_SAVE_FILE);
             GameEngine.VisualEngine.PrintFOVMap(pc.X, pc.Y);
             GameEngine.VisualEngine.PrintUnit(pc);
         }
@@ -192,12 +199,6 @@ namespace WorldOfCSharp
             emptySB.Append(new string(' ', windowWidth - 8));
             while (this.Write(emptySB.ToString()));
             this.linePosition = this.TopLeft.Y + 2;
-        }
-
-        //temporarily save the game to file other than the main save
-        private void SaveGame(Unit pc)    //pause
-        {
-            SaveLoadTools.SaveGame(TEMP_SAVE_FILE);
         }
 
         //draw the window over the game field
@@ -244,7 +245,6 @@ namespace WorldOfCSharp
 
             ConsoleTools.WriteOnPosition(SBTitle.ToString(), titleX, titleY, ConsoleColor.Yellow);
         }
-       
     }
 }
        

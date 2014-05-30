@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WorldOfCSharp
+namespace Maya
 {
     /// <summary>
     /// Coordinate struct for positioning every (game) object in the game.
@@ -20,9 +20,7 @@ namespace WorldOfCSharp
         public Coordinate(int x, int y, int z = 0)
         {
             if (x >= 0 && x <= Globals.CONSOLE_WIDTH)
-            {
                 this.x = x;
-            }
             else
             {
                 string exceptionStr = string.Format("Invalid width(X) coordinates. X -axis has a value of {0}. X -axis value should be in range 0 to {1}.", 
@@ -31,9 +29,7 @@ namespace WorldOfCSharp
             }
             
             if (y >= 0 && y <= Globals.CONSOLE_HEIGHT)
-            {
                 this.y = y;
-            }
             else
             {
                 string exceptionStr = string.Format("Invalid height(Y) coordinates. Y -axis has a value of {0}. Y -axis value should be in range 0 to {1}.", 
@@ -51,9 +47,7 @@ namespace WorldOfCSharp
             set
             {
                 if (value >= 0 && value <= Globals.CONSOLE_WIDTH)
-                {
                     this.x = value;
-                }
                 else
                 {
                     string exceptionStr = string.Format("Invalid width(X) coordinates. X -axis has a value of {0}. X -axis value should be in range 0 to {1}.",
@@ -70,9 +64,7 @@ namespace WorldOfCSharp
             set
             {
                 if (value >= 0 && value <= Globals.CONSOLE_HEIGHT)
-                {
                     this.y = value;
-                }
                 else
                 {
                     string exceptionStr = string.Format("Invalid height(Y) coordinates. Y -axis has a value of {0}. Y -axis value should be in range 0 to {1}.",
@@ -82,9 +74,18 @@ namespace WorldOfCSharp
             }
         }
 
+        /// <summary>
+        /// Map ID.
+        /// </summary>
+        public int Z
+        {
+            get { return this.z; }
+            set { this.Z = value; }
+        }
+
         public override string ToString()
         {
-            return string.Format("[{0};{1}]", this.X, this.Y);
+            return string.Format("[{0};{1};{2}]", this.X, this.Y, this.Z);
         }
     }
 }

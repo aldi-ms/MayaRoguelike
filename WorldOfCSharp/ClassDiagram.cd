@@ -17,7 +17,7 @@
   <Class Name="WorldOfCSharp.Database" Collapsed="true">
     <Position X="11.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAIAASAgQAAAAAAAAAAAAAEAYAAQACIAAAAACAAAAAA=</HashCode>
+      <HashCode>AAIAASAgAAAAAAAAAAAAAAEAYAAQACIACAAACAAAAAA=</HashCode>
       <FileName>Framework\Database.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -39,7 +39,7 @@
   <Class Name="WorldOfCSharp.GameEngine" Collapsed="true">
     <Position X="9.5" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAkAQAABEAASgAACgIAACwARUQAACREAAABABASAQ=</HashCode>
+      <HashCode>AAAAkAQAABEAAQiAACgIgACwBRUQAACREAAABABASAU=</HashCode>
       <FileName>Framework\GameEngine.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -106,25 +106,25 @@
       <FileName>Framework\MessageLog.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="WorldOfCSharp.RightPane" Collapsed="true">
-    <Position X="7.75" Y="3.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAQAAAAAAAAggIAAAAAAAAAAAFABgAAAAAQAAAYAAAA=</HashCode>
-      <FileName>Framework\RightPane.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="WorldOfCSharp.RNG" Collapsed="true">
-    <Position X="9.5" Y="3.5" Width="1.5" />
+    <Position X="7.75" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAACAAAAAAAAAAAAAACAAAAAAAAAA=</HashCode>
       <FileName>Framework\RNG.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="WorldOfCSharp.SaveLoadTools" Collapsed="true">
-    <Position X="11.25" Y="3.5" Width="1.5" />
+    <Position X="9.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>IAIAAAAgAAAQAAAAAAAAAAAAABAAAAAAAAAAAAACAAA=</HashCode>
+      <HashCode>IAIAAAAgAAAQAAAAAAAAAAAAABAAAAAAAAAAAAgAAAA=</HashCode>
       <FileName>Framework\SaveLoadTools.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WorldOfCSharp.SideBar" Collapsed="true">
+    <Position X="14.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAghIAAQAAAABAAAFAFgAAAAAQAAAYEAAA=</HashCode>
+      <FileName>Framework\SideBar.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="WorldOfCSharp.UnitStats" Collapsed="true">
@@ -141,7 +141,7 @@
       <FileName>Framework\Stats.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="WorldOfCSharp.TerrainType" Collapsed="true">
+  <Class Name="WorldOfCSharp.Terrain" Collapsed="true">
     <Position X="3" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAIA=</HashCode>
@@ -212,14 +212,14 @@
     </TypeIdentifier>
   </Class>
   <Class Name="WorldOfCSharp.FieldOfView.Shadow" Collapsed="true">
-    <Position X="13" Y="3.5" Width="1.5" />
+    <Position X="11.25" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAgAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Framework\MRPAS.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="WorldOfCSharp.FieldOfView.ShadowMap" Collapsed="true">
-    <Position X="14.75" Y="3.5" Width="1.5" />
+    <Position X="13" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAACAAAAEQAAACAAAQAAAAAAEAAEAAAAAAAABAAAA=</HashCode>
       <FileName>Framework\MRPAS.cs</FileName>
@@ -249,14 +249,14 @@
   <Class Name="WorldOfCSharp.Tests.Testing" Collapsed="true">
     <Position X="16.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAIAAAAAAACAAAAAAAAAAAAAACAAAAAAAAgAAAAAAA=</HashCode>
+      <HashCode>AAAIAAAAAAACAAAAAAAAAAAAAACAAAEACAAgAAAAAAA=</HashCode>
       <FileName>Testing.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Struct Name="WorldOfCSharp.Coordinate" Collapsed="true">
     <Position X="7.75" Y="5.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAABgAAAAYAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAABgAQAAYAA=</HashCode>
       <FileName>Framework\Coordinate.cs</FileName>
     </TypeIdentifier>
   </Struct>

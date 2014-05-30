@@ -2,7 +2,7 @@
 using System.Text;
 using System.Collections.Generic;
 
-namespace WorldOfCSharp
+namespace Maya
 {
     public sealed class MessageLog
     {

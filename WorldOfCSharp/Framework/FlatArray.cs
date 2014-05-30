@@ -1,4 +1,4 @@
-﻿namespace WorldOfCSharp.Framework
+﻿namespace Maya.Framework
 {
     public class FlatArray<T>
     {

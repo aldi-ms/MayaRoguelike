@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using WorldOfCSharp.Framework;
+using Maya.Framework;
 
-namespace WorldOfCSharp
+namespace Maya
 {
     public static class GameEngine
     {
@@ -17,7 +17,7 @@ namespace WorldOfCSharp
         private static List<Unit> removedUnits = new List<Unit>();
         private static VisualEngine VEngine;
         private static GameTime gameTime = new GameTime();
-        private static SideBar rightInfoPane;
+        private static SideBar sideBar;
 
         public static VisualEngine VisualEngine
         {
@@ -49,7 +49,7 @@ namespace WorldOfCSharp
 
         public static SideBar RightInfoPane
         {
-            get { return rightInfoPane; }
+            get { return sideBar; }
         }
 
         public static string MapName
@@ -89,6 +89,7 @@ namespace WorldOfCSharp
                             if (unit.Flags.HasFlag(Flags.IsPlayerControl))
                             {
                                 SaveLoadTools.SaveGame();
+                                SaveLoadTools.SaveGameToXML();
                                 MapTools.SaveMap(gameField);
                                 MessageLog.SendMessage("Game Saved.");
                             }
@@ -157,7 +158,7 @@ namespace WorldOfCSharp
 
         private static void Initialize(Unit pc)
         {
-            rightInfoPane = new SideBar(pc);
+            sideBar = new SideBar(pc);
 
             VEngine = new VisualEngine(GameField);
             VEngine.PrintUnit(pc);
@@ -169,6 +170,7 @@ namespace WorldOfCSharp
         {
             bool loop = true;
 
+            //int turns = 0;
             while (loop)
             {
                 //add queued units
@@ -190,24 +192,26 @@ namespace WorldOfCSharp
                 if (GameTime.Ticks % 50 == 0)
                     pc.EffectsPerFive();
 
-                rightInfoPane.Update(pc);
-
+                sideBar.Update(pc);
                 foreach (Unit unit in Units)
                 {
-                    unit.Stats.Energy += unit.Stats.ActionSpeed;
+                    unit.UnitStats.Energy += unit.UnitStats.ActionSpeed;
                     int energyCost = 0;
-                    if (unit.Stats.Energy >= 100)
+                    if (unit.UnitStats.Energy >= 100)
                     {
                         if (unit.Flags.HasFlag(Flags.IsPlayerControl))
                         {
                             energyCost = PlayerControl(pc);
+                            //turns++;
+                            //if (turns == 1000)
+                            //    MessageLog.SendMessage(string.Format("Time for 1k turns = {0}", gameTime.ToString()));
                             //energyCost = AI.ArtificialIntelligence.DrunkardWalk(unit);      //for performance testing purposes
                         }
                         else
                         {
                             energyCost = AI.ArtificialIntelligence.DrunkardWalk(unit);
                         }
-                        unit.Stats.Energy = unit.Stats.Energy - energyCost;
+                        unit.UnitStats.Energy -= energyCost;
                     }
                 }
             }

@@ -7,7 +7,7 @@
     <ProjectGuid>{0B65B911-6677-430B-A956-C8E9C534109B}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WorldOfCSharp</RootNamespace>
+    <RootNamespace>Maya</RootNamespace>
     <AssemblyName>WorldOfCSharp</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -82,7 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="!TO DO.txt" />

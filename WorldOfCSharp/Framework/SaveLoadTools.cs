@@ -2,14 +2,38 @@
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
+using System.Xml.Linq;
 
-namespace WorldOfCSharp
+namespace Maya
 {
     public static class SaveLoadTools
     {
         private const string UNITS_SAVE_FILE = @"../../saves/units.wocs";   //contains info on units, as well as the current map name
         private const string UNITS_INFO_FILE = @"../../saves/units_info.wocs";
         private static readonly Encoding ENCODING = Encoding.ASCII;
+
+        public static void SaveGameToXML()
+        {
+            XDocument units = new XDocument(
+                new XElement("Units")
+                );
+            XElement unitsElement = units.Element("Units");
+            foreach (var unit in GameEngine.Units)
+            {
+                unitsElement.Add(new XElement("Unit", 
+                    new XAttribute("x", unit.X),
+                    new XAttribute("y", unit.Y),
+                    new XAttribute("z", unit.Z),
+                    new XAttribute("flags", (int)unit.Flags),
+                    new XAttribute("char", unit.VisualChar),
+                    new XAttribute("color", unit.Color.ToString()),
+                    new XAttribute("name", unit.Name),
+                    new XAttribute("id", unit.UniqueID),
+                    new XElement("stats") //re-work stats first
+                    ));
+            }
+            units.Save(@"../../saves/units.xml");
+        }
 
         //saves all basic unit info in UNITS_SAVE_FILE
         public static void SaveGame()
@@ -36,47 +60,11 @@ namespace WorldOfCSharp
                 StringBuilder saveSB = new StringBuilder();
                 foreach (Unit unit in GameEngine.Units)
                 {
-                    saveSB.AppendFormat("[{0};{1}]", unit.UniqueID, unit.Stats.ToString());
+                    saveSB.AppendFormat("[{0};{1}]", unit.UniqueID, unit.UnitStats.ToString());
                     infoFile.WriteLine(saveSB.ToString());
                     saveSB.Clear();
                 }
             }
-        }
-
-        public static void SaveGame(string fileName)
-        {
-            const string TEMP_INFO_FILE = @"../../saves/temp_info.wocs";
-
-            if (!string.IsNullOrWhiteSpace(GameEngine.MapFileName))
-            {
-                using (var file = new StreamWriter(fileName, false, ENCODING))
-                {
-                    file.WriteLine(GameEngine.MapID);
-                    file.WriteLine(GameEngine.GameTime.Ticks);
-
-                    StringBuilder saveSB = new StringBuilder();
-                    foreach (Unit unit in GameEngine.Units)
-                    {
-                        saveSB.AppendFormat("[{0};{1};{2};{3};{4};{5};{6}]", unit.X, unit.Y, (int)unit.Flags, unit.VisualChar, unit.Color, unit.Name, unit.UniqueID);
-                        file.WriteLine(saveSB.ToString());
-                        saveSB.Clear();
-                    }
-                }
-
-                using (var infoFile = new StreamWriter(TEMP_INFO_FILE, false, ENCODING))
-                {
-                    StringBuilder saveSB = new StringBuilder();
-
-                    foreach (Unit unit in GameEngine.Units)
-                    {
-                        saveSB.AppendFormat("[{0};{1}]", unit.UniqueID, unit.Stats.ToString());
-                        infoFile.WriteLine(saveSB.ToString());
-                        saveSB.Clear();
-                    }
-                }
-            }
-            else
-                throw new ArgumentException("On save time string currentMapName is null, empty, or contains only white spaces.");
         }
 
         public static string LoadMapID(string saveFileName = UNITS_SAVE_FILE)
@@ -190,19 +178,19 @@ namespace WorldOfCSharp
                                 readChar = (char)infoFile.Read();
                             } while (readChar != ';');
 
-                            StringBuilder stamina = new StringBuilder();
+                            StringBuilder constitution = new StringBuilder();
                             readChar = (char)infoFile.Read();
                             do
                             {
-                                stamina.Append(readChar);
+                                constitution.Append(readChar);
                                 readChar = (char)infoFile.Read();
                             } while (readChar != ';');
 
-                            StringBuilder intelligence = new StringBuilder();
+                            StringBuilder wisdom = new StringBuilder();
                             readChar = (char)infoFile.Read();
                             do
                             {
-                                intelligence.Append(readChar);
+                                wisdom.Append(readChar);
                                 readChar = (char)infoFile.Read();
                             } while (readChar != ';');
 
@@ -230,13 +218,13 @@ namespace WorldOfCSharp
                                 readChar = (char)infoFile.Read();
                             } while (readChar != ']');
 
-                            unit.Stats.Strength = int.Parse(strength.ToString());
-                            unit.Stats.Dexterity = int.Parse(dexterity.ToString());
-                            unit.Stats.Stamina = int.Parse(stamina.ToString());
-                            unit.Stats.Intelligence = int.Parse(intelligence.ToString());
-                            unit.Stats.Spirit = int.Parse(spirit.ToString());
-                            unit.Stats.CurrentHitPoints = int.Parse(currentHP.ToString());
-                            unit.Stats.ActionSpeed = int.Parse(actionSpeed.ToString());
+                            unit.UnitStats[0] = int.Parse(strength.ToString());
+                            unit.UnitStats[1] = int.Parse(dexterity.ToString());
+                            unit.UnitStats[2] = int.Parse(constitution.ToString());
+                            unit.UnitStats[3] = int.Parse(wisdom.ToString());
+                            unit.UnitStats[4] = int.Parse(spirit.ToString());
+                            unit.UnitStats.CurrentHealth = int.Parse(currentHP.ToString());
+                            //unit.UnitStats.ActionSpeed = int.Parse(actionSpeed.ToString());
 
                             loadedUnits.Add(unit);
                         }
