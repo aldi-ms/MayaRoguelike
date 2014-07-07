@@ -74,7 +74,7 @@ namespace Maya
             }
         }
 
-        public static ConsoleColor ParseColor(string color)
+        public static ConsoleColor ToColor(this String color)
         {
             switch (color)
             {

@@ -1,19 +1,16 @@
-﻿1. Add Equipment/Inventory to save method.
-	--> Save items on ground to the map.
-	--> Make items load-able from a file (much like ingame obj?).
+﻿1. Add Equipment/Inventory items to load method.
 
 2. Implement options to scroll the log history.
 
-3. Implement a way to print colored messages (colored letters even) in MessageLog.
+3. Implement a way to print colored messages (colored letters?!) in MessageLog.
 	--> Use special character (for the method) in front of the letter/word you want colored
 	--> Selector char & color char
 
-4. New name for the game. "Maya" good?
+4. Word wrap for log history/global word wrap for windows?
 
 5. Implement CombatEngine class, to do everything combat-related.
 
-6. Make all array initializations (esp. in ItemType and VisualEngine) load from file/s.
-	--> Use databases for items, units, terrain, ingame objects, etc.
+6. Use databases for items, units, terrain, ingame objects, etc.
 
 7. Day/night, weather and other time related simulations.
 
@@ -22,8 +19,6 @@
 
 9. Map ID based? Z-coordinate for map ID?
 
-10. Change MersenneTwister for another RNG.
+10. Change MersenneTwister for another RNG? (ok for now)
 
-11.  Amulets/Rings should take either slot and not specify which (A or B) in ItemType constructor.
-
-12. Main/Off hand, one-hand (either main or off hand) and two-hand weapons to take the correct equip slots (work in Equipment?).
+11. 

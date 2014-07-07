@@ -3,24 +3,48 @@ using System.IO;
 using System.Text;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using Maya.Framework;
 
 namespace Maya
 {
     public static class SaveLoadTools
     {
-        private const string UNITS_SAVE_FILE = @"../../saves/units.wocs";   //contains info on units, as well as the current map name
-        private const string UNITS_INFO_FILE = @"../../saves/units_info.wocs";
+        internal const string UNITS_FILE = @"../../saves/units.xml";
+        internal const string GAME_STATS_FILE = @"../../saves/gamestats.xml";
+        internal const string ITEMS_ON_MAP_FILE = @"../../saves/mapitems.xml";
+        internal const string ITEMS_SAVE_FILE = @"../../db/itemdb.xml";
         private static readonly Encoding ENCODING = Encoding.ASCII;
 
-        public static void SaveGameToXML()
+        public static void SaveGame(FlatArray<GameCell> gameField)
         {
-            XDocument units = new XDocument(
-                new XElement("Units")
-                );
-            XElement unitsElement = units.Element("Units");
+            SaveUnits();
+            SaveMap(gameField);
+            SaveGameStats();
+            SaveItemsToDB(Item.ItemsGenerated);
+            GameEngine.MessageLog.SendMessage("Game saved.");
+        }
+
+        public static void LoadGame()
+        {
+            GameEngine.GameField = LoadMap(GameEngine.MapFileName = SaveLoadTools.SavedMapFileName());
+            //SpawnItemsOnMap();
+            GameEngine.GameTime = new GameTime(SaveLoadTools.SavedGameTicks());
+            Item.LastItemID = LastItemID();
+            GameEngine.Units = LoadUnitsXML();
+        }
+
+        public static void SaveUnits()
+        {
+            XDocument units = new XDocument(new XElement("units"));
+
+            XElement unitsElement = units.Element("units");
             foreach (var unit in GameEngine.Units)
             {
-                unitsElement.Add(new XElement("Unit", 
+                XElement equipment;
+                XElement inventory;
+
+                unitsElement.Add(
+                    new XElement("unit", 
                     new XAttribute("x", unit.X),
                     new XAttribute("y", unit.Y),
                     new XAttribute("z", unit.Z),
@@ -29,212 +53,333 @@ namespace Maya
                     new XAttribute("color", unit.Color.ToString()),
                     new XAttribute("name", unit.Name),
                     new XAttribute("id", unit.UniqueID),
-                    new XElement("stats") //re-work stats first
+                    new XAttribute("age", unit.UnitAttr.Age),
+                    new XElement("attributes",
+                        new XAttribute("str", unit.UnitAttr[0]),
+                        new XAttribute("dex", unit.UnitAttr[1]),
+                        new XAttribute("con", unit.UnitAttr[2]),
+                        new XAttribute("wis", unit.UnitAttr[3]),
+                        new XAttribute("spi", unit.UnitAttr[4]),
+                        new XAttribute("luck", unit.UnitAttr[5])),
+                    equipment = new XElement("equipment"),
+                    inventory = new XElement("inventory")
                     ));
-            }
-            units.Save(@"../../saves/units.xml");
-        }
 
-        //saves all basic unit info in UNITS_SAVE_FILE
-        public static void SaveGame()
-        {
-            if (string.IsNullOrWhiteSpace(GameEngine.MapFileName))
-                GameEngine.MapFileName = LoadMapID();
-
-            using (var unitFile = new StreamWriter(UNITS_SAVE_FILE, false, ENCODING))
-            {
-                unitFile.WriteLine(GameEngine.MapID);
-                unitFile.WriteLine(GameEngine.GameTime.Ticks);
-
-                StringBuilder saveSB = new StringBuilder();
-                foreach (Unit unit in GameEngine.Units)
+                if (unit.Equipment.Count > 0)
                 {
-                    saveSB.AppendFormat("[{0};{1};{2};{3};{4};{5};{6}]", unit.X, unit.Y, (int)unit.Flags, unit.VisualChar, unit.Color, unit.Name, unit.UniqueID);
-                    unitFile.WriteLine(saveSB.ToString());
-                    saveSB.Clear();
-                }
-            }
-
-            using (var infoFile = new StreamWriter(UNITS_INFO_FILE, false, ENCODING))
-            {
-                StringBuilder saveSB = new StringBuilder();
-                foreach (Unit unit in GameEngine.Units)
-                {
-                    saveSB.AppendFormat("[{0};{1}]", unit.UniqueID, unit.UnitStats.ToString());
-                    infoFile.WriteLine(saveSB.ToString());
-                    saveSB.Clear();
-                }
-            }
-        }
-
-        public static string LoadMapID(string saveFileName = UNITS_SAVE_FILE)
-        {
-            using (var sReader = new StreamReader(saveFileName, ENCODING))
-                return string.Format(@"../../maps/{0}.wocm", sReader.ReadLine());
-        }
-
-        public static List<Unit> LoadUnits(string unitSaveFile = UNITS_SAVE_FILE)
-        {
-            using (var unitFile = new StreamReader(unitSaveFile, ENCODING))
-            {
-                GameEngine.MapFileName = unitFile.ReadLine();
-                GameEngine.GameTime = new GameTime(int.Parse(unitFile.ReadLine()));
-
-                List<Unit> loadedUnits = new List<Unit>();
-                int readInt = unitFile.Peek();
-
-                using (var infoFile = new StreamReader(UNITS_INFO_FILE, ENCODING))
-                {
-                    char readChar;
-                    while (readInt > -1) //at eof returns 13 (CR) for some reason...
+                    int count = unit.Equipment.Count;
+                    int i = 0;
+                    do
                     {
-                        while ((readChar = (char)unitFile.Read()) == '\r' || readChar == '\n' || readChar == '[') ;
-                        if ((int)readChar > 255) break;
-                        StringBuilder coordX = new StringBuilder(4);    //--> read X -coord
-                        do
+                        if (unit.Equipment[i] != null)
                         {
-                            coordX.Append(readChar);
-                            readChar = (char)unitFile.Read();
-                        } while (readChar != ';');
-
-                        StringBuilder coordY = new StringBuilder(4);    //--> read Y -coord
-                        readChar = (char)unitFile.Read();
-                        do
-                        {
-                            coordY.Append(readChar);
-                            readChar = (char)unitFile.Read();
-                        } while (readChar != ';');
-
-                        StringBuilder flag = new StringBuilder();    //--> read flag
-                        readChar = (char)unitFile.Read();
-                        do
-                        {
-                            flag.Append(readChar);
-                            readChar = (char)unitFile.Read();
-                        } while (readChar != ';');
-
-                        char visCh = '\0';      //--> read visCh
-                        visCh = (char)unitFile.Read();
-                        readChar = (char)unitFile.Read();
-
-                        StringBuilder color = new StringBuilder();          //--> read color
-                        readChar = (char)unitFile.Read();
-                        do
-                        {
-                            color.Append(readChar);
-                            readChar = (char)unitFile.Read();
-                        } while (readChar != ';');
-
-                        StringBuilder name = new StringBuilder();       //--> read name
-                        readChar = (char)unitFile.Read();
-                        do
-                        {
-                            name.Append(readChar);
-                            readChar = (char)unitFile.Read();
-                        } while (readChar != ';');
-
-                        StringBuilder unitID = new StringBuilder();       //--> read ID from basic unit file
-                        readChar = (char)unitFile.Read();
-                        do
-                        {
-                            unitID.Append(readChar);
-                            readChar = (char)unitFile.Read();
-                        } while (readChar != ']');
-
-                        StringBuilder infoID = new StringBuilder();       //--> read ID from unit info file
-
-                        while ((readChar = (char)infoFile.Read()) == '\n' || readChar == '\r' || readChar == '[') ;
-                        do
-                        {
-                            infoID.Append(readChar);
-                            readChar = (char)infoFile.Read();
-                        } while (readChar != ';');
-
-                        //to a player character object >>>
-                        int parsedCoordX = int.Parse(coordX.ToString());
-                        int parsedCoordY = int.Parse(coordY.ToString());
-                        int parsedFlag = int.Parse(flag.ToString());
-                        int parsedUnitID = int.Parse(unitID.ToString());
-                        int parsedInfoID = int.Parse(infoID.ToString());
-                        ConsoleColor parsedColor = ConsoleTools.ParseColor(color.ToString());
-
-                        if (parsedUnitID == parsedInfoID)
-                        {
-                            Unit unit = new Unit(parsedCoordX, parsedCoordY, (Flags)parsedFlag, visCh, parsedColor, name.ToString(), parsedUnitID);
-
-                            StringBuilder strength = new StringBuilder();
-                            readChar = (char)infoFile.Read();
-                            do
-                            {
-                                strength.Append(readChar);
-                                readChar = (char)infoFile.Read();
-                            } while (readChar != ';');
-
-                            StringBuilder dexterity = new StringBuilder();
-                            readChar = (char)infoFile.Read();
-                            do
-                            {
-                                dexterity.Append(readChar);
-                                readChar = (char)infoFile.Read();
-                            } while (readChar != ';');
-
-                            StringBuilder constitution = new StringBuilder();
-                            readChar = (char)infoFile.Read();
-                            do
-                            {
-                                constitution.Append(readChar);
-                                readChar = (char)infoFile.Read();
-                            } while (readChar != ';');
-
-                            StringBuilder wisdom = new StringBuilder();
-                            readChar = (char)infoFile.Read();
-                            do
-                            {
-                                wisdom.Append(readChar);
-                                readChar = (char)infoFile.Read();
-                            } while (readChar != ';');
-
-                            StringBuilder spirit = new StringBuilder();
-                            readChar = (char)infoFile.Read();
-                            do
-                            {
-                                spirit.Append(readChar);
-                                readChar = (char)infoFile.Read();
-                            } while (readChar != ';');
-
-                            StringBuilder currentHP = new StringBuilder();
-                            readChar = (char)infoFile.Read();
-                            do
-                            {
-                                currentHP.Append(readChar);
-                                readChar = (char)infoFile.Read();
-                            } while (readChar != ';');
-
-                            StringBuilder actionSpeed = new StringBuilder();
-                            readChar = (char)infoFile.Read();
-                            do
-                            {
-                                actionSpeed.Append(readChar);
-                                readChar = (char)infoFile.Read();
-                            } while (readChar != ']');
-
-                            unit.UnitStats[0] = int.Parse(strength.ToString());
-                            unit.UnitStats[1] = int.Parse(dexterity.ToString());
-                            unit.UnitStats[2] = int.Parse(constitution.ToString());
-                            unit.UnitStats[3] = int.Parse(wisdom.ToString());
-                            unit.UnitStats[4] = int.Parse(spirit.ToString());
-                            unit.UnitStats.CurrentHealth = int.Parse(currentHP.ToString());
-                            //unit.UnitStats.ActionSpeed = int.Parse(actionSpeed.ToString());
-
-                            loadedUnits.Add(unit);
+                            equipment.Add(new XElement("item_id", unit.Equipment[i].ID - 1));
+                            count--;
                         }
+                        i++;
+                    } while(count > 0);
+                }
 
-                        readInt = unitFile.Peek();
+                if (unit.Inventory.Count > 0)
+                {
+                    int count = unit.Inventory.Count;
+                    int i = 0;
+                    do
+                    {
+                        if (unit.Inventory[i] != null)
+                        {
+                            inventory.Add(new XElement("item_id", unit.Inventory[i].ID - 1));
+                            count--;
+                        }
+                        i++;
+                    } while (count > 0);
+                }
+
+
+            }
+            units.Save(UNITS_FILE);
+        }
+
+        public static void SaveGameStats()
+        {
+            XDocument gameStats = new XDocument(new XElement("game_stats"));
+            XElement statsElement = gameStats.Element("game_stats");
+
+            statsElement.Add(
+                new XElement("map_file", GameEngine.MapFileName),
+                new XElement("ticks", GameEngine.GameTime.Ticks)
+                );
+            gameStats.Save(@"../../saves/gamestats.xml");
+        }
+
+        public static string SavedMapFileName(string saveFileName = GAME_STATS_FILE)
+        {
+            XDocument gameStats = XDocument.Load(saveFileName);
+            return gameStats.Element("game_stats").Element("map_file").Value;
+        }
+
+        public static int SavedGameTicks(string saveFileName = GAME_STATS_FILE)
+        {
+            XDocument gameStats = XDocument.Load(saveFileName);
+            return int.Parse(gameStats.Element("game_stats").Element("ticks").Value);
+        }
+
+        public static int LastItemID(string saveFileName = ITEMS_SAVE_FILE)
+        {
+            XDocument items = XDocument.Load(saveFileName);
+            return int.Parse(items.Element("items").Attribute("last_id").Value);
+        }
+
+        public static List<Unit> LoadUnitsXML(string file = UNITS_FILE)
+        {
+            List<Unit> unitList = new List<Unit>();
+            XDocument unitsXML = XDocument.Load(UNITS_FILE);
+
+            var units = unitsXML.Element("units").Elements();
+
+            foreach (var unit in units)
+            {
+                //unit info
+                int x = int.Parse(unit.Attribute("x").Value);
+                int y = int.Parse(unit.Attribute("y").Value);
+                int z = int.Parse(unit.Attribute("z").Value);
+                int flags = int.Parse(unit.Attribute("flags").Value);
+                char visualChar = char.Parse(unit.Attribute("char").Value);
+                ConsoleColor color = unit.Attribute("color").Value.ToColor();
+                string name = unit.Attribute("name").Value;
+                int id = int.Parse(unit.Attribute("id").Value);
+                int age = int.Parse(unit.Attribute("age").Value);
+
+                //attributes info
+                XElement unitAttr = unit.Element("attributes");
+                int str = int.Parse(unitAttr.Attribute("str").Value);
+                int dex = int.Parse(unitAttr.Attribute("dex").Value);
+                int con = int.Parse(unitAttr.Attribute("con").Value);
+                int wis = int.Parse(unitAttr.Attribute("wis").Value);
+                int spi = int.Parse(unitAttr.Attribute("spi").Value);
+                int luck = int.Parse(unitAttr.Attribute("luck").Value);
+
+                UnitAttributes unitAttributes = new UnitAttributes(age, str, dex, con, wis, spi, luck);
+                unitList.Add(new Unit(x, y, (Flags)flags, visualChar, color, name, id, unitAttributes));
+            }
+
+            return unitList;
+        }
+
+        public static void SpawnItemsOnMap(ref FlatArray<GameCell> gameField)
+        {
+            XDocument savedItems = XDocument.Load(ITEMS_ON_MAP_FILE);
+            XElement root = savedItems.Element("item-cells");
+            var itemCells = root.Elements("cell");
+
+            foreach (var cell in itemCells)
+            {
+                int x = int.Parse(cell.Attribute("x").Value);
+                int y = int.Parse(cell.Attribute("y").Value);
+                var items = cell.Elements("item_id");
+
+                foreach (var item in items)
+                {
+                    int itemID = int.Parse(item.Value);
+                    Item itemOnMap = new Item(Database.ItemDatabase[itemID]);
+                    gameField[x, y].ItemList.Add(itemOnMap);
+                }
+            }
+        }
+        
+        public static FlatArray<GameCell> LoadMap(string mapFileName = null)
+        {
+            bool newMap = mapFileName == null;
+            if (newMap)
+                mapFileName = @"../../maps/0.wocm";
+            Database.LoadDatabases();
+            FlatArray<GameCell> gameGrid = new FlatArray<GameCell>(Globals.GAME_FIELD_BOTTOM_RIGHT.X, Globals.GAME_FIELD_BOTTOM_RIGHT.Y);
+
+            using (var sReader = new StreamReader(mapFileName, ENCODING))
+            {
+                char procCh = (char)sReader.Read();
+
+                StringBuilder mapName = new StringBuilder();        //--> map name
+                do
+                {
+                    mapName.Append(procCh);
+                    procCh = (char)sReader.Read();
+                } while (procCh != '[');
+
+                GameEngine.MapName = mapName.ToString();
+
+                StringBuilder xSize = new StringBuilder(4);        //--> gameField.GetLength(0)
+                procCh = (char)sReader.Read();
+                do
+                {
+                    xSize.Append(procCh);
+                    procCh = (char)sReader.Read();
+                } while (procCh != ';');
+
+                StringBuilder ySize = new StringBuilder(4);        //--> gameField.GetLength(1)
+                procCh = (char)sReader.Read();
+                do
+                {
+                    ySize.Append(procCh);
+                    procCh = (char)sReader.Read();
+                } while (procCh != ']');
+
+
+                int charCode = sReader.Peek();
+                for (int x = 0; x < int.Parse(xSize.ToString()); x++)
+                {
+                    for (int y = 0; y < int.Parse(ySize.ToString()); y++)
+                    {
+                        gameGrid[x, y] = new GameCell();
+                        if (charCode != -1)
+                        {
+                            char readChar = (char)sReader.Read();
+
+                            StringBuilder posInTerrainDB = new StringBuilder(4);        //--> position in DB
+                            readChar = (char)sReader.Read();
+                            do
+                            {
+                                posInTerrainDB.Append(readChar);
+                                readChar = (char)sReader.Read();
+                            } while (readChar != ']' && readChar != '<');
+
+                            int index = int.Parse(posInTerrainDB.ToString());
+                            gameGrid[x, y].Terrain = new Terrain(Database.TerrainDatabase[index]);
+                            gameGrid[x, y].Terrain.X = x;
+                            gameGrid[x, y].Terrain.Y = y;
+
+                            if (readChar == '<')
+                            {
+                                StringBuilder posInInGameObjDB = new StringBuilder(4);        //--> position in DB
+                                readChar = (char)sReader.Read();
+                                do
+                                {
+                                    posInInGameObjDB.Append(readChar);
+                                    readChar = (char)sReader.Read();
+                                } while (readChar != '>');
+
+                                readChar = (char)sReader.Read();
+
+                                int objIndex = int.Parse(posInInGameObjDB.ToString());
+                                gameGrid[x, y].IngameObject = new InGameObject(Database.ObjectDatabase[objIndex]);
+                                gameGrid[x, y].IngameObject.X = x;
+                                gameGrid[x, y].IngameObject.Y = y;
+                            }
+                        }
                     }
                 }
 
-                return loadedUnits;
+                GameEngine.MessageLog.SendMessage("Map loaded.");
+                if (!newMap)
+                    SpawnItemsOnMap(ref gameGrid);
+
+                return gameGrid;
+
             }
+        }
+
+        public static void SaveMap(FlatArray<GameCell> gameField)
+        {
+            StringBuilder parseMap = new StringBuilder();
+            XDocument mapItems = new XDocument(new XElement("item-cells"));
+            XElement itemCells = mapItems.Element("item-cells");
+
+            for (int x = 0; x < gameField.Height; x++)
+            {
+                for (int y = 0; y < gameField.Width; y++)
+                {
+                    parseMap.AppendFormat("[{0}", gameField[x, y].Terrain.PositionInDB);
+
+                    if (gameField[x, y].IngameObject == null)
+                        parseMap.Append("]");
+                    else
+                        parseMap.AppendFormat("<{0}>]", gameField[x, y].IngameObject.PositionInDB);
+
+                    //save items on map
+                    if (gameField[x, y].ItemList.Count > 0)
+                    {
+                        XElement cell;
+                        itemCells.Add(
+                            cell = new XElement("cell",
+                                new XAttribute("x", x),
+                                new XAttribute("y", y)));
+
+                        foreach (var item in gameField[x, y].ItemList)
+                            cell.Add(new XElement("item_id", item.ID - 1));
+                    }
+                }
+            }
+            mapItems.Save(ITEMS_ON_MAP_FILE);
+
+            //save map
+            using (var sWriter = new StreamWriter(string.Format(@"../../maps/{0}.wocm", GameEngine.MapID), false, ENCODING))
+            {
+                sWriter.Write(GameEngine.MapName);
+                sWriter.Write(string.Format("[{0};{1}]", gameField.Height, gameField.Width));
+                sWriter.Write(parseMap.ToString());
+            }
+        }
+
+        public static void SaveItemsToDB(List<Item> items)
+        {
+            //clear item duplicates
+            List<Item> uniqueItems = new List<Item>();
+            foreach (var item in items)
+            {
+                if (Database.SearchItemDB(item.Name) == -1)
+                    uniqueItems.Add(item);
+            }
+
+            XDocument itemsDB = XDocument.Load(ITEMS_SAVE_FILE);
+            XElement itemsEle = itemsDB.Element("items");
+
+            foreach (var item in uniqueItems)
+            {
+                if (item.ItemType.BaseType == BaseType.Weapon)
+                    itemsEle.Add(
+                         new XElement("item",
+                            new XElement("id", item.ID),
+                            new XElement("attr",
+                                new XAttribute("name", item.Name),
+                                new XAttribute("str", item.ItemAttr[0]),
+                                new XAttribute("dex", item.ItemAttr[1]),
+                                new XAttribute("con", item.ItemAttr[2]),
+                                new XAttribute("wis", item.ItemAttr[3]),
+                                new XAttribute("spi", item.ItemAttr[4]),
+                                new XAttribute("luck", item.ItemAttr[5]),
+                                new XAttribute("weight", item.ItemAttr.Weight)),
+                            new XElement("itemtype",
+                                new XAttribute("equipslot", (int)item.Slot),
+                                new XAttribute("basetype", (int)item.ItemType.BaseType),
+                                new XAttribute("subtype", item.ItemType.SubType)),
+                            new XElement("weapon_attr",
+                                new XAttribute("base_dmg", item.ItemAttr.BaseDamage),
+                                new XAttribute("speed", item.ItemAttr.Speed),
+                                new XAttribute("accuracy", item.ItemAttr.Accuracy),
+                                new XAttribute("random_ele", item.ItemAttr.RandomElement))
+                    ));
+                else
+                    itemsEle.Add(
+                         new XElement("item",
+                            new XElement("id", item.ID),
+                            new XElement("attr",
+                                new XAttribute("name", item.Name),
+                                new XAttribute("str", item.ItemAttr[0]),
+                                new XAttribute("dex", item.ItemAttr[1]),
+                                new XAttribute("con", item.ItemAttr[2]),
+                                new XAttribute("wis", item.ItemAttr[3]),
+                                new XAttribute("spi", item.ItemAttr[4]),
+                                new XAttribute("luck", item.ItemAttr[5]),
+                                new XAttribute("weight", item.ItemAttr.Weight)),
+                            new XElement("itemtype",
+                                new XAttribute("equipslot", (int)item.Slot),
+                                new XAttribute("basetype", (int)item.ItemType.BaseType),
+                                new XAttribute("subtype", item.ItemType.SubType))
+                    ));
+            }
+
+            itemsEle.SetAttributeValue("last_id", Item.LastItemID);
+            itemsDB.Save(ITEMS_SAVE_FILE);
         }
     }
 }

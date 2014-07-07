@@ -62,22 +62,20 @@
     <Compile Include="GlobalValues.cs" />
     <Compile Include="Framework\InGameObject.cs" />
     <Compile Include="Framework\Item.cs" />
-    <Compile Include="Framework\ItemCode.cs" />
     <Compile Include="Framework\ItemType.cs" />
-    <Compile Include="Framework\MapTools.cs" />
     <Compile Include="Framework\MersenneTwister.cs" />
     <Compile Include="Framework\MessageLog.cs" />
     <Compile Include="Framework\GameTimeEnums.cs" />
     <Compile Include="Framework\MRPAS.cs" />
     <Compile Include="Framework\SaveLoadTools.cs" />
     <Compile Include="Framework\ShadowCasting.cs" />
-    <Compile Include="Framework\Stats.cs" />
-    <Compile Include="Framework\TerrainType.cs" />
+    <Compile Include="Framework\Attributes.cs" />
+    <Compile Include="Framework\Terrain.cs" />
     <Compile Include="Testing.cs" />
     <Compile Include="Framework\Unit.cs" />
     <Compile Include="Framework\VisualEngine.cs" />
     <Compile Include="Framework\Window.cs" />
-    <Compile Include="WorldOfCSharpMain.cs" />
+    <Compile Include="MayaMain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

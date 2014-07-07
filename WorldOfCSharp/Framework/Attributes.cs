@@ -52,6 +52,11 @@ namespace Maya
             get { return 6; }
         }
 
+        /// <summary>
+        /// Indexer for the base attributes.
+        /// </summary>
+        /// <param name="index">str: 0, dex: 1, con: 2, wis: 3, spi: 4, luck: 5</param>
+        /// <returns></returns>
         public int this[int index]
         {
             get
@@ -127,6 +132,7 @@ namespace Maya
             }
         }
 
+        /* UNUSED ENUMERATOR
         public IEnumerator<int> GetEnumerator()
         {
             return StatValues();
@@ -141,24 +147,8 @@ namespace Maya
             yield return spirit;
             yield return luck;
         }
-        
-        public static BaseAttributes operator +(BaseAttributes stat1, BaseAttributes stat2)
-        {
-            BaseAttributes result = new BaseAttributes(0,0,0,0,0,0);
+        */
 
-            for (int i = 0; i < BaseAttributes.Count; i++)
-			    result[i] += stat1[i] + stat2[i];
-            return result;
-        }
-
-        public static UnitAttributes operator +(UnitAttributes unitStats, BaseAttributes stats)
-        {
-            //UnitStats st = new UnitStats(unitStats.Age, unitStats.strength, unitStats.dexterity, unitStats.constitution, unitStats.wisdom, unitStats.spirit, unitStats.luck);
-            for (int i = 0; i < BaseAttributes.Count; i++)
-                unitStats[i] += stats[i];
-            return unitStats;
-        }
-        
         public override string ToString()
         {
             return string.Format("str = {0} \ndex = {1} \ncon = {2} \nwis = {3} \nspi = {4} \nluck = {5}",
@@ -208,28 +198,28 @@ namespace Maya
             get 
             {
                 if (BMI > 18.5 && BMI < 30)
-                    return (int)((dexterity + (int)fitness) / Math.Sqrt(BMI) + (2 * dexterity * (int)fitness) / ((BMI * BMI) / Math.Sqrt((double)fitness)) + 5 * Math.Sqrt(dexterity));
+                    return (int)((dexterity + (int)fitness) / Math.Sqrt(BMI) + 
+                        (2 * dexterity * (int)fitness) / ((BMI * BMI) / Math.Sqrt((double)fitness)) + 5 * Math.Sqrt(dexterity));
                 else 
                 {
                     int BMIPenalty = 45;
-                    return (int)((dexterity + (int)fitness) / Math.Sqrt(BMIPenalty) + (2 * dexterity * (int)fitness) / ((BMIPenalty * BMIPenalty) / Math.Sqrt((double)fitness)) + 5 * Math.Sqrt(dexterity));
+                    return (int)((dexterity + (int)fitness) / Math.Sqrt(BMIPenalty) + 
+                        (2 * dexterity * (int)fitness) / ((BMIPenalty * BMIPenalty) / Math.Sqrt((double)fitness)) + 5 * Math.Sqrt(dexterity));
                 }
             }
         }
 
         public int HealthRegen
         {
-            //test & fix formula
-            get { return (int)(constitution + spirit * 2); }
+            get { return (int)(constitution / 2 + spirit); }
         }
 
         public int CurrentHealth
         {
             get
             {
-                return
-                    this.currentHealth <= this.MaxHealth ?
-                this.currentHealth : this.MaxHealth;
+                return this.currentHealth <= this.MaxHealth ?
+                    this.currentHealth : this.MaxHealth;
             }
             set
             {
@@ -264,6 +254,9 @@ namespace Maya
         private int accuracy;
         private string randomElement;   //in format 2d5, 1d3, 3d12, etc.
 
+        /// <summary>
+        /// ItemAttribute constructor for armor and jewellery items.
+        /// </summary>
         public ItemAttributes(ItemType itemType, float weight, int str = 0, int dex = 0, int con = 0, int wis = 0, int spi = 0, int luck = 0)
             : base(str, dex, con, wis, spi, luck)
         {
@@ -277,6 +270,9 @@ namespace Maya
                 throw new ArgumentException("Used constructor is for items of BaseType Armor and Jewellery only!");
         }
 
+        /// <summary>
+        /// ItemAttribute constructor for weapons.
+        /// </summary>
         public ItemAttributes(ItemType itemType, float weight, int baseDamage, string randomElement, int speed, int accuracy, 
             int str = 0, int dex = 0, int con = 0, int wis = 0, int spi = 0, int luck = 0)
             : base(str, dex, con, wis, spi, luck)
@@ -307,6 +303,21 @@ namespace Maya
         public string RandomElement
         {
             get { return this.randomElement; }
+        }
+
+        public float Weight
+        {
+            get { return this.itemWeight; }
+        }
+
+        public int Speed
+        {
+            get { return this.speed; }
+        }
+
+        public int Accuracy
+        {
+            get { return this.accuracy; }
         }
     }
 }

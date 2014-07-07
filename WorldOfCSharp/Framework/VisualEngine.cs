@@ -44,7 +44,7 @@ namespace Maya
         }
 
         public VisualEngine(Framework.FlatArray<GameCell> map)
-            : this(map, 12, FOVMethod.MRPAS, RangeLimitShape.Octagon)
+            : this(map, 12, FOVMethod.MRPAS, RangeLimitShape.Circle)
         { }
 
         public void PrintFOVMap(int FOV_X, int FOV_Y)
@@ -80,36 +80,20 @@ namespace Maya
                 {
                     if (map[x, y].IsVisible == true)
                     {
-                        ConsoleTools.WriteOnPosition(map[x, y].Terrain);
-                        if (map[x, y].IngameObject != null)
-                        {
-                            ConsoleTools.WriteOnPosition(map[x, y].IngameObject);
-                        }
-                        if (map[x, y].ItemList != null && map[x, y].ItemList.Count > 0)
-                        {
-                            ConsoleTools.WriteOnPosition(itemCharacters[(int)map[x, y].ItemList[0].ItemType.BaseType], x, y);
-                        }
                         if (map[x, y].Unit != null)
-                        {
-                            if (map[x, y].Unit.VisualChar != '@')
-                            {
-                                if (x >= xStart && x <= xEnd && y >= yStart && y <= yEnd)
-                                {
-                                    if (map[x, y].IsVisible)
-                                        ConsoleTools.WriteOnPosition(map[x, y].Unit);
-                                }
-                            }
-                            else
-                            {
-                                fieldOfView.ComputeFov(x, y, range, true, method, shape);
-                                ConsoleTools.WriteOnPosition(map[x, y].Unit);
-                            }
-                        }
+                            ConsoleTools.WriteOnPosition(map[x, y].Unit);
+
+                        else if (map[x, y].ItemList != null && map[x, y].ItemList.Count > 0)
+                            ConsoleTools.WriteOnPosition(itemCharacters[(int)map[x, y].ItemList[0].ItemType.BaseType], x, y);
+
+                        else if (map[x, y].IngameObject != null)
+                            ConsoleTools.WriteOnPosition(map[x, y].IngameObject);
+
+                        else 
+                            ConsoleTools.WriteOnPosition(map[x, y].Terrain);
                     }
                     else
-                    {
                         ConsoleTools.WriteOnPosition(' ', x, y);
-                    }
                 }
             }
         }
@@ -122,20 +106,19 @@ namespace Maya
                 ConsoleTools.WriteOnPosition(unit);
                 this.PrintFOVMap(unit.X, unit.Y);
             }
-            else if (unit.X >= xStart && unit.X <= xEnd && unit.Y >= yStart && unit.Y <= yEnd)
-            {
-                if (GameEngine.GameField[unit.X, unit.Y].IsVisible)
-                    ConsoleTools.WriteOnPosition(unit);
-            }
+            else
+                if (unit.X >= xStart && unit.X <= xEnd && unit.Y >= yStart && unit.Y <= yEnd)
+                    if (GameEngine.GameField[unit.X, unit.Y].IsVisible)
+                        ConsoleTools.WriteOnPosition(unit);
         }
                 
         public void ClearGameObject(Unit unit)
         {
-            if (unit.X >= xStart && unit.X <= xEnd && unit.Y >= yStart && unit.Y <= yEnd)
-            {
+            if (map[unit.X, unit.Y].IsVisible == true)
                 ConsoleTools.WriteOnPosition(GameEngine.GameField[unit.X, unit.Y].Terrain, unit.X, unit.Y);
-            }
-            else ConsoleTools.WriteOnPosition(' ', unit.X, unit.Y);
+            else
+                ConsoleTools.WriteOnPosition(' ', unit.X, unit.Y);
+
             GameEngine.GameField[unit.X, unit.Y].Unit = null;
         }
     }

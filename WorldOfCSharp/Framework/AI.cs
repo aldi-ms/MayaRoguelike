@@ -8,7 +8,7 @@ namespace Maya.AI
         public static int DrunkardWalk(Unit unit)
         {
             MersenneTwister mt = new MersenneTwister();
-            unit.MakeAMove((CardinalDirection)mt.Next(0, 9));
+            unit.MakeAMove((CardinalDirection)mt.Next(9));
 
             return 100;
         }

@@ -87,12 +87,7 @@ namespace Maya
                         //add hit/walk related objects+events here
                         case "savepoint":
                             if (unit.Flags.HasFlag(Flags.IsPlayerControl))
-                            {
-                                SaveLoadTools.SaveGame();
-                                SaveLoadTools.SaveGameToXML();
-                                MapTools.SaveMap(gameField);
-                                MessageLog.SendMessage("Game Saved.");
-                            }
+                                SaveLoadTools.SaveGame(gameField);
                             break;
 
                         default:
@@ -118,7 +113,9 @@ namespace Maya
             MessageLog.DeleteLog();
 
             Units.Clear();
-            gameField = MapTools.LoadMap(@"../../maps/0.wocm");       //load map; change it to generate map!
+            gameField = SaveLoadTools.LoadMap();       //load map; change it to generate map!
+            MapFileName = @"../../maps/0.wocm";
+            Item.LastItemID = SaveLoadTools.LastItemID();
             Flags pcFlags = Flags.IsCollidable | Flags.IsMovable | Flags.IsPlayerControl;
             Unit pc = new Unit(10, 10, pcFlags, '@', ConsoleColor.White, pcName);
             Units.Add(pc);
@@ -136,12 +133,14 @@ namespace Maya
             MessageLog.SendMessage("Message log initialized.");
 
             Units.Clear();
-            gameField = MapTools.LoadMap(mapFileName = SaveLoadTools.LoadMapID());       //load map<<<<<<<<
-            Units = SaveLoadTools.LoadUnits();
-
+            SaveLoadTools.LoadGame();
+            
             foreach (var unit in Units)
                 if (unit.Flags.HasFlag(Flags.IsPlayerControl))
+                {
                     Initialize(unit);
+                    break;
+                }
         }
 
         public static void AddUnit(Unit unit)
@@ -195,9 +194,9 @@ namespace Maya
                 sideBar.Update(pc);
                 foreach (Unit unit in Units)
                 {
-                    unit.UnitStats.Energy += unit.UnitStats.ActionSpeed;
+                    unit.UnitAttr.Energy += unit.UnitAttr.ActionSpeed;
                     int energyCost = 0;
-                    if (unit.UnitStats.Energy >= 100)
+                    if (unit.UnitAttr.Energy >= 100)
                     {
                         if (unit.Flags.HasFlag(Flags.IsPlayerControl))
                         {
@@ -211,7 +210,7 @@ namespace Maya
                         {
                             energyCost = AI.ArtificialIntelligence.DrunkardWalk(unit);
                         }
-                        unit.UnitStats.Energy -= energyCost;
+                        unit.UnitAttr.Energy -= energyCost;
                     }
                 }
             }
@@ -244,6 +243,7 @@ namespace Maya
                             MessageLog.ShowLogFile(pc);
                             return 0;
 
+                        #region PickUpItem
                         case ConsoleKey.G:
                         case ConsoleKey.OemComma:
                             //pick up item
@@ -262,7 +262,7 @@ namespace Maya
                                     {
                                         for (int i = 0; i < GameField[pc.X, pc.Y].ItemList.Count; i++)
                                         {
-                                            MessageLog.SendMessage(string.Format("Pick up {0}? Yes/No/All/Cancel", GameField[pc.X, pc.Y].ItemList[i].ToString()));
+                                            MessageLog.SendMessage(string.Format("Pick up {0}? [Y]es/ [N]o/ [A]ll/ [C]ancel", GameField[pc.X, pc.Y].ItemList[i].ToString()));
 
                                             ConsoleKeyInfo itemKey = Console.ReadKey(true);
                                             switch (itemKey.Key)
@@ -307,6 +307,7 @@ namespace Maya
                                 }
                             }
                             return 100;
+                        #endregion
 
                         case ConsoleKey.I:
                             OpenInventory(pc);
@@ -382,7 +383,7 @@ namespace Maya
         private static void OpenInventory(Unit pc)
         {
             Window invWindow = new Window(pc, "inventory");
-            ShowWindow(pc, invWindow);
+            ShowInvWindow(pc, invWindow);
 
             ConsoleKeyInfo key;
             bool loop = true;
@@ -427,18 +428,18 @@ namespace Maya
             } while (loop);
         }
 
-        private static void ShowWindow(Unit unit, Window invWindow)
+        private static void ShowInvWindow(Unit unit, Window invWindow)
         {
             int letterCount = 0;
             bool CTRLMod = false;
             int letterSize = 65;
-            //show equipment/inventory window
-            Item[] itemsOwned = new Item[unit.Inventory.Count + unit.Equipment.Count];
             int itemsCount = 0;
+            int itemTypeCode = -1; //unexisting item type
+            Item[] itemsOwned = new Item[unit.Inventory.Count + unit.Equipment.Count];
 
             invWindow.Show();
 
-            invWindow.WriteLine("Equipment:", ConsoleColor.Red);
+            invWindow.WriteLine("Equipment:", ConsoleColor.Green);
             for (int i = 0; i < unit.Equipment.IsSlotUsed.Length; i++)
             {
                 if (unit.Equipment.IsSlotUsed[i] == true)
@@ -450,12 +451,18 @@ namespace Maya
 
             letterCount = 0;
             letterSize = 97;
-            invWindow.WriteLine("Inventory:", ConsoleColor.Red);
-            invWindow.Write("");
+            invWindow.WriteLine("Inventory:", ConsoleColor.Green);
+
             for (int i = 0; i < unit.Inventory.IsSlotUsed.Length; i++)
             {
                 if (unit.Inventory.IsSlotUsed[i] == true)
                 {
+                    if (itemTypeCode != (int)unit.Inventory[i].ItemAttr.ItemType.BaseType)
+                    {
+                        itemTypeCode = (int)unit.Inventory[i].ItemAttr.ItemType.BaseType;
+                        invWindow.WriteLine(string.Format("{0}:", unit.Inventory[i].ItemAttr.ItemType.BaseType));
+                    }
+
                     itemsOwned[itemsCount++] = unit.Inventory[i];
                     if (!CTRLMod)
                         invWindow.Write(string.Format("{0} - {1}", (char)(unit.Inventory[i].InventorySlot + letterSize), unit.Inventory[i].ToString()), ConsoleColor.White);
@@ -533,7 +540,7 @@ namespace Maya
                 if (Window.ActiveWindows[i].Title == "INVENTORY")
                 {
                     Window.ActiveWindows[i].ResetLinePosition();
-                    ShowWindow(unit, Window.ActiveWindows[i]);
+                    ShowInvWindow(unit, Window.ActiveWindows[i]);
                 }
             }
         }

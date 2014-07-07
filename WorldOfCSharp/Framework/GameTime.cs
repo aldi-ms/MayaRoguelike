@@ -5,6 +5,7 @@ namespace Maya
     public class GameTime
     {
         //do not access these directly. use properties instead!
+        MT19937.MersenneTwister mt = new MT19937.MersenneTwister();
         private int seconds;
         private int minutes;
         private int hour;
@@ -12,7 +13,6 @@ namespace Maya
         private int month;
         private int year;
         private int ticks;
-        MT19937.MersenneTwister mt = new MT19937.MersenneTwister();
 
         public GameTime(int seconds, int minutes, int hour, int day, int month, int year)
         {
@@ -149,7 +149,7 @@ namespace Maya
 
         public void Tick(int ticks)
         {
-            for (int i = 0; i < ticks / 2; i++)
+            for (int i = 0; i < ticks; i++)
             {
                 this.Tick();
                 this.ticks++;

@@ -52,8 +52,6 @@ namespace Maya
                     break;
                 }
             }
-
-            //Sort();
         }
 
         public Item DropItem(Item item)
@@ -72,45 +70,43 @@ namespace Maya
             return null;
         }
 
-        //private void Sort()
-        //{
-        //    int[] intArr = new int[this.inventory.Length];
-
-        //    for (int i = 0; i < this.inventory.Length; i++)
-        //    {
-        //        intArr[i] = this[i].ItemType.ItemCodeToInt;
-        //    }
-
-        //    for (int j = 0; j < intArr.Length; j++)
-        //    {
-        //        int key = intArr[j];
-        //        Item swapItem = inventory[j];
-
-        //        int i = j - 1;
-
-        //        while (i >= 0 && intArr[i] > key)
-        //        {
-        //            intArr[i + 1] = intArr[i];
-        //            inventory[i + 1] = inventory[i];
-
-        //            i = i - 1;
-        //        }
-
-        //        intArr[i + 1] = key;
-        //        inventory[i + 1] = swapItem;
-        //    }
-        //}
-
-        //public List<string> ToStringListDEPRECATED()
-        //{
-        //    List<string> strList = new List<string>();
-        //    for (int i = 0; i < this.inventory.Length; i++)
-        //    {
-        //        if (this.inventory[i].Slot != EquipSlot.NotEquippable)
-        //            strList.Add(string.Format("{0}", this.inventory[i].ToString()));
-        //    }
-
-        //    return strList;
-        //}
+        public void SortInventory()
+        {
+            int lowerBound = 0; // First position to compare.
+            int upperBound = BASE_BAG_SLOTS - 1; // First position NOT to compare.
+            int n = upperBound;
+            // Continue making passes while there is a potential exchange.
+            while (lowerBound <= upperBound)
+            {
+                // assume impossibly high index for low end.
+                int firstExchange = n;
+                // assume impossibly low index for high end.
+                int lastExchange = -1;
+                // Make a pass over the appropriate range.
+                for (int i = lowerBound; i < upperBound; i++)
+                {
+                    if (this.inventory[i].ItemType.BaseType > this.inventory[i + 1].ItemType.BaseType)
+                    {
+                        // Exchange elements
+                        Item temp = this.inventory[i];
+                        this.inventory[i] = this.inventory[i + 1];
+                        this.inventory[i + 1] = temp;
+                        // Remember first and last exchange indexes.
+                        if (i < firstExchange)
+                        { // True only for first exchange.
+                            firstExchange = i;
+                        }
+                        lastExchange = i;
+                    }
+                }
+                //--- Prepare limits for next pass.
+                lowerBound = firstExchange - 1;
+                if (lowerBound < 0)
+                {
+                    lowerBound = 0;
+                }
+                upperBound = lastExchange;
+            }
+        }
     }
 }

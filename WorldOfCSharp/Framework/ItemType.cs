@@ -137,9 +137,6 @@ namespace Maya
 
     public class ItemType
     {
-        //private static string[][] itemTypeArr = new string[System.Enum.GetNames(typeof(BaseType)).Length][];
-        //private ItemCode itemCode;
-
         private EquipSlot itemSlot = EquipSlot.NotEquippable;
         private BaseType itemBaseType = BaseType.Miscellaneous;
         private int subItemType;
@@ -148,6 +145,14 @@ namespace Maya
         {
             this.itemBaseType = baseItemType;
             this.subItemType = subItemType;
+        }
+
+        //for item db purposes
+        public ItemType(BaseType baseItemType, int subItemType, EquipSlot equipSlot)
+        {
+            this.itemBaseType = baseItemType;
+            this.subItemType = subItemType;
+            this.itemSlot = equipSlot;
         }
 
         public ItemType(ArmorType armorType, EquipSlot itemSlot)
@@ -192,11 +197,44 @@ namespace Maya
         public EquipSlot Slot
         {
             get { return this.itemSlot; }
+            //set { this.itemSlot = value; }
         }
 
         public BaseType BaseType
         {
             get { return this.itemBaseType; }
+        }
+
+        public int SubType
+        {
+            get { return this.subItemType; }
+        }
+
+        public void SwitchSlot()
+        {
+            switch (this.Slot)
+            {
+                case EquipSlot.AmuletA:
+                    this.itemSlot = EquipSlot.AmuletB;
+                    return;
+                case EquipSlot.AmuletB:
+                    this.itemSlot = EquipSlot.AmuletA;
+                    return;
+                case EquipSlot.FingerA:
+                    this.itemSlot = EquipSlot.FingerB;
+                    return;
+                case EquipSlot.FingerB:
+                    this.itemSlot = EquipSlot.FingerA;
+                    return;
+                case EquipSlot.MainHand:
+                    this.itemSlot = EquipSlot.OffHand;
+                    return;
+                case EquipSlot.OffHand:
+                    this.itemSlot = EquipSlot.MainHand;
+                    return;
+                default:
+                    return;
+            }
         }
     }
 }

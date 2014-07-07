@@ -10,7 +10,7 @@ namespace Maya
         private Terrain terrain;
         private Unit unit;
         private InGameObject ingameObject;
-        private List<Item> item = new List<Item>();
+        private List<Item> itemList = new List<Item>();
         
         public bool IsTransparent
         {
@@ -44,8 +44,8 @@ namespace Maya
 
         public List<Item> ItemList
         {
-            get { return this.item; }
-            set { this.item = value; }
+            get { return this.itemList; }
+            set { this.itemList = value; }
         }
     }
 }

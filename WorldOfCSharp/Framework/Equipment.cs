@@ -76,26 +76,57 @@ namespace Maya
             {
                 this.inventoryConnected.DropItem(item);
 
-                    //if there is already equipped item, put it in the inventory
+                //if there is already equipped item, put it in the inventory
                 if (this.equipment[(int)item.Slot] != null)
-                    this.Unequip(this.equipment[(int)item.Slot]);
+                {
+                    //amulets, rings and one-handed weapons have 2 slots in the equipment, 
+                    //so check if the item slot is full and switch to the other if it's empty
+                    if (item.ItemType.BaseType == BaseType.Jewellery || item.ItemType.BaseType == BaseType.Weapon)
+                    {
+                        if ((JewelleryType)item.ItemType.SubType == JewelleryType.Amulet)
+                            if (this.equipment[(int)EquipSlot.AmuletA] == null || this.equipment[(int)EquipSlot.AmuletB] == null)
+                                item.ItemType.SwitchSlot();
+                            else
+                                this.Unequip(this.equipment[(int)item.Slot]);
+
+                        if ((JewelleryType)item.ItemType.SubType == JewelleryType.Ring)
+                            if (this.equipment[(int)EquipSlot.FingerA] == null || this.equipment[(int)EquipSlot.FingerB] == null)
+                                item.ItemType.SwitchSlot();
+                            else
+                                this.Unequip(this.equipment[(int)item.Slot]);
+
+                        if ((WeaponType)item.ItemType.SubType == WeaponType.OneHandedAxes ||
+                            (WeaponType)item.ItemType.SubType == WeaponType.OneHandedMaces ||
+                            (WeaponType)item.ItemType.SubType == WeaponType.OneHandedSwords)
+                            if (this.equipment[(int)EquipSlot.MainHand] == null || this.equipment[(int)EquipSlot.OffHand] == null)
+                                item.ItemType.SwitchSlot();
+                            else
+                                this.Unequip(this.equipment[(int)item.Slot]);
+                    }
+                    else
+                        this.Unequip(this.equipment[(int)item.Slot]);
+                }
 
                 this.equipment[(int)item.Slot] = item;
                 this.equipment[(int)item.Slot].isEquipped = true;
                 this.isSlotUsed[(int)item.Slot] = true;
-                this.Owner.AddStats(item);
+                this.Owner.AddAttributes(item);
                 this.count++;
                 this.hasChanged = true;
             }
         }
 
+        /// <summary>
+        /// Removes an item from the equipment and puts it in the inventory.
+        /// </summary>
+        /// <param name="item">The item specified.</param>
         public void Unequip(Item item)
         {
             this.equipment[(int)item.Slot] = null;
             this.isSlotUsed[(int)item.Slot] = false;
             this.count--;
             this.hasChanged = true;
-            this.Owner.RemoveStats(item);
+            this.Owner.RemoveAttributes(item);
 
             item.isEquipped = false;
             this.inventoryConnected.StoreItem(item);

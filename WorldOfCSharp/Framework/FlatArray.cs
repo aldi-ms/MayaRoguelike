@@ -15,8 +15,8 @@
 
         public T this[int x, int y]
         {
-            get { return this.array[x * width + y]; }
-            set { this.array[x * width + y] = value; }
+            get { return this.array[x + y * height]; }
+            set { this.array[x + y * height] = value; }
         }
 
         public int Height

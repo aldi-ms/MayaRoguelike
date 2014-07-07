@@ -7,7 +7,7 @@ namespace Maya
     {
         private static List<int> listOfUnitIDs = new List<int>();
         private static MT19937.MersenneTwister mt = new MT19937.MersenneTwister();
-        private UnitAttributes unitStats;
+        private UnitAttributes unitAttr;
         private Equipment equipment;
         private Inventory inventory;
         private int uniqueID = 0;
@@ -17,15 +17,16 @@ namespace Maya
         {
             if (uniqueID == 0)
                 this.uniqueID = UniqueIDGenerator();
-            this.unitStats = new UnitAttributes(18);
+            this.unitAttr = new UnitAttributes(18);
             this.inventory = new Inventory(this.equipment = new Equipment(this));
             this.equipment.InventoryConnected = this.inventory;
         }
 
-        public Unit(int x, int y, Flags flags, char visualChar, ConsoleColor color, string name, int ID)
+        public Unit(int x, int y, Flags flags, char visualChar, ConsoleColor color, string name, int ID, UnitAttributes unitAttr)
             : this(x, y, flags, visualChar, color, name)
         {
             this.uniqueID = ID;
+            this.unitAttr = unitAttr;
         }
 
         public Unit(Unit unit)
@@ -49,10 +50,10 @@ namespace Maya
             set { this.inventory = value; }
         }
 
-        public UnitAttributes UnitStats
+        public UnitAttributes UnitAttr
         {
-            get { return unitStats; }
-            set { this.unitStats = value; }
+            get { return unitAttr; }
+            set { this.unitAttr = value; }
         }
         
         public string ItemInSlot(EquipSlot slot)
@@ -63,12 +64,13 @@ namespace Maya
         public void EffectsPerFive()
         {
             //HP regeneration
-            if (this.UnitStats.CurrentHealth + this.UnitStats.HealthRegen < this.UnitStats.MaxHealth)
-                this.UnitStats.CurrentHealth += this.UnitStats.HealthRegen;
-            else this.UnitStats.CurrentHealth = this.UnitStats.MaxHealth;
+            if (this.UnitAttr.CurrentHealth + this.UnitAttr.HealthRegen < this.UnitAttr.MaxHealth)
+                this.UnitAttr.CurrentHealth += this.UnitAttr.HealthRegen;
+            else
+                this.UnitAttr.CurrentHealth = this.UnitAttr.MaxHealth;
         }
 
-        protected internal void MakeAMove(CardinalDirection direction)
+        internal protected void MakeAMove(CardinalDirection direction)
         {
             if (this.Flags.HasFlag(Flags.IsMovable))
             {
@@ -175,16 +177,16 @@ namespace Maya
             return false;
         }
 
-        public void AddStats(Item item)
+        public void AddAttributes(Item item)
         {
             for (int i = 0; i < BaseAttributes.Count; i++)
-                UnitStats[i] += item.ItemStats[i];
+                UnitAttr[i] += item.ItemAttr[i];
         }
 
-        public void RemoveStats(Item item)
+        public void RemoveAttributes(Item item)
         {
             for (int i = 0; i < BaseAttributes.Count; i++)
-                UnitStats[i] -= item.ItemStats[i];
+                UnitAttr[i] -= item.ItemAttr[i];
         }
     }
 }
