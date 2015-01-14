@@ -74,7 +74,8 @@ namespace Maya
         {
             if (item != null && item.Slot != EquipSlot.NotEquippable)
             {
-                this.inventoryConnected.DropItem(item);
+                if (item.InventorySlot != -1)
+                    this.inventoryConnected.DropItem(item);
 
                 //if there is already equipped item, put it in the inventory
                 if (this.equipment[(int)item.Slot] != null)

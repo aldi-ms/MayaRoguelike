@@ -52,25 +52,27 @@ namespace Maya
 
         private void ShowHPBar(Unit unit)
         {
-            hitPointsLabel = string.Format("{0}/{1} ", unit.UnitAttr.CurrentHealth, unit.UnitAttr.MaxHealth);
+            hitPointsLabel = string.Format("{0}/{1} ", unit.Attributes.CurrentHealth, unit.Attributes.MaxHealth);
             ConsoleTools.WriteOnPosition(hitPointsLabel.ToString(), topRight.X + HIT_POINTS_STRING.Length, topRight.Y + 4, ConsoleColor.Cyan);
 
-            int bars = (int)(unit.UnitAttr.CurrentHealth / ((double)unit.UnitAttr.MaxHealth / (double)HPBarLength));
+            int bars = (int)(unit.Attributes.CurrentHealth / ((double)unit.Attributes.MaxHealth / (double)HPBarLength));
             hitPointsBar.Append('\u2588', bars);
+            hitPointsBar.Append('\u2591', HPBarLength - bars);
+
             if (bars < HPBarLength)
                 hitPointsBar.Append(' ', Globals.CONSOLE_WIDTH - (topRight.X + HIT_POINTS_STRING.Length + hitPointsLabel.Length + hitPointsBar.Length));
 
             ConsoleColor color = ConsoleColor.Red;
-            if (((double)unit.UnitAttr.CurrentHealth / (double)unit.UnitAttr.MaxHealth) > 0.9)
+            if (((double)unit.Attributes.CurrentHealth / (double)unit.Attributes.MaxHealth) > 0.9)
                 color = ConsoleColor.DarkGreen;
             else
-                if (((double)unit.UnitAttr.CurrentHealth / (double)unit.UnitAttr.MaxHealth) > 0.7)
+                if (((double)unit.Attributes.CurrentHealth / (double)unit.Attributes.MaxHealth) > 0.7)
                     color = ConsoleColor.Green;
             else
-                    if (((double)unit.UnitAttr.CurrentHealth / (double)unit.UnitAttr.MaxHealth) > 0.5)
+                    if (((double)unit.Attributes.CurrentHealth / (double)unit.Attributes.MaxHealth) > 0.5)
                     color = ConsoleColor.Yellow;
             else
-                        if (((double)unit.UnitAttr.CurrentHealth / (double)unit.UnitAttr.MaxHealth) > 0.3)
+                        if (((double)unit.Attributes.CurrentHealth / (double)unit.Attributes.MaxHealth) > 0.3)
                     color = ConsoleColor.DarkYellow;
             
             ConsoleTools.WriteOnPosition(hitPointsBar.ToString(), topRight.X + HIT_POINTS_STRING.Length + hitPointsLabel.Length, topRight.Y + 4, color);
@@ -88,15 +90,38 @@ namespace Maya
             timeLabel.Clear();
         }
 
+        private decimal oldAttrPrint;
         private void ShowAttributes(Unit unit)
         {
+            string del = new string(' ', width);
+
+            int attributesPrint = 1;
+            for (int i = 0; i < 6; i++)
+                attributesPrint *= unit.Attributes[i] + 1;
+            attributesPrint += unit.Experience.Level;
+
             int mid = topRight.X + ((Globals.CONSOLE_WIDTH - topRight.X) / 2);
-            ConsoleTools.WriteOnPosition(string.Format("STR: {0}", unit.UnitAttr[0]), topRight.X, topRight.Y + 10, ConsoleColor.DarkGray);
-            ConsoleTools.WriteOnPosition(string.Format("DEX: {0}", unit.UnitAttr[1]), mid, topRight.Y + 10, ConsoleColor.DarkGray);
-            ConsoleTools.WriteOnPosition(string.Format("CON: {0}", unit.UnitAttr[2]), topRight.X, topRight.Y + 11, ConsoleColor.DarkGray);
-            ConsoleTools.WriteOnPosition(string.Format("WIS: {0}", unit.UnitAttr[3]), mid, topRight.Y + 11, ConsoleColor.DarkGray);
-            ConsoleTools.WriteOnPosition(string.Format("SPI: {0}", unit.UnitAttr[4]), topRight.X, topRight.Y + 12, ConsoleColor.DarkGray);
-            ConsoleTools.WriteOnPosition(string.Format("LUCK: {0}", unit.UnitAttr[5]), mid, topRight.Y + 12, ConsoleColor.DarkGray);
+            if (attributesPrint != this.oldAttrPrint)
+            {
+                //clear the rows for the new info print
+                ConsoleTools.WriteOnPosition(del, topRight.X, topRight.Y + 10);
+                ConsoleTools.WriteOnPosition(del, topRight.X, topRight.Y + 11);
+                ConsoleTools.WriteOnPosition(del, topRight.X, topRight.Y + 12);
+
+                //print the new attributes
+                ConsoleTools.WriteOnPosition(string.Format("STR: {0}", unit.Attributes[0]), topRight.X, topRight.Y + 10, ConsoleColor.DarkGray);
+                ConsoleTools.WriteOnPosition(string.Format("DEX: {0}", unit.Attributes[1]), mid, topRight.Y + 10, ConsoleColor.DarkGray);
+                ConsoleTools.WriteOnPosition(string.Format("CON: {0}", unit.Attributes[2]), topRight.X, topRight.Y + 11, ConsoleColor.DarkGray);
+                ConsoleTools.WriteOnPosition(string.Format("WIS: {0}", unit.Attributes[3]), mid, topRight.Y + 11, ConsoleColor.DarkGray);
+                ConsoleTools.WriteOnPosition(string.Format("SPI: {0}", unit.Attributes[4]), topRight.X, topRight.Y + 12, ConsoleColor.DarkGray);
+                ConsoleTools.WriteOnPosition(string.Format("LUCK: {0}", unit.Attributes[5]), mid, topRight.Y + 12, ConsoleColor.DarkGray);
+                this.oldAttrPrint = attributesPrint;
+            }
+
+            ConsoleTools.WriteOnPosition(del, topRight.X, topRight.Y + 14);
+            ConsoleTools.WriteOnPosition(string.Format("LVL: {0}", unit.Experience.Level), topRight.X, topRight.Y + 14, ConsoleColor.White);
+            ConsoleTools.WriteOnPosition(string.Format("EXP: {0} / {1}", unit.Experience.XP, unit.Experience.ExpPointsArray[unit.Experience.Level]),
+                mid, topRight.Y + 14, ConsoleColor.White);
         }
         
         /// <summary>

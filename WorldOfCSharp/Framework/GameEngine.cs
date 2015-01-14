@@ -109,7 +109,7 @@ namespace Maya
 
             messageLog = new MessageLog(0, Globals.CONSOLE_HEIGHT - 1, Globals.GAME_FIELD_BOTTOM_RIGHT.X,
                 (Globals.CONSOLE_HEIGHT - (Globals.GAME_FIELD_BOTTOM_RIGHT.Y + 1)), true);
-            MessageLog.SendMessage("Message log initialized.");
+            MessageLog.SendMessage("~w13!Message ~W2!log ~l11!i~l3!n~s11!itialized.");
             MessageLog.DeleteLog();
 
             Units.Clear();
@@ -117,7 +117,7 @@ namespace Maya
             MapFileName = @"../../maps/0.wocm";
             Item.LastItemID = SaveLoadTools.LastItemID();
             Flags pcFlags = Flags.IsCollidable | Flags.IsMovable | Flags.IsPlayerControl;
-            Unit pc = new Unit(10, 10, pcFlags, '@', ConsoleColor.White, pcName);
+            Unit pc = new Unit(10, 10, pcFlags, '@', ConsoleColor.White, pcName, new UnitAttributes());
             Units.Add(pc);
             GameTime = new GameTime();
 
@@ -194,9 +194,9 @@ namespace Maya
                 sideBar.Update(pc);
                 foreach (Unit unit in Units)
                 {
-                    unit.UnitAttr.Energy += unit.UnitAttr.ActionSpeed;
+                    unit.Attributes.Energy += unit.Attributes.ActionSpeed;
                     int energyCost = 0;
-                    if (unit.UnitAttr.Energy >= 100)
+                    if (unit.Attributes.Energy >= 100)
                     {
                         if (unit.Flags.HasFlag(Flags.IsPlayerControl))
                         {
@@ -210,7 +210,7 @@ namespace Maya
                         {
                             energyCost = AI.ArtificialIntelligence.DrunkardWalk(unit);
                         }
-                        unit.UnitAttr.Energy -= energyCost;
+                        unit.Attributes.Energy -= energyCost;
                     }
                 }
             }
@@ -231,17 +231,17 @@ namespace Maya
                             Tests.Testing.ItemTest(pc);
                             return 0;
 
-                        case ConsoleKey.U:
+                        /*case ConsoleKey.U:
                             Tests.Testing.UnitSpawn();
-                            return 0;
+                            return 0;*/
 
                         case ConsoleKey.F1:
-                                MessageLog.SendMessage(string.Format("[{0}, {1}]", pc.X, pc.Y));
+                            MessageLog.SendMessage(string.Format("[{0}, {1}]", pc.X, pc.Y));
                             return 0;
 
-                        case ConsoleKey.H:
+                        /*case ConsoleKey.H:
                             MessageLog.ShowLogFile(pc);
-                            return 0;
+                            return 0;*/
 
                         #region PickUpItem
                         case ConsoleKey.G:
@@ -313,40 +313,60 @@ namespace Maya
                             OpenInventory(pc);
                             return 100;
 
+                        case ConsoleKey.X:
+                            pc.Experience.GainXP(15);
+                            return 0;
+
                         case ConsoleKey.UpArrow:
                         case ConsoleKey.NumPad8:
-                            pc.MakeAMove(CardinalDirection.North);
+                        case ConsoleKey.K:
+                            if (!ModifierPressed(key))
+                                pc.MakeAMove(CardinalDirection.North);
                             break;
 
                         case ConsoleKey.DownArrow:
                         case ConsoleKey.NumPad2:
-                            pc.MakeAMove(CardinalDirection.South);
+                        case ConsoleKey.J:
+                            if (!ModifierPressed(key))
+                                pc.MakeAMove(CardinalDirection.South);
                             break;
 
                         case ConsoleKey.LeftArrow:
                         case ConsoleKey.NumPad4:
-                            pc.MakeAMove(CardinalDirection.West);
+                        case ConsoleKey.H:
+                            if (!ModifierPressed(key))
+                                pc.MakeAMove(CardinalDirection.West);
                             break;
 
                         case ConsoleKey.RightArrow:
                         case ConsoleKey.NumPad6:
-                            pc.MakeAMove(CardinalDirection.East);
+                        case ConsoleKey.L:
+                            if (!ModifierPressed(key))
+                                pc.MakeAMove(CardinalDirection.East);
                             break;
 
                         case ConsoleKey.NumPad7:
-                            pc.MakeAMove(CardinalDirection.NorthWest);
+                        case ConsoleKey.Y:
+                            if (!ModifierPressed(key))
+                                pc.MakeAMove(CardinalDirection.NorthWest);
                             break;
 
                         case ConsoleKey.NumPad9:
-                            pc.MakeAMove(CardinalDirection.NorthEast);
+                        case ConsoleKey.U:
+                            if (!ModifierPressed(key))
+                                pc.MakeAMove(CardinalDirection.NorthEast);
                             break;
 
                         case ConsoleKey.NumPad1:
-                            pc.MakeAMove(CardinalDirection.SouthWest);
+                        case ConsoleKey.B:
+                            if (!ModifierPressed(key))
+                                pc.MakeAMove(CardinalDirection.SouthWest);
                             break;
 
                         case ConsoleKey.NumPad3:
-                            pc.MakeAMove(CardinalDirection.SouthEast);
+                        case ConsoleKey.N:
+                            if (!ModifierPressed(key))
+                                pc.MakeAMove(CardinalDirection.SouthEast);
                             break;
 
                         case ConsoleKey.Escape:
@@ -378,6 +398,17 @@ namespace Maya
                 }
             }
             return 100;
+        }
+
+        private static bool ModifierPressed(ConsoleKeyInfo key)
+        {
+            if ((key.Modifiers & ConsoleModifiers.Shift) != 0)
+                return true;
+            if ((key.Modifiers & ConsoleModifiers.Alt) != 0)
+                return true;
+            if ((key.Modifiers & ConsoleModifiers.Control) != 0)
+                return true;
+            return false;
         }
 
         private static void OpenInventory(Unit pc)

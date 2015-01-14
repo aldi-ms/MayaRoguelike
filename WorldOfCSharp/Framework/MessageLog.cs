@@ -55,15 +55,16 @@ namespace Maya
                 for (int i = height - 1; i > 0; i--)
                 {
                     line[i].Clear();
-                    WriteOnPosition(emptySB, lineCoordinates[i]);
-                    line[i].Append(line[i - 1]);
+                    line[i].Append(line[i - 1] + new string(' ', width - line[i - 1].Length));
                 }
 
                 line[0].Clear();
                 line[0].Append(text);
+                
                 PrintMessageLog();
                 WriteLogFile(text);     //make log file save on game save instead of every message?
             }
+                //else block also present (copied from here) in Window.Write
             else
             {
                 string[] splitText = text.Split(' ');
@@ -109,56 +110,46 @@ namespace Maya
             Window logWindow = new Window(pc, "log");
             logWindow.Show();
 
-            System.IO.StreamReader sReader = new System.IO.StreamReader(LOG_FILE, ENCODING);
-
-            using (sReader)
+            using (var sReader = new System.IO.StreamReader(LOG_FILE, ENCODING))
             {
                 while (sReader.Peek() != -1)
-                {
                     logWindow.Write(sReader.ReadLine());
-                }
             }
-                ConsoleKeyInfo key;
-                bool loop = true;
-                do
-                {
-                    key = Console.ReadKey(true);
-                    switch (key.Key)
-                    {
-                        case ConsoleKey.Escape:
-                            loop = false;
-                            logWindow.CloseWindow();
-                            break;
 
-                        default:
-                            break;
-                    }
-                } while(loop);
-            
+            ConsoleKeyInfo key;
+            bool loop = true;
+            do
+            {
+                key = Console.ReadKey(true);
+                switch (key.Key)
+                {
+                    case ConsoleKey.Escape:
+                        loop = false;
+                        logWindow.CloseWindow();
+                        break;
+
+                    default:
+                        break;
+                }
+            } while (loop);
         }
 
         private void WriteLogFile(string text)
         {
-            System.IO.StreamWriter sWriter = new System.IO.StreamWriter(LOG_FILE, true, ENCODING);
-            using (sWriter)
-            {
-                sWriter.WriteLine("[{0}] {1}", DateTime.Now, text);                
-            }
+            using (var sWriter = new System.IO.StreamWriter(LOG_FILE, true, ENCODING))
+                sWriter.WriteLine("[{0}] {1}", GameEngine.GameTime.Now.TimeToString(), text);   
         }
 
         private void PrintMessageLog()
         {
-            WriteOnPosition(emptySB, lineCoordinates[0]);
-            WriteOnPosition(line[0], lineCoordinates[0], ConsoleColor.White);
-
-            for (int i = 1; i < height; i++)
+            for (int i = 0; i < height; i++)
             {
-                WriteOnPosition(emptySB, lineCoordinates[i]);
-                WriteOnPosition(line[i], lineCoordinates[i]);
+                FormatWriteOnPosition(emptySB, lineCoordinates[i]);
+                FormatWriteOnPosition(line[i], lineCoordinates[i]);
             }
         }
 
-        private void WriteOnPosition(
+        /*private void WriteOnPosition(
             StringBuilder text, Coordinate coords, 
             ConsoleColor foregroundColor = ConsoleColor.DarkGray, 
             ConsoleColor backgroundColor = ConsoleColor.Black)
@@ -167,6 +158,91 @@ namespace Maya
             Console.ForegroundColor = foregroundColor;
             Console.BackgroundColor = backgroundColor;
             Console.Write(text.ToString());
+        }*/
+        /// <summary>
+        /// Gives the ability to select color letter/word/whole string in a color chosen with a code in the string.
+        /// For more detailed information check coloredMessagesDesign.txt
+        /// </summary>
+        private void FormatWriteOnPosition(
+            StringBuilder text, Coordinate coords,
+            ConsoleColor foregroundColor = ConsoleColor.DarkGray,
+            ConsoleColor backgroundColor = ConsoleColor.Black)
+        {
+            Console.SetCursorPosition(coords.X, coords.Y);
+            string workText = text.ToString();
+            char selector = '\0';
+            string color = null;
+            //bool colorText = false;
+
+            for (int i = 0; i < workText.Length; i++)
+            {
+                if (workText[i] == '~')
+                {
+                    //beggining of a escape formatting sequence
+                    //colorText = true;
+                    selector = workText[++i];
+                    color = workText[++i].ToString();
+                    if (workText[++i] == '!')
+                        i++;
+                    else if (char.IsDigit(workText[i]))
+                    {
+                        color = string.Format("{0}{1}", color, workText[i]);
+                        i += 2;
+                    }
+                    else
+                    {
+                        SendMessage("Wrong format sequence in MessageLog. Terminating FormatWriteOnPosition method.");
+                        return;
+                    }
+
+                    //select text to color
+                    string selectedText = null;
+                    switch (selector)
+                    {
+                        case 'L':
+                        case 'l':
+                            selectedText = workText[i].ToString();
+                            i--;
+                            break;
+
+                        case 'W':
+                        case 'w':
+                            var sb = new StringBuilder(10);
+                            for (int j = i; j < workText.Length; j++)
+                            {
+                                if (workText[j] != ' ' && workText[j] != '\n')
+                                    sb.Append(workText[j]);
+                                else
+                                    break;
+                            }
+                            selectedText = sb.ToString();
+                            i--;
+                            break;
+
+                        case 'S':
+                        case 's':
+                            selectedText = new string(workText.ToCharArray(), i, workText.Length - i);
+                            i--;
+                            break;
+                    }
+
+                    int col = int.Parse(color.ToString());
+                    if (col >= 0 && col <= 15)
+                        Console.ForegroundColor = (ConsoleColor)col;
+                    else
+                        Console.ForegroundColor = foregroundColor;
+
+                    Console.BackgroundColor = backgroundColor;
+                    Console.Write(selectedText);
+                    i += selectedText.Length;
+                }
+                else
+                {
+                    Console.ForegroundColor = foregroundColor;
+                    Console.BackgroundColor = backgroundColor;
+                    Console.Write(workText[i]);
+                }
+            }
         }
     }
 }

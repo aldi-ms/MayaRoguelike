@@ -19,5 +19,16 @@ namespace Maya
             string[] split = str.Split('d');
             return Roll(int.Parse(split[0]), int.Parse(split[1]));
         }
+
+        /// <summary>
+        /// Returns a random integer between [low, high], both inclusive.
+        /// </summary>
+        /// <param name="low"></param>
+        /// <param name="high"></param>
+        /// <returns></returns>
+        public static int Random(int low, int high)
+        {
+            return mt.Next(low, high + 1);
+        }
     }
 }

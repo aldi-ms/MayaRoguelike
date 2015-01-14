@@ -1,0 +1,29 @@
+~[select char][color]!       - formatting sequence in string passed to FormatWriteOnPosition.
+
+-->		'~'			- denotes the beggining of a format sequence.
+
+-->		[select char]		- selects the size/length of text to colour. =>
+L - selects the next letter from the string.
+W - selects the next word.
+S - selects the rest of the string.
+
+-->		[color] - selects the color in which the string will be shown. =>
+color = number [0..15]
+        Black = 0,
+        DarkBlue = 1,
+        DarkGreen = 2,
+        DarkCyan = 3,
+        DarkRed = 4,
+        DarkMagenta = 5,
+        DarkYellow = 6,
+        Gray = 7,
+        DarkGray = 8,
+        Blue = 9,
+        Green = 10,
+        Cyan = 11,
+        Red = 12,
+        Magenta = 13,
+        Yellow = 14,
+        White = 15,
+
+-->		'!'		 - end of seq.

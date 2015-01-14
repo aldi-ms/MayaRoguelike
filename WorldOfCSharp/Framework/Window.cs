@@ -7,8 +7,9 @@ namespace Maya
 {
     public sealed class Window
     {
-        private const string TEMP_SAVE_FILE = @"../../saves/temp.wocs";
         private static List<Window> activeWindows = new List<Window>();
+        private Unit pc;
+        private Coordinate topLeft, topRight, bottomLeft, bottomRight;  //window frame coordinates!
         private string title;
         private bool windowIsOpen = false;
         private int windowBottomLeftX = 0;
@@ -17,8 +18,6 @@ namespace Maya
         private int windowHeight = Globals.CONSOLE_HEIGHT - (Globals.CONSOLE_HEIGHT - Globals.GAME_FIELD_BOTTOM_RIGHT.Y);
         private int windowMargin = 3;
         private int linePosition;
-        private Unit pc;
-        private Coordinate topLeft, topRight, bottomLeft, bottomRight;  //window frame coordinates!
 
         /// <summary>
         /// Default constructor for creating a window over the game field.
@@ -149,6 +148,7 @@ namespace Maya
         {
             get { return this.title; }
         }
+
         public void Show()
         {
             if (!windowIsOpen)
@@ -160,27 +160,54 @@ namespace Maya
             }
         }
 
-        public bool Write(string str, ConsoleColor color = ConsoleColor.Gray)
+        public bool Write(string text, ConsoleColor color = ConsoleColor.Gray, int line = 1)
         {
-            linePosition++;
             if (!(linePosition >= BottomLeft.Y - 2))
             {
-                ConsoleTools.WriteOnPosition(str, (windowHeight - windowBottomLeftY) + (windowMargin + 2),
-                    windowBottomLeftX + (linePosition - 1), color);
-                return true;
+                if (this.TopLeft.X + text.Length <= this.TopRight.X - 2)
+                {
+                    linePosition += line;
+                    ConsoleTools.WriteOnPosition(text, (windowHeight - windowBottomLeftY) + (windowMargin + 2),
+                        windowBottomLeftX + (linePosition - 1), color);
+                    return true;
+                }
+                    //else block copied from MessageLog.SendMessage
+                else
+                {
+                    string[] splitText = text.Split(' ');
+                    int firstUnappendedString = 0;
+                    int width = this.TopRight.X - this.TopLeft.X;
+                    StringBuilder firstPartText = new StringBuilder(width);
+
+                    for (int i = firstUnappendedString; i < splitText.Length; i++)
+                    {
+                        if (!(firstPartText.Length + (splitText[i].Length + 1) > width - 2))
+                        {
+                            firstPartText.Append(splitText[i]);
+                            firstPartText.Append(" ");
+                        }
+                        else
+                        {
+                            firstUnappendedString = i;
+                            break;
+                        }
+                    }
+
+                    StringBuilder secondPartText = new StringBuilder(width);
+                    for (int i = firstUnappendedString; i < splitText.Length; i++)
+                        secondPartText.AppendFormat("{0} ", splitText[i]);
+
+                    Write(firstPartText.ToString());
+                    Write(secondPartText.ToString());
+                    return true;
+                }
             }
             return false;
         }
+
         public bool WriteLine(string str, ConsoleColor color = ConsoleColor.Gray)
         {
-            linePosition +=2;
-            if (!(linePosition >= BottomLeft.Y - 2))
-            {
-                ConsoleTools.WriteOnPosition(str, (windowHeight - windowBottomLeftY) + (windowMargin + 2),
-                    windowBottomLeftX + (linePosition - 1), color);
-                return true;
-            }
-            return false;
+            return Write(str, color, 2);
         }
 
         public void CloseWindow()

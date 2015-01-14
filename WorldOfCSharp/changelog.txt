@@ -1,0 +1,29 @@
+﻿ChangeLog created and added 08.07.2014
+***Tracks changes and updates of "Maya" (WIP title) by SCiENiDE***
+===================================================================================
+***06.07.2014***
+*Added GameCell.ItemList to game save method (the items on the map are now saved).
+===================================================================================
+***08.07.2014***
+*Added Unit.Inventory and Unit.Equipment item lists to the game save method.
+*All saved items (on map, inventory, equipment, etc.) are now properly loaded on
+*game load.
+===================================================================================
+***09.07.2014***
+*Some work on Window.Write/WriteLine methods to update them. Write now uses a int
+*for the vertical lines you move in the window, and WriteLine points to Write with
+*a line count = 2, to eliminate code repetition.
+*Implemented word wrap for Window.Write method. tbh copied and modified a block of
+*code from MessageLog.SendMessage.
+*Months after having the idea, finally! A way to print colored messages in the
+*MessageLog. The method FormatWriteOnPosition, checks if there is a formatting
+*sequence in the string passed according to coloredMessagesDesign.txt
+*Introduced Race class.
+===================================================================================
+***06.08.2014***
+*Re-made a new working implementation of Experience. Customisable by 
+*const MAX_LEVEL, experienceModifier - multiplier of the experience gained.
+*GainXP(double xp) is to be used for awarding the unit experience. If the experience
+*goes over a treshhold (expPointsTable that is) the unit gains a level.
+*Added xp level to sidebar info.
+*Started optimizing the code for MessageLog. Slow printing/updating is the issue?

@@ -28,11 +28,13 @@ namespace Maya
             : this(0, 0, 0, 1, 1, 1)
         { }
 
-        public GameTime(int ticks)
-            : this()
+        public GameTime Now
         {
-            this.Tick(ticks);
-            this.ticks = ticks;
+            get 
+            {
+                return new GameTime(this.seconds, this.minutes, this.hour,
+                    this.day, this.month, this.year);
+            }
         }
 
         #region Properties. Always use these!
@@ -156,28 +158,30 @@ namespace Maya
             }
         }
 
-        public string GetCurrentTime()
+        public string TimeToString()
         {
-            return string.Format("{0}h:{1}m:{2}s", Hour, Minutes, Seconds);
+            return string.Format("{0:D2}:{1:D2}:{2:D2}", this.Hour, this.Minutes, this.Seconds);
         }
 
-        public string GetFullDate()
+        public string ToSaveString()
         {
-            return string.Format("day of {0}, month of {1}, year {2}", ((GameDay)Day).GetName(), ((GameMonth)Month).GetName(), year);
+            return string.Format("{0}.{1}.{2}.{3}.{4}.{5}", this.Seconds, this.Minutes, this.Hour, this.Day, this.Month, this.Year);
         }
 
-        public string GetShortDate()
+        public string ShortDateToString()
         {
-            string str = string.Format("day of {0}, month of {1}", ((GameDay)Day).GetName(), ((GameMonth)Month).GetName());
+            /*string str = string.Format("day of {0}, month of {1}", ((GameDay)Day).GetName(), ((GameMonth)Month).GetName());
             System.Text.StringBuilder sb = new System.Text.StringBuilder(str.Length);
             sb.Append(' ', (Globals.CONSOLE_WIDTH - Globals.GAME_FIELD_BOTTOM_RIGHT.X) - str.Length);
             sb.Append(str);
-            return sb.ToString();
+            return sb.ToString();*/
+
+            return string.Format("{0}/{0}/{0}", this.Day, this.Month, this.Year);
         }
 
         public override string ToString()
         {
-            return string.Format("{0}h:{1}m:{2}s, day of {3}, month of {4}", Hour, Minutes, Seconds,
+            return string.Format("{0:D2}:{1:D2}:{2:D2}, day of {3}, month of {4}", this.Hour, this.Minutes, this.Seconds,
                 ((GameDay)Day).GetName(), ((GameMonth)Month).GetName());
         }
     }

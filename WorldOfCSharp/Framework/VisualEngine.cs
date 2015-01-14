@@ -5,8 +5,9 @@ namespace Maya
 {
     public class VisualEngine
     {
+        private const int DEFAULT_RANGE = 5;
         private FieldOfView<GameCell> fieldOfView;
-        private int range = 12;
+        private int range = DEFAULT_RANGE;
         private FOVMethod method = FOVMethod.MRPAS;
         private RangeLimitShape shape = RangeLimitShape.Circle;
         private Framework.FlatArray<GameCell> map;
@@ -44,7 +45,7 @@ namespace Maya
         }
 
         public VisualEngine(Framework.FlatArray<GameCell> map)
-            : this(map, 12, FOVMethod.MRPAS, RangeLimitShape.Circle)
+            : this(map, DEFAULT_RANGE, FOVMethod.MRPAS, RangeLimitShape.Circle)
         { }
 
         public void PrintFOVMap(int FOV_X, int FOV_Y)
@@ -103,6 +104,7 @@ namespace Maya
             GameEngine.GameField[unit.X, unit.Y].Unit = unit;
             if (unit.VisualChar == '@')
             {
+                this.range += unit.Attributes.EyeSight;
                 ConsoleTools.WriteOnPosition(unit);
                 this.PrintFOVMap(unit.X, unit.Y);
             }
@@ -110,6 +112,7 @@ namespace Maya
                 if (unit.X >= xStart && unit.X <= xEnd && unit.Y >= yStart && unit.Y <= yEnd)
                     if (GameEngine.GameField[unit.X, unit.Y].IsVisible)
                         ConsoleTools.WriteOnPosition(unit);
+            this.range = DEFAULT_RANGE;
         }
                 
         public void ClearGameObject(Unit unit)

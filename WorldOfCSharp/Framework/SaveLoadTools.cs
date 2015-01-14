@@ -27,8 +27,7 @@ namespace Maya
         public static void LoadGame()
         {
             GameEngine.GameField = LoadMap(GameEngine.MapFileName = SaveLoadTools.SavedMapFileName());
-            //SpawnItemsOnMap();
-            GameEngine.GameTime = new GameTime(SaveLoadTools.SavedGameTicks());
+            SaveLoadTools.LoadGameTime();
             Item.LastItemID = LastItemID();
             GameEngine.Units = LoadUnitsXML();
         }
@@ -53,18 +52,19 @@ namespace Maya
                     new XAttribute("color", unit.Color.ToString()),
                     new XAttribute("name", unit.Name),
                     new XAttribute("id", unit.UniqueID),
-                    new XAttribute("age", unit.UnitAttr.Age),
+                    new XAttribute("age", unit.Attributes.Age),
                     new XElement("attributes",
-                        new XAttribute("str", unit.UnitAttr[0]),
-                        new XAttribute("dex", unit.UnitAttr[1]),
-                        new XAttribute("con", unit.UnitAttr[2]),
-                        new XAttribute("wis", unit.UnitAttr[3]),
-                        new XAttribute("spi", unit.UnitAttr[4]),
-                        new XAttribute("luck", unit.UnitAttr[5])),
+                        new XAttribute("str", unit.Attributes[0]),
+                        new XAttribute("dex", unit.Attributes[1]),
+                        new XAttribute("con", unit.Attributes[2]),
+                        new XAttribute("wis", unit.Attributes[3]),
+                        new XAttribute("spi", unit.Attributes[4]),
+                        new XAttribute("luck", unit.Attributes[5])),
                     equipment = new XElement("equipment"),
                     inventory = new XElement("inventory")
                     ));
 
+                //add equipment items to unit save
                 if (unit.Equipment.Count > 0)
                 {
                     int count = unit.Equipment.Count;
@@ -73,13 +73,16 @@ namespace Maya
                     {
                         if (unit.Equipment[i] != null)
                         {
-                            equipment.Add(new XElement("item_id", unit.Equipment[i].ID - 1));
+                            equipment.Add(
+                                new XElement("item_id",
+                                unit.Equipment[i].ID - 1));
                             count--;
                         }
                         i++;
                     } while(count > 0);
                 }
 
+                //add inventory items to unit save
                 if (unit.Inventory.Count > 0)
                 {
                     int count = unit.Inventory.Count;
@@ -94,8 +97,6 @@ namespace Maya
                         i++;
                     } while (count > 0);
                 }
-
-
             }
             units.Save(UNITS_FILE);
         }
@@ -107,7 +108,7 @@ namespace Maya
 
             statsElement.Add(
                 new XElement("map_file", GameEngine.MapFileName),
-                new XElement("ticks", GameEngine.GameTime.Ticks)
+                new XElement("game_time", GameEngine.GameTime.Now.ToSaveString())
                 );
             gameStats.Save(@"../../saves/gamestats.xml");
         }
@@ -118,10 +119,17 @@ namespace Maya
             return gameStats.Element("game_stats").Element("map_file").Value;
         }
 
-        public static int SavedGameTicks(string saveFileName = GAME_STATS_FILE)
+        public static void LoadGameTime(string saveFileName = GAME_STATS_FILE)
         {
             XDocument gameStats = XDocument.Load(saveFileName);
-            return int.Parse(gameStats.Element("game_stats").Element("ticks").Value);
+            string[] splitString = gameStats.Element("game_stats").Element("game_time").Value.Split('.');
+            int[] gameTime = new int[splitString.Length];
+
+            for (int i = 0; i < splitString.Length; i++)
+                gameTime[i] = int.Parse(splitString[i]);
+
+            GameEngine.GameTime = new GameTime(gameTime[0], gameTime[1], gameTime[2], 
+                gameTime[3], gameTime[4], gameTime[5]);
         }
 
         public static int LastItemID(string saveFileName = ITEMS_SAVE_FILE)
@@ -159,8 +167,29 @@ namespace Maya
                 int spi = int.Parse(unitAttr.Attribute("spi").Value);
                 int luck = int.Parse(unitAttr.Attribute("luck").Value);
 
+                Unit currentUnit;
                 UnitAttributes unitAttributes = new UnitAttributes(age, str, dex, con, wis, spi, luck);
-                unitList.Add(new Unit(x, y, (Flags)flags, visualChar, color, name, id, unitAttributes));
+                unitList.Add(currentUnit = new Unit(x, y, (Flags)flags, visualChar, color, name, id, unitAttributes));
+
+                //load equipment
+                XElement equipment = unit.Element("equipment");
+                var equipmentItems = equipment.Elements("item_id");
+
+                foreach (var itemID in equipmentItems)
+                {
+                    Item equippedItem = new Item(Database.ItemDatabase[int.Parse(itemID.Value)]);
+                    currentUnit.Equipment.EquipItem(equippedItem);
+                }
+
+                //load inventory
+                XElement inventory = unit.Element("inventory");
+                var inventoryItems = inventory.Elements("item_id");
+
+                foreach (var itemID in inventoryItems)
+                {
+                    Item storedItem = new Item(Database.ItemDatabase[int.Parse(itemID.Value)]);
+                    currentUnit.Inventory.StoreItem(storedItem);
+                }                
             }
 
             return unitList;

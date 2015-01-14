@@ -1,24 +1,26 @@
-﻿1. Add Equipment/Inventory items to load method.
+﻿1. Move all databases to xml file format.
 
 2. Implement options to scroll the log history.
 
-3. Implement a way to print colored messages (colored letters?!) in MessageLog.
-	--> Use special character (for the method) in front of the letter/word you want colored
-	--> Selector char & color char
+3. Work on character build/attributes.
+	--> Implement races.
 
-4. Word wrap for log history/global word wrap for windows?
+4. Implement item identify.
 
 5. Implement CombatEngine class, to do everything combat-related.
 
-6. Use databases for items, units, terrain, ingame objects, etc.
+6. Implement a "Options" screen/menu from the main menu.
+	--> Save/Load option values from a XML file.
 
 7. Day/night, weather and other time related simulations.
 
-8. Re-write save files to use XML & LINQ - save/load/databases/etc.
-	--> Goto 9.
+8. Implement Experience.
 
 9. Map ID based? Z-coordinate for map ID?
 
 10. Change MersenneTwister for another RNG? (ok for now)
 
-11. 
+11. Keybind for dropping items in the "Inventory" screen (SHIFT + [item key]).
+
+12. Make a system to choose from words/expressions for a message. 
+	--> Ex. "You crash into", "You bump into", etc.

@@ -48,6 +48,7 @@
     <Compile Include="Framework\Database.cs" />
     <Compile Include="Framework\CardinalDirection.cs" />
     <Compile Include="Framework\Equipment.cs" />
+    <Compile Include="Framework\Experience.cs" />
     <Compile Include="Framework\FieldOfView.cs" />
     <Compile Include="Framework\FlatArray.cs" />
     <Compile Include="Framework\FOVAlgorithm.cs" />
@@ -55,6 +56,7 @@
     <Compile Include="Framework\GameCell.cs" />
     <Compile Include="Framework\GameObject.cs" />
     <Compile Include="Framework\GameTime.cs" />
+    <Compile Include="Framework\Race.cs" />
     <Compile Include="UIElements.cs" />
     <Compile Include="Framework\Inventory.cs" />
     <Compile Include="Framework\SideBar.cs" />
@@ -80,10 +82,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="!TO DO.txt" />
+    <Content Include="changelog.txt" />
+    <Content Include="coloredMessagesDesign.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

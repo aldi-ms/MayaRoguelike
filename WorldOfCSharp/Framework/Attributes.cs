@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Maya.Framework;
 
 namespace Maya
 {
@@ -132,23 +133,6 @@ namespace Maya
             }
         }
 
-        /* UNUSED ENUMERATOR
-        public IEnumerator<int> GetEnumerator()
-        {
-            return StatValues();
-        }
-
-        public IEnumerator<int> StatValues()
-        {
-            yield return strength;
-            yield return dexterity;
-            yield return constitution;
-            yield return wisdom;
-            yield return spirit;
-            yield return luck;
-        }
-        */
-
         public override string ToString()
         {
             return string.Format("str = {0} \ndex = {1} \ncon = {2} \nwis = {3} \nspi = {4} \nluck = {5}",
@@ -158,12 +142,15 @@ namespace Maya
 
     public class UnitAttributes : BaseAttributes
     {
+        private int level;
         //Defines body build
-        private double height;
+        private int height;
         private int weight;
         private int age;
         private Fitness fitness;
-        //race goes here?
+        //private Race race;
+        private int lengthOfVision;
+        private bool sexIsMale;
 
         /// <summary>
         /// Body Mass Index.
@@ -173,15 +160,20 @@ namespace Maya
         private int currentHealth;
         private int energy;
 
-        public UnitAttributes(int age, int str = 1, int dex = 1, int con = 1, int wis = 1, int spi = 1, int luck = 1)
+        public UnitAttributes(int age = 18, int str = 1, int dex = 1, int con = 1, int wis = 1, int spi = 1, int luck = 1)
             : base(str, dex, con, wis, spi, luck)
         {
             this.age = age;
-            this.height = 1.85;      //later calc based on age/race/class etc.
-            this.weight = 72;       //- - - - same as above - - - - -
+            this.sexIsMale = true;
+            this.height = 184;
+            this.weight = 77;
+            //this.height = 185;      //later calc based on age/race/class etc.
+            //this.weight = 72;       //- - - - same as above - - - - -
             this.fitness = Fitness.Striking;        //- - - - same as above - - - - -
             this.BMI = weight / (height * height);
-            currentHealth = MaxHealth;
+            this.currentHealth = this.MaxHealth;
+            this.lengthOfVision = 1;
+            this.level = 0;
         }
 
         public int MaxHealth
@@ -230,6 +222,12 @@ namespace Maya
             }
         }
 
+        //public Race Race
+        //{
+        //    get { return this.race; }
+        //    set { this.race = value; }
+        //}
+
         public int Energy
         {
             get { return this.energy; }
@@ -239,6 +237,17 @@ namespace Maya
         public int Age
         {
             get { return this.age; }
+        }
+
+        public int EyeSight
+        {
+            get { return this.lengthOfVision; }
+            set { this.lengthOfVision = value; }
+        }
+
+        public bool SexIsMale
+        {
+            get { return this.sexIsMale; }
         }
     }
 

@@ -84,7 +84,8 @@ namespace Maya.Tests
             char randChar = (char)mt.Next(97, 123);
             ConsoleColor randColor = (ConsoleColor)mt.Next(1, 16);
             string name = "_" + (char)mt.Next(65, 91) + (char)mt.Next(65, 91) + (char)mt.Next(65, 91);
-            Unit testUnit = new Unit(x, y, unitFlags, randChar, randColor, name);
+            UnitAttributes uAttr = new UnitAttributes(18);
+            Unit testUnit = new Unit(x, y, unitFlags, randChar, randColor, name, uAttr);
             GameEngine.AddUnit(testUnit);
         }
     }
